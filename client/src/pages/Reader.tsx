@@ -91,7 +91,7 @@ const ReaderPage = () => {
               </tr>
               <tr className="bg-blue-400">
                 <td className="reader-left">
-                  <p className="reader-text reader-text-left">残高</p>
+                  <p className="reader-text reader-text-left">残額</p>
                 </td>
                 <td className="reader-right">
                   <p className="reader-text reader-text-right">
