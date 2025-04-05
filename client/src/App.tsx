@@ -6,6 +6,7 @@ import { BACKEND_ENDPOINT } from './const';
 import LoginRegister from './pages/LoginRegister';
 import User from './types/User';
 import ReaderPage from './pages/Reader';
+import Page404 from './pages/404';
 
 export default function App() {
   const [user, setUser] = useState<User | null>(null);
@@ -42,6 +43,7 @@ export default function App() {
             <Route path="/" element={user ? <UserPage user={user} /> : <LoginRegister setUser={setUser} />}></Route>
             <Route path="/history" element={<History />}></Route>
             <Route path="/reader" element={<ReaderPage />}></Route>
+            <Route path="/*" element={<Page404 />}></Route>
           </Routes>
         </BrowserRouter>
       </main>
