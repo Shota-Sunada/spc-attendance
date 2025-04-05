@@ -7,7 +7,7 @@ import User from '../types/User';
 
 const ReaderPage = () => {
   const [scanResult, setScanResult] = useState({ format: '', rawValue: '' });
-  const [balance, setBalance] = useState<number | null>(300);
+  const [balance, setBalance] = useState<number | null>(null);
   const [lastUUID, setLastUUID] = useState<string | null>(null);
 
   useEffect(() => {
