@@ -53,14 +53,16 @@ const UserPage = (props: UserPageProps) => {
   useEffect(() => {
     const timer = setTimeout(() => {
       if (count <= 0) {
-        createTicket();
+        if (qr) {
+          createTicket();
+        }
       } else {
         setCount(count - 1);
       }
     }, 1000);
 
     return () => clearTimeout(timer);
-  }, [count, createTicket]);
+  }, [qr, count, createTicket]);
 
   const sec = count % 60;
   const min = (count - sec) / 60;
@@ -75,6 +77,12 @@ const UserPage = (props: UserPageProps) => {
           <p>
             有効期限: {min}分{sec.toString().padStart(2, '0')}秒
           </p>
+          <button
+            onClick={() => {
+              createTicket();
+            }}>
+            再生成
+          </button>
           <button
             onClick={() => {
               setQR(null);
