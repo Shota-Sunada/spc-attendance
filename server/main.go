@@ -96,10 +96,26 @@ func main() {
 
 	http.HandleFunc("/api/tickets", handleCORS(func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
-		case http.MethodGet:
-			getTicket(w, r)
 		case http.MethodPost:
 			handleAuthRequire(issueTicket)(w, r)
+		default:
+			w.WriteHeader(http.StatusMethodNotAllowed)
+		}
+	}))
+
+	http.HandleFunc("/useTicket", handleCORS(func(w http.ResponseWriter, r *http.Request) {
+		switch r.Method {
+		case http.MethodPost:
+			useTicket(w, r)
+		default:
+			w.WriteHeader(http.StatusMethodNotAllowed)
+		}
+	}))
+
+	http.HandleFunc("/api/users", handleCORS(func(w http.ResponseWriter, r *http.Request) {
+		switch r.Method {
+		case http.MethodPost:
+			getUserById(w, r)
 		default:
 			w.WriteHeader(http.StatusMethodNotAllowed)
 		}

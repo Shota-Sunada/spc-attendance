@@ -141,3 +141,23 @@ func getMe(w http.ResponseWriter, r *http.Request) {
 
 	respondJSON(w, http.StatusOK, user)
 }
+
+func getUserById(w http.ResponseWriter, r *http.Request) {
+	var arg User
+	if err := decodeBody(r, &arg); err != nil {
+		respondJSON(w, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	row := db.QueryRow(selectUserByID, arg.ID)
+	var user User
+	err := row.Scan(&user.ID, &user.Name, &user.Password, &user.IsAdmin, &user.Balance, &user.IsGettingOn, &user.CreatedAt)
+	if err != nil {
+		respondJSON(w, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	user.Password = ""
+
+	respondJSON(w, http.StatusOK, user)
+}

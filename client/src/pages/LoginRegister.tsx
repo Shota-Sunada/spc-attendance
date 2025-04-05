@@ -2,11 +2,11 @@ import { useState } from 'react';
 import { BACKEND_ENDPOINT } from '../const';
 import User from '../types/User';
 
-interface Props {
+export interface SetUserProps {
   setUser: React.Dispatch<React.SetStateAction<User | null>>;
 }
 
-const LoginRegister = ({ setUser }: Props) => {
+const LoginRegister = ({ setUser }: SetUserProps) => {
   const [isRegister, setIsRegister] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 

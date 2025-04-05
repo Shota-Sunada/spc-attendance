@@ -19,7 +19,7 @@ const (
 
 	insertTicket = "INSERT INTO tickets (user_id, uuid, date_limit) VALUES (?, ?, ?)"
 
-	selectTickets = "SELECT * FROM tickets WHERE id = ?"
+	selectTicketByUUID = "SELECT * FROM tickets WHERE uuid = ?"
 )
 
 type Ticket struct {
@@ -55,23 +55,20 @@ func issueTicket(w http.ResponseWriter, r *http.Request) {
 	respondJSON(w, http.StatusCreated, ticket)
 }
 
-func getTicket(w http.ResponseWriter, r *http.Request) {
-	rows, err := db.Query(selectTickets)
+func useTicket(w http.ResponseWriter, r *http.Request) {
+	var arg Ticket
+	if err := decodeBody(r, &arg); err != nil {
+		respondJSON(w, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	row := db.QueryRow(selectTicketByUUID, arg.Uuid)
+	var ticket Ticket
+	err := row.Scan(&ticket.ID, &ticket.UserId, &ticket.Uuid, &ticket.DateLimit)
 	if err != nil {
-		panic(err)
-	}
-	defer rows.Close()
-
-	var tickets = []Ticket{}
-
-	for rows.Next() {
-		var ticket Ticket
-		err := rows.Scan(&ticket.ID, &ticket.UserId, &ticket.Uuid, &ticket.DateLimit)
-		if err != nil {
-			panic(err)
-		}
-		tickets = append(tickets, ticket)
+		respondJSON(w, http.StatusBadRequest, err.Error())
+		return
 	}
 
-	respondJSON(w, http.StatusOK, tickets)
+	respondJSON(w, http.StatusOK, ticket)
 }

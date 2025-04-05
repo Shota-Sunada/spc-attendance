@@ -1,16 +1,66 @@
 import { Scanner, IDetectedBarcode } from '@yudiel/react-qr-scanner';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import '../styles/reader.css';
+import { BACKEND_ENDPOINT } from '../const';
+import Ticket from '../types/Ticket';
+import User from '../types/User';
 
 const ReaderPage = () => {
   const [scanResult, setScanResult] = useState({ format: '', rawValue: '' });
+  const [balance, setBalance] = useState<number | null>(300);
+  const [lastUUID, setLastUUID] = useState<string | null>(null);
 
-  const handleScan = (results: IDetectedBarcode[]) => {
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLastUUID(null);
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, [lastUUID]);
+
+  const handleScan = async (results: IDetectedBarcode[]) => {
     if (results.length > 0) {
       setScanResult({
         format: results[0].format,
         rawValue: results[0].rawValue
       });
+
+      if (lastUUID == scanResult.rawValue) return;
+
+      setLastUUID(scanResult.rawValue);
+      const payload = {
+        uuid: scanResult.rawValue
+      };
+
+      console.log(scanResult.rawValue);
+
+      const res = await fetch(`${BACKEND_ENDPOINT}/useTicket`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      });
+
+      const data = (await res.json()) as Ticket;
+      if (res.ok) {
+        console.log('hi!');
+        const payload2 = {
+          id: data.user_id
+        };
+        const res2 = await fetch(`${BACKEND_ENDPOINT}/api/users`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(payload2)
+        });
+
+        const data2 = (await res2.json()) as User;
+        if (res2.ok) {
+          setBalance(data2.balance);
+        }
+      }
     }
   };
 
@@ -45,6 +95,7 @@ const ReaderPage = () => {
                 </td>
                 <td className="reader-right">
                   <p className="reader-text reader-text-right">
+                    {balance}
                     <span className="text-2xl">円</span>
                   </p>
                 </td>
@@ -68,9 +119,10 @@ const ReaderPage = () => {
             onScan={handleScan}
             formats={['qr_code', 'micro_qr_code']}
             allowMultiple
+            // paused={isReaderPaused}
             components={{
               tracker: customTracker,
-              audio: true,
+              audio: false,
               onOff: false,
               zoom: false,
               finder: false,
