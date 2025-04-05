@@ -75,7 +75,11 @@ const UserPage = (props: UserPageProps) => {
       {qr ? (
         <>
           <p>
-            有効期限: {min}分{sec.toString().padStart(2, '0')}秒
+            {'有効期限　'}
+            {min}
+            {'分'}
+            {sec.toString().padStart(2, '0')}
+            {'秒'}
           </p>
           <button
             onClick={() => {
@@ -87,7 +91,7 @@ const UserPage = (props: UserPageProps) => {
             onClick={() => {
               setQR(null);
             }}>
-            X
+            閉じる
           </button>
         </>
       ) : null}
