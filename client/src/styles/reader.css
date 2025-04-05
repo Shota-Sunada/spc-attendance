@@ -1,0 +1,23 @@
+.reader-left {
+  padding: 3px;
+  text-align: start;
+}
+
+.reader-right {
+  padding: 3px;
+  text-align: end;
+}
+
+.reader-text {
+  font-family: 'Noto Sans JP', sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+}
+
+.reader-text-left {
+  font-size: 150%;
+}
+
+.reader-text-right {
+  font-size: 250%;
+}

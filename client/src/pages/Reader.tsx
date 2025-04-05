@@ -1,5 +1,6 @@
 import { Scanner, IDetectedBarcode } from '@yudiel/react-qr-scanner';
 import { useState } from 'react';
+import '../styles/reader.css';
 
 const ReaderPage = () => {
   const [scanResult, setScanResult] = useState({ format: '', rawValue: '' });
@@ -22,25 +23,41 @@ const ReaderPage = () => {
   };
 
   return (
-    <div className='bg-black'>
+    <div className="bg-black">
       <div className="m-auto h-screen w-screen max-w-[400px] flex flex-col">
-        <p className="bg-blue-400 text-white font-bold shrink">乗降兼用</p>
+        <p className="text-blue-400 font-bold shrink">乗降兼用</p>
         <div className="bg-gray-500 grow">
           <table className="text-white w-full h-full">
             <tbody className="">
               <tr className="">
-                <td className="p-1 text-start">精算額</td>
-                <td className='p-1 text-end after:content-["円"]'>1,000</td>
+                <td className="reader-left">
+                  <p className="reader-text reader-text-left">精算額</p>
+                </td>
+                <td className="reader-right">
+                  <p className="reader-text reader-text-right">
+                    1000<span className="text-2xl">円</span>
+                  </p>
+                </td>
               </tr>
-              <tr className='bg-blue-400'>
-                <td className="p-1 text-start ">残高</td>
-                <td className='p-1 text-end after:content-["円"]'></td>
+              <tr className="bg-blue-400">
+                <td className="reader-left">
+                  <p className="reader-text reader-text-left">残高</p>
+                </td>
+                <td className="reader-right">
+                  <p className="reader-text reader-text-right">
+                    <span className="text-2xl">円</span>
+                  </p>
+                </td>
               </tr>
               <tr>
-                <td className="p-1 text-start">
-                  定期券 有効期限
+                <td className="reader-left">
+                  <p className="reader-text reader-text-left">有効期限</p>
                 </td>
-                <td className="p-1 text-end">2025年11月4日</td>
+                <td className="reader-right">
+                  <p className="reader-text reader-text-right">
+                    2025<span className="text-2xl">年</span>11<span className="text-2xl">月</span>4<span className="text-2xl">日</span>
+                  </p>
+                </td>
               </tr>
             </tbody>
           </table>
