@@ -23,7 +23,7 @@ const ReaderPage = () => {
 
   return (
     <>
-      <div className="m-auto h-screen w-screen max-w-[450px] flex flex-col">
+      <div className="m-auto h-screen w-screen max-w-[400px] flex flex-col">
         <p className="bg-blue-400 text-white font-bold shrink">乗降兼用</p>
         <div className="bg-gray-500 grow">
           <table className="text-white w-full">
