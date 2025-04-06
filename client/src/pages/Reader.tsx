@@ -1,5 +1,5 @@
 import { Scanner, IDetectedBarcode } from '@yudiel/react-qr-scanner';
-import { ReactElement, useEffect, useRef, useState } from 'react';
+import { ReactElement, useCallback, useEffect, useState } from 'react';
 import '../styles/reader.css';
 import { BACKEND_ENDPOINT } from '../const';
 import Ticket from '../types/Ticket';
@@ -7,11 +7,11 @@ import User from '../types/User';
 import { useSearchParams } from 'react-router-dom';
 
 type ReaderStatus = 'getOn' | 'getOff' | 'standby' | 'standby-getOn' | 'standby-getOff' | 'isReading';
-type ReaderMode = 'getOn' | 'getOff' | 'getOnOff' | null;
+// type ReaderMode = 'getOn' | 'getOff' | 'getOnOff' | null;
 
 const ReaderPage = () => {
   const [scanResult, setScanResult] = useState({ format: '', rawValue: '' });
-  const [paid, setPaid] = useState<number | null>(null);
+  // const [paid, setPaid] = useState<number | null>(null);
   const [balance, setBalance] = useState<number | null>(null);
   const [lastUUID, setLastUUID] = useState<string | null>(null);
   const [headerText, setHeaderText] = useState<string>('兼用');
@@ -20,109 +20,128 @@ const ReaderPage = () => {
 
   const [params] = useSearchParams();
 
-  const isFirstRender = useRef(true);
-
-  const tableTopPaid = (
-    <tr className="">
-      <td className="reader-left">
-        <p className="reader-text reader-text-left">精算額</p>
-      </td>
-      <td className="reader-right">
-        <p className="reader-text reader-text-right">
-          {paid}
-          <span className="text-2xl">円</span>
-        </p>
-      </td>
-    </tr>
+  const tableTopPaid = useCallback(
+    () => (
+      <tr className="">
+        <td className="reader-left">
+          <p className="reader-text reader-text-left">精算額</p>
+        </td>
+        <td className="reader-right">
+          <p className="reader-text reader-text-right">
+            {/* {paid} */}
+            <span className="text-2xl">円</span>
+          </p>
+        </td>
+      </tr>
+    ),
+    []
   );
 
-  const tableTopNumber = (
-    <tr className="">
-      <td className="reader-left border-r-[1px] border-gray-500">
-        <p className="reader-text reader-text-left">整理券No.</p>
-      </td>
-      <td className="reader-right">
-        <p className="reader-text reader-text-right">{params.get('stop_id') ?? '未指定'}</p>
-      </td>
-    </tr>
+  const tableTopNumber = useCallback(
+    () => (
+      <tr className="">
+        <td className="reader-left border-r-[1px] border-gray-500">
+          <p className="reader-text reader-text-left">整理券No.</p>
+        </td>
+        <td className="reader-right">
+          <p className="reader-text reader-text-right">{params.get('stop_id') ?? '未指定'}</p>
+        </td>
+      </tr>
+    ),
+    [params]
   );
 
-  const tableMiddleBalance = (
-    <tr className="bg-blue-400">
-      <td className="reader-left border-r-[1px] border-gray-500">
-        <p className="reader-text reader-text-left">残額</p>
-      </td>
-      <td className="reader-right">
-        <p className="reader-text reader-text-right">
-          {balance}
-          <span className="text-2xl">円</span>
-        </p>
-      </td>
-    </tr>
+  const tableMiddleBalance = useCallback(
+    () => (
+      <tr className="bg-blue-400">
+        <td className="reader-left border-r-[1px] border-gray-500">
+          <p className="reader-text reader-text-left">残額</p>
+        </td>
+        <td className="reader-right">
+          <p className="reader-text reader-text-right">
+            {balance}
+            <span className="text-2xl">円</span>
+          </p>
+        </td>
+      </tr>
+    ),
+    [balance]
   );
 
-  const tableBottomLimit = (
-    <tr>
-      <td className="reader-left border-r-[1px] border-gray-500">
-        <p className="reader-text reader-text-left">有効期限</p>
-      </td>
-      <td className="reader-right">
-        <p className="reader-text reader-text-right">
-          2025<span className="text-2xl">年</span>11<span className="text-2xl">月</span>4<span className="text-2xl">日</span>
-        </p>
-      </td>
-    </tr>
+  const tableBottomLimit = useCallback(
+    () => (
+      <tr>
+        <td className="reader-left border-r-[1px] border-gray-500">
+          <p className="reader-text reader-text-left">有効期限</p>
+        </td>
+        <td className="reader-right">
+          <p className="reader-text reader-text-right">
+            2025<span className="text-2xl">年</span>11<span className="text-2xl">月</span>4<span className="text-2xl">日</span>
+          </p>
+        </td>
+      </tr>
+    ),
+    []
   );
 
-  const tableBottomWelcome = (
-    <tr className="bg-gray-600">
-      <td className="reader-left" colSpan={2}>
-        <p className="reader-text text-center text-2xl text-green-500">QRコードをかざしてください。</p>
-      </td>
-    </tr>
+  const tableBottomWelcome = useCallback(
+    () => (
+      <tr className="bg-gray-600">
+        <td className="reader-left" colSpan={2}>
+          <p className="reader-text text-center text-2xl text-green-500">QRコードをかざしてください。</p>
+        </td>
+      </tr>
+    ),
+    []
   );
 
-  const tableBottomWait = (
-    <tr className="bg-green-400">
-      <td className="reader-left" colSpan={2}>
-        <p className="reader-text text-center text-2xl text-gray-800">しばらくお待ち下さい。</p>
-      </td>
-    </tr>
+  const tableBottomWait = useCallback(
+    () => (
+      <tr className="bg-green-400">
+        <td className="reader-left" colSpan={2}>
+          <p className="reader-text text-center text-2xl text-gray-800">しばらくお待ち下さい。</p>
+        </td>
+      </tr>
+    ),
+    []
   );
 
-  const tableNullRow = (
-    <tr className="">
-      <td className="reader-left border-r-[1px] border-gray-500">
-        <p className="reader-text reader-text-left">{'　'}</p>
-      </td>
-      <td className="reader-right">
-        <p className="reader-text reader-text-right">{'　'}</p>
-      </td>
-    </tr>
+  const tableNullRow = useCallback(
+    () => (
+      <tr className="">
+        <td className="reader-left border-r-[1px] border-gray-500">
+          <p className="reader-text reader-text-left">{'　'}</p>
+        </td>
+        <td className="reader-right">
+          <p className="reader-text reader-text-right">{'　'}</p>
+        </td>
+      </tr>
+    ),
+    []
   );
 
   const [tableTop, setTableTop] = useState<ReactElement>(tableTopNumber);
   const [tableMiddle, setTableMiddle] = useState<ReactElement>(tableNullRow);
   const [tableBottom, setTableBottom] = useState<ReactElement>(tableBottomWelcome);
 
-  const setReaderMode = (): ReaderMode => {
-    const mode = params.get('mode');
+  // const setReaderMode = (): ReaderMode => {
+  //   const mode = params.get('mode');
 
-    switch (mode) {
-      case 'get-on':
-        return 'getOn';
-      case 'get-off':
-        return 'getOff';
-      case 'get-on-off':
-        return 'getOnOff';
-      default:
-        return null;
-    }
-  };
+  //   switch (mode) {
+  //     case 'get-on':
+  //       return 'getOn';
+  //     case 'get-off':
+  //       return 'getOff';
+  //     case 'get-on-off':
+  //       return 'getOnOff';
+  //     default:
+  //       return null;
+  //   }
+  // };
 
-  const readerMode: ReaderMode = setReaderMode();
+  // const readerMode: ReaderMode = setReaderMode();
 
-  const updateDisplay = () => {
+  const updateDisplay = useCallback(() => {
     switch (currentStatus) {
       case 'getOn':
         setHeaderText('乗車');
@@ -170,81 +189,52 @@ const ReaderPage = () => {
         setTableBottom(tableNullRow);
         break;
     }
-  };
+  }, [currentStatus, tableBottomLimit, tableBottomWait, tableBottomWelcome, tableMiddleBalance, tableTopNumber, tableTopPaid, tableNullRow]);
 
-  useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-      return;
-    }
+  const handleScan = async () => {
+    console.log('handle scan');
 
-    const timer = setTimeout(() => {
-      console.log('reset last uuid');
-      setLastUUID(null);
-    }, 2000);
+    const payload = {
+      uuid: scanResult.rawValue
+    };
 
-    return () => clearTimeout(timer);
-  }, [lastUUID]);
+    const res = await fetch(`${BACKEND_ENDPOINT}/useTicket`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    });
 
-  // useEffect(() => {
-  //   const timer2 = setTimeout(() => {
-  //     console.log('standby');
-  //     setCurrentStatus('standby');
-  //     updateDisplay();
-  //   }, 5000);
-
-  //   return () => clearTimeout(timer2);
-  // }, [updateDisplay]);
-
-  const handleScan = async (results: IDetectedBarcode[]) => {
-    if (results.length > 0) {
-      setScanResult({
-        format: results[0].format,
-        rawValue: results[0].rawValue
-      });
-
-      if (scanResult.rawValue == lastUUID || scanResult.rawValue == null || scanResult.rawValue == undefined || scanResult.rawValue == '') return;
-
-      setLastUUID(scanResult.rawValue);
-      const payload = {
-        uuid: scanResult.rawValue
+    const data = (await res.json()) as Ticket;
+    if (res.ok) {
+      const payload2 = {
+        id: data.user_id
       };
-
-      setCurrentStatus('isReading');
-      updateDisplay();
-
-      const res = await fetch(`${BACKEND_ENDPOINT}/useTicket`, {
+      const res2 = await fetch(`${BACKEND_ENDPOINT}/api/users`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(payload)
+        body: JSON.stringify(payload2)
       });
 
-      const data = (await res.json()) as Ticket;
-      if (res.ok) {
-        console.log('hi!');
-        const payload2 = {
-          id: data.user_id
-        };
-        const res2 = await fetch(`${BACKEND_ENDPOINT}/api/users`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(payload2)
-        });
+      const data2 = (await res2.json()) as User;
+      if (res2.ok) {
+        setBalance(data2.balance);
 
-        const data2 = (await res2.json()) as User;
-        if (res2.ok) {
-          setBalance(data2.balance);
+        setCurrentStatus('getOn');
 
-          setCurrentStatus('getOn');
-          updateDisplay();
-        }
+        setTimeout(() => {
+          setCurrentStatus('standby-getOn');
+        }, 5000);
       }
     }
   };
+
+  useEffect(() => {
+    updateDisplay();
+  }, [currentStatus, updateDisplay]);
 
   const customTracker = (detectedCodes: IDetectedBarcode[], ctx: CanvasRenderingContext2D) => {
     detectedCodes.forEach((code) => {
@@ -278,7 +268,40 @@ const ReaderPage = () => {
         <div className="h-[8%] bg-white"></div>
         <div className="bg-gray-900 shrink">
           <Scanner
-            onScan={handleScan}
+            onScan={(detectedCodes: IDetectedBarcode[]) => {
+              if (detectedCodes.length > 0) {
+                setScanResult({
+                  format: detectedCodes[0].format,
+                  rawValue: detectedCodes[0].rawValue
+                });
+
+                switch (scanResult.rawValue) {
+                  case lastUUID:
+                    console.log('The UUID is duplicated with the last one. Skip.');
+                    return;
+                  case null:
+                    console.log('The UUID is null. Skip.');
+                    return;
+                  case undefined:
+                    console.log('The UUID is undefined. Skip.');
+                    return;
+                  case '':
+                    console.log('The UUID is empty. Skip.');
+                    return;
+                  default:
+                    break;
+                }
+
+                setLastUUID(scanResult.rawValue);
+                setTimeout(() => {
+                  console.log('reset last uuid');
+                  setLastUUID(null);
+                }, 3000);
+
+                setCurrentStatus('isReading');
+                handleScan();
+              }
+            }}
             formats={['qr_code', 'micro_qr_code']}
             allowMultiple
             // paused={isReaderPaused}
