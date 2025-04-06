@@ -4,12 +4,14 @@ import '../styles/reader.css';
 import { BACKEND_ENDPOINT } from '../const';
 import Ticket from '../types/Ticket';
 import User from '../types/User';
+import { useSearchParams } from 'react-router-dom';
 
 type ReaderStatus = {
   status: 'getOn' | 'getOff' | 'standby' | 'standby-getOn' | 'standby-getOff';
-  mode: 'getOn' | 'getOff' | 'getOnOff';
   is_reading: false;
 };
+
+type ReaderMode = 'getOn' | 'getOff' | 'getOnOff' | null;
 
 const ReaderPage = () => {
   const [scanResult, setScanResult] = useState({ format: '', rawValue: '' });
@@ -18,6 +20,8 @@ const ReaderPage = () => {
   const [lastUUID, setLastUUID] = useState<string | null>(null);
   const [headerText, setHeaderText] = useState<string>('兼用');
   const [headerCss, setHeaderCss] = useState<string>('text-blue-400');
+
+  const [params] = useSearchParams();
 
   const tableTopPaid = (
     <tr className="">
@@ -39,7 +43,7 @@ const ReaderPage = () => {
         <p className="reader-text reader-text-left">整理券No.</p>
       </td>
       <td className="reader-right">
-        <p className="reader-text reader-text-right">{0}</p>
+        <p className="reader-text reader-text-right">{params.get('stop_id') ?? '未指定'}</p>
       </td>
     </tr>
   );
@@ -101,9 +105,25 @@ const ReaderPage = () => {
 
   const currentStatus: ReaderStatus = {
     status: 'standby',
-    mode: 'getOnOff',
     is_reading: false
   };
+
+  const setReaderMode = (): ReaderMode => {
+    const mode = params.get('mode');
+
+    switch (mode) {
+      case 'getOn':
+        return 'getOn';
+      case 'getOff':
+        return 'getOff';
+      case 'getOnOff':
+        return 'getOnOff';
+      default:
+        return null;
+    }
+  };
+
+  const readerMode: ReaderMode = setReaderMode();
 
   useEffect(() => {
     const timer = setTimeout(() => {
