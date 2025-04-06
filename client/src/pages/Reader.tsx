@@ -1,5 +1,5 @@
 import { Scanner, IDetectedBarcode } from '@yudiel/react-qr-scanner';
-import { ReactElement, useEffect, useState } from 'react';
+import { ReactElement, useEffect, useRef, useState } from 'react';
 import '../styles/reader.css';
 import { BACKEND_ENDPOINT } from '../const';
 import Ticket from '../types/Ticket';
@@ -19,6 +19,8 @@ const ReaderPage = () => {
   const [currentStatus, setCurrentStatus] = useState<ReaderStatus>('standby');
 
   const [params] = useSearchParams();
+
+  const isFirstRender = useRef(true);
 
   const tableTopPaid = (
     <tr className="">
@@ -107,11 +109,11 @@ const ReaderPage = () => {
     const mode = params.get('mode');
 
     switch (mode) {
-      case 'getOn':
+      case 'get-on':
         return 'getOn';
-      case 'getOff':
+      case 'get-off':
         return 'getOff';
-      case 'getOnOff':
+      case 'get-on-off':
         return 'getOnOff';
       default:
         return null;
@@ -171,6 +173,11 @@ const ReaderPage = () => {
   };
 
   useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+
     const timer = setTimeout(() => {
       console.log('reset last uuid');
       setLastUUID(null);
