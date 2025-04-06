@@ -7,7 +7,7 @@ import User from '../types/User';
 import { useSearchParams } from 'react-router-dom';
 
 type ReaderStatus = 'getOn' | 'getOff' | 'standby' | 'standby-getOn' | 'standby-getOff' | 'isReading';
-// type ReaderMode = 'getOn' | 'getOff' | 'getOnOff' | null;
+type ReaderMode = 'get-on' | 'get-off' | 'get-on-off';
 
 const ReaderPage = () => {
   const [scanResult, setScanResult] = useState({ format: '', rawValue: '' });
@@ -17,6 +17,7 @@ const ReaderPage = () => {
   const [headerText, setHeaderText] = useState<string>('兼用');
   const [headerCss, setHeaderCss] = useState<string>('text-blue-400');
   const [currentStatus, setCurrentStatus] = useState<ReaderStatus>('standby');
+  const [currentMode, setCurrentMode] = useState<ReaderMode>("get-on-off");
 
   const [params] = useSearchParams();
 
@@ -124,23 +125,6 @@ const ReaderPage = () => {
   const [tableMiddle, setTableMiddle] = useState<ReactElement>(tableNullRow);
   const [tableBottom, setTableBottom] = useState<ReactElement>(tableBottomWelcome);
 
-  // const setReaderMode = (): ReaderMode => {
-  //   const mode = params.get('mode');
-
-  //   switch (mode) {
-  //     case 'get-on':
-  //       return 'getOn';
-  //     case 'get-off':
-  //       return 'getOff';
-  //     case 'get-on-off':
-  //       return 'getOnOff';
-  //     default:
-  //       return null;
-  //   }
-  // };
-
-  // const readerMode: ReaderMode = setReaderMode();
-
   const updateDisplay = useCallback(() => {
     switch (currentStatus) {
       case 'getOn':
@@ -226,15 +210,44 @@ const ReaderPage = () => {
         setCurrentStatus('getOn');
 
         setTimeout(() => {
-          setCurrentStatus('standby-getOn');
+          switch (currentMode) {
+            default:
+            case 'get-on-off':
+              setCurrentStatus('standby');
+              break;
+            case 'get-on':
+              setCurrentStatus('standby-getOn');
+              break;
+            case 'get-off':
+              setCurrentStatus('standby-getOff');
+              break;
+          }
         }, 5000);
       }
     }
   };
 
   useEffect(() => {
+    switch (currentMode) {
+      default:
+      case 'get-on-off':
+        setCurrentStatus('standby');
+        break;
+      case 'get-on':
+        setCurrentStatus('standby-getOn');
+        break;
+      case 'get-off':
+        setCurrentStatus('standby-getOff');
+        break;
+    }
+
     updateDisplay();
-  }, [currentStatus, updateDisplay]);
+  }, [currentStatus, currentMode, updateDisplay]);
+
+  useEffect(() => {
+    const mode = params.get('mode') as ReaderMode;
+    setCurrentMode(mode);
+  }, [params]);
 
   const customTracker = (detectedCodes: IDetectedBarcode[], ctx: CanvasRenderingContext2D) => {
     detectedCodes.forEach((code) => {
