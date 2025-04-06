@@ -17,7 +17,7 @@ const ReaderPage = () => {
   const [headerText, setHeaderText] = useState<string>('兼用');
   const [headerCss, setHeaderCss] = useState<string>('text-blue-400');
   const [currentStatus, setCurrentStatus] = useState<ReaderStatus>('standby');
-  const [currentMode, setCurrentMode] = useState<ReaderMode>("get-on-off");
+  const [currentMode, setCurrentMode] = useState<ReaderMode>('get-on-off');
 
   const [params] = useSearchParams();
 
