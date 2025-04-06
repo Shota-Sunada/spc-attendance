@@ -4,7 +4,6 @@ import (
 	"context"
 	"database/sql"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"os"
 	"strings"
@@ -16,53 +15,72 @@ import (
 
 var secret []byte
 var db *sql.DB
+var logger Logger
 
 const dbFileName = "db.sqlite3"
 
 func init() {
+	logger.Init()
+	logger.Info("Booting \"BUTSURY DAYS\" server...")
+	logger.Info("Copyright 2025 Shudo Physics Club")
+	logger.Empty()
+	logger.Info("＿人人人人人人人人人人人人人人人人人人人人人人人人＿")
+	logger.Info(">　QRコードは(株)デンソーウェーブの登録商標です　<")
+	logger.Info("￣Y^Y^Y^Y^Y^Y^Y^Y^Y^Y^Y^Y^Y^Y^Y^Y^Y^Y^Y^Y^Y^Y^Y^Y^￣")
+	logger.Empty()
+
+	logger.Info("Starting initializing process...")
+
 	err := godotenv.Load()
 	if err != nil {
-		panic(err)
+		logger.ErrorE(err)
 	}
 
 	secretRaw := os.Getenv("SECRET")
 	if secretRaw == "" {
-		panic("SECRET is not set")
+		logger.Error("SECRET is not set")
 	}
 	secret = []byte(secretRaw)
 
+	logger.Info("Initializing database...")
 	db, err = sql.Open("sqlite3", "db.sqlite3")
 	if err != nil {
-		panic(err)
+		logger.ErrorE(err)
 	}
 
 	defer db.Close()
 
 	_, err = db.Exec(createHistoriesTable)
 	if err != nil {
-		panic(err)
+		logger.ErrorE(err)
 	}
 
 	_, err = db.Exec(createUsersTable)
 	if err != nil {
-		panic(err)
+		logger.ErrorE(err)
 	}
 
 	_, err = db.Exec(createTicketTable)
 	if err != nil {
-		panic(err)
+		logger.ErrorE(err)
 	}
+
+	logger.Info("Initializing process is done.")
 }
 
 func main() {
+	logger.Info("Staring main process...")
+
+	logger.Info("Opening database file")
 	var err error
 	db, err = sql.Open("sqlite3", dbFileName)
 	if err != nil {
-		panic(err)
+		logger.ErrorE(err)
 	}
 
 	defer db.Close()
 
+	logger.Info("Handling \"/api/histories\" function")
 	http.HandleFunc("/api/histories", handleCORS(func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case http.MethodGet:
@@ -74,8 +92,10 @@ func main() {
 		}
 	}))
 
+	logger.Info("Handling \"/api/me\" function")
 	http.HandleFunc("/api/me", handleCORS(handleAuthRequire(getMe)))
 
+	logger.Info("Handling \"/login\" function")
 	http.HandleFunc("/login", handleCORS(func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case http.MethodPost:
@@ -85,6 +105,7 @@ func main() {
 		}
 	}))
 
+	logger.Info("Handling \"/register\" function")
 	http.HandleFunc("/register", handleCORS(func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case http.MethodPost:
@@ -94,6 +115,7 @@ func main() {
 		}
 	}))
 
+	logger.Info("Handling \"/api/tickets\" function")
 	http.HandleFunc("/api/tickets", handleCORS(func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case http.MethodPost:
@@ -103,6 +125,7 @@ func main() {
 		}
 	}))
 
+	logger.Info("Handling \"/api/useTicket\" function")
 	http.HandleFunc("/useTicket", handleCORS(func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case http.MethodPost:
@@ -112,6 +135,7 @@ func main() {
 		}
 	}))
 
+	logger.Info("Handling \"/api/users\" function")
 	http.HandleFunc("/api/users", handleCORS(func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case http.MethodPost:
@@ -121,7 +145,7 @@ func main() {
 		}
 	}))
 
-	fmt.Println("Server is booted. Endpoint: http://localhost:8080")
+	logger.Info("Server is booted. Endpoint: http://localhost:8080")
 	http.ListenAndServe(":8080", nil)
 }
 
@@ -146,7 +170,7 @@ func respondJSON(w http.ResponseWriter, status int, payload interface{}) {
 	w.WriteHeader(status)
 
 	if err := json.NewEncoder(w).Encode(payload); err != nil {
-		panic(err)
+		logger.ErrorE(err)
 	}
 }
 

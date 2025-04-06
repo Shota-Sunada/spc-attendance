@@ -36,8 +36,8 @@ type History struct {
 func getHistories(w http.ResponseWriter, r *http.Request) {
 	rows, err := db.Query(selectHistories)
 	if err != nil {
-		println("The bad request is occurred: getHistories-Query")
-		println(err.Error())
+		logger.Error("The bad request is occurred: getHistories-Query")
+		logger.ErrorE(err)
 		respondJSON(w, http.StatusBadRequest, err.Error())
 		return
 	}
@@ -49,8 +49,8 @@ func getHistories(w http.ResponseWriter, r *http.Request) {
 		var history History
 		err := rows.Scan(&history.ID, &history.GetOnID, &history.GetOffID, &history.Date, &history.Fair, &history.Balance, &history.TypeID)
 		if err != nil {
-			println("The internal server error is occurred: getHistories-Scan")
-			println(err.Error())
+			logger.Error("The internal server error is occurred: getHistories-Scan")
+			logger.ErrorE(err)
 			respondJSON(w, http.StatusInternalServerError, err.Error())
 			return
 		}
@@ -63,8 +63,8 @@ func getHistories(w http.ResponseWriter, r *http.Request) {
 func createHistory(w http.ResponseWriter, r *http.Request) {
 	var history History
 	if err := decodeBody(r, &history); err != nil {
-		println("The bad request is occurred: createHistory-decodeBody")
-		println(err.Error())
+		logger.Error("The bad request is occurred: createHistory-decodeBody")
+		logger.ErrorE(err)
 		respondJSON(w, http.StatusBadRequest, err.Error())
 		return
 	}
@@ -73,16 +73,16 @@ func createHistory(w http.ResponseWriter, r *http.Request) {
 
 	result, err := db.Exec(insertHistory, history.GetOnID, history.GetOffID, now, history.Fair, history.Balance, history.TypeID)
 	if err != nil {
-		println("The internal server error is occurred: createHistory-Exec")
-		println(err.Error())
+		logger.Error("The internal server error is occurred: createHistory-Exec")
+		logger.ErrorE(err)
 		respondJSON(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 
 	id, err := result.LastInsertId()
 	if err != nil {
-		println("The internal server error is occurred: createHistory-LastInsertId")
-		println(err.Error())
+		logger.Error("The internal server error is occurred: createHistory-LastInsertId")
+		logger.ErrorE(err)
 		respondJSON(w, http.StatusInternalServerError, err.Error())
 		return
 	}

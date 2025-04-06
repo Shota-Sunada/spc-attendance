@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 	"time"
 
@@ -36,8 +37,8 @@ type Ticket struct {
 func issueTicket(w http.ResponseWriter, r *http.Request) {
 	var ticket Ticket
 	if err := decodeBody(r, &ticket); err != nil {
-		println("The bad request is occurred: issueTicket-decodeBody")
-		println(err.Error())
+		logger.Error("The bad request is occurred: issueTicket-decodeBody")
+		logger.ErrorE(err)
 		respondJSON(w, http.StatusBadRequest, err.Error())
 		return
 	}
@@ -47,16 +48,16 @@ func issueTicket(w http.ResponseWriter, r *http.Request) {
 
 	result, err := db.Exec(insertTicket, ticket.UserId, uuid.String(), false, limit)
 	if err != nil {
-		println("The internal server error is occurred: issueTicket-Exec")
-		println(err.Error())
+		logger.Error("The internal server error is occurred: issueTicket-Exec")
+		logger.ErrorE(err)
 		respondJSON(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 
 	id, err := result.LastInsertId()
 	if err != nil {
-		println("The internal server error is occurred: issueTicket-LastInsertId")
-		println(err.Error())
+		logger.Error("The internal server error is occurred: issueTicket-LastInsertId")
+		logger.ErrorE(err)
 		respondJSON(w, http.StatusInternalServerError, err.Error())
 		return
 	}
@@ -64,18 +65,13 @@ func issueTicket(w http.ResponseWriter, r *http.Request) {
 	ticket.Uuid = uuid.String()
 	ticket.DateLimit = limit.Format("2006-01-02 15:04:05")
 
-	println("========= The new ticket was issued.=========")
-	print("ID: ")
-	println(ticket.ID)
-	print("UserID: ")
-	println(ticket.UserId)
-	print("UUID: ")
-	println(ticket.Uuid)
-	print("Disabled: ")
-	println(ticket.Disabled)
-	print("Limit: ")
-	println(ticket.DateLimit)
-	println("=============================================")
+	logger.Info("========= The new ticket was issued.=========")
+	logger.Info(fmt.Sprintf("ID: %d", ticket.ID))
+	logger.Info(fmt.Sprintf("UserID: %d", ticket.UserId))
+	logger.Info(fmt.Sprintf("UUID: %s", ticket.Uuid))
+	logger.Info(fmt.Sprintf("Disabled: %t", ticket.Disabled))
+	logger.Info(fmt.Sprintf("Limit: %s", ticket.DateLimit))
+	logger.Info("=============================================")
 
 	respondJSON(w, http.StatusCreated, ticket)
 }
@@ -83,8 +79,8 @@ func issueTicket(w http.ResponseWriter, r *http.Request) {
 func useTicket(w http.ResponseWriter, r *http.Request) {
 	var arg Ticket
 	if err := decodeBody(r, &arg); err != nil {
-		println("The bad request is occurred: useTicket-decodeBody")
-		println(err.Error())
+		logger.Error("The bad request is occurred: useTicket-decodeBody")
+		logger.ErrorE(err)
 		respondJSON(w, http.StatusBadRequest, err.Error())
 		return
 	}
@@ -93,26 +89,25 @@ func useTicket(w http.ResponseWriter, r *http.Request) {
 	var ticket Ticket
 	err := row.Scan(&ticket.ID, &ticket.UserId, &ticket.Uuid, &ticket.Disabled, &ticket.DateLimit)
 	if err != nil {
-		println("The internal server error is occurred: useTicket-Scan")
-		println(err.Error())
+		logger.Error("The internal server error is occurred: useTicket-Scan")
+		logger.ErrorE(err)
 		respondJSON(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	println("The ticket was used by user.")
-	print("UUID: ")
-	println(ticket.Uuid)
+	logger.Info("The ticket was used by user.")
+	logger.Info(fmt.Sprintf("UUID: %s", ticket.Uuid))
 
 	if ticket.Disabled {
-		println("But the ticket was already used.")
+		logger.Warn("But the ticket was already used.")
 		respondJSON(w, http.StatusContinue, nil)
 		return
 	}
 
 	_, err = db.Exec(updateTicketDisabled, ticket.Uuid)
 	if err != nil {
-		println("The internal server error is occurred: useTicket-Exec")
-		println(err.Error())
+		logger.Error("The internal server error is occurred: useTicket-Exec")
+		logger.ErrorE(err)
 		respondJSON(w, http.StatusInternalServerError, err.Error())
 		return
 	}
