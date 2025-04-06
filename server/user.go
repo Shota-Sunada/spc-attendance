@@ -39,6 +39,8 @@ type User struct {
 func registerUser(w http.ResponseWriter, r *http.Request) {
 	var user User
 	if err := decodeBody(r, &user); err != nil {
+		println("The bad request is occurred: registerUser-decodeBody")
+		println(err.Error())
 		respondJSON(w, http.StatusBadRequest, err.Error())
 		return
 	}
@@ -47,18 +49,24 @@ func registerUser(w http.ResponseWriter, r *http.Request) {
 
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
 	if err != nil {
+		println("The internal server error is occurred: registerUser-GenerateFromPassword")
+		println(err.Error())
 		respondJSON(w, http.StatusInternalServerError, map[string]string{"message": "内部サーバーエラー: エラーコード1"})
 		return
 	}
 
 	result, err := db.Exec(insertUser, user.Name, string(hashedPassword), user.IsAdmin, 0, false, now)
 	if err != nil {
+		println("The internal server error is occurred: registerUser-Exec")
+		println(err.Error())
 		respondJSON(w, http.StatusInternalServerError, map[string]string{"message": "内部サーバーエラー: エラーコード2"})
 		return
 	}
 
 	id, err := result.LastInsertId()
 	if err != nil {
+		println("The internal server error is occurred: registerUser-LastInsertId")
+		println(err.Error())
 		respondJSON(w, http.StatusInternalServerError, map[string]string{"message": "内部サーバーエラー: エラーコード3"})
 		return
 	}
@@ -75,7 +83,9 @@ func registerUser(w http.ResponseWriter, r *http.Request) {
 
 	tokenString, err := token.SignedString(secret)
 	if err != nil {
-		respondJSON(w, http.StatusBadRequest, map[string]string{"message": "内部サーバーエラー: エラーコード4"})
+		println("The internal server error is occurred: registerUser-SignedString")
+		println(err.Error())
+		respondJSON(w, http.StatusInternalServerError, map[string]string{"message": "内部サーバーエラー: エラーコード4"})
 		return
 	}
 
@@ -88,6 +98,8 @@ func registerUser(w http.ResponseWriter, r *http.Request) {
 func loginUser(w http.ResponseWriter, r *http.Request) {
 	var user User
 	if err := decodeBody(r, &user); err != nil {
+		println("The bad request is occurred: loginUser-decodeBody")
+		println(err.Error())
 		respondJSON(w, http.StatusBadRequest, "不正なリクエストです。")
 		return
 	}
@@ -96,11 +108,15 @@ func loginUser(w http.ResponseWriter, r *http.Request) {
 	var temp User
 	err := row.Scan(&temp.ID, &temp.Name, &temp.Password, &temp.IsAdmin, &temp.Balance, &temp.IsGettingOn, &temp.CreatedAt)
 	if err != nil {
+		println("The bad request is occurred: loginUser-IDorPS")
+		println(err.Error())
 		respondJSON(w, http.StatusBadRequest, map[string]string{"message": "IDまたはパスワードが間違っています。"})
 		return
 	}
 
 	if err := bcrypt.CompareHashAndPassword([]byte(temp.Password), []byte(user.Password)); err != nil {
+		println("The bad request is occurred: loginUser-IDorPS")
+		println(err.Error())
 		respondJSON(w, http.StatusBadRequest, map[string]string{"message": "IDまたはパスワードが間違っています。"})
 		return
 	}
@@ -114,7 +130,9 @@ func loginUser(w http.ResponseWriter, r *http.Request) {
 
 	tokenString, err := token.SignedString(secret)
 	if err != nil {
-		respondJSON(w, http.StatusBadRequest, map[string]string{"message": "内部サーバーエラー: エラーコード5"})
+		println("The internal server error is occurred: loginUser-SignedString")
+		println(err.Error())
+		respondJSON(w, http.StatusInternalServerError, map[string]string{"message": "内部サーバーエラー: エラーコード5"})
 		return
 	}
 
@@ -133,7 +151,9 @@ func getMe(w http.ResponseWriter, r *http.Request) {
 	var user User
 	err := row.Scan(&user.ID, &user.Name, &user.Password, &user.IsAdmin, &user.Balance, &user.IsGettingOn, &user.CreatedAt)
 	if err != nil {
-		respondJSON(w, http.StatusBadRequest, err.Error())
+		println("The internal server error is occurred: getMe-Scan")
+		println(err.Error())
+		respondJSON(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 
@@ -145,6 +165,8 @@ func getMe(w http.ResponseWriter, r *http.Request) {
 func getUserById(w http.ResponseWriter, r *http.Request) {
 	var arg User
 	if err := decodeBody(r, &arg); err != nil {
+		println("The internal server error is occurred: getUserById-decodeBody")
+		println(err.Error())
 		respondJSON(w, http.StatusBadRequest, err.Error())
 		return
 	}
@@ -153,7 +175,9 @@ func getUserById(w http.ResponseWriter, r *http.Request) {
 	var user User
 	err := row.Scan(&user.ID, &user.Name, &user.Password, &user.IsAdmin, &user.Balance, &user.IsGettingOn, &user.CreatedAt)
 	if err != nil {
-		respondJSON(w, http.StatusBadRequest, err.Error())
+		println("The internal server error is occurred: getUserById-Scan")
+		println(err.Error())
+		respondJSON(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 

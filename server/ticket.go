@@ -32,6 +32,8 @@ type Ticket struct {
 func issueTicket(w http.ResponseWriter, r *http.Request) {
 	var ticket Ticket
 	if err := decodeBody(r, &ticket); err != nil {
+		println("The bad request is occurred: issueTicket-decodeBody")
+		println(err.Error())
 		respondJSON(w, http.StatusBadRequest, err.Error())
 		return
 	}
@@ -41,12 +43,18 @@ func issueTicket(w http.ResponseWriter, r *http.Request) {
 
 	result, err := db.Exec(insertTicket, ticket.UserId, uuid.String(), now)
 	if err != nil {
-		panic(err)
+		println("The internal server error is occurred: issueTicket-Exec")
+		println(err.Error())
+		respondJSON(w, http.StatusInternalServerError, err.Error())
+		return
 	}
 
 	id, err := result.LastInsertId()
 	if err != nil {
-		panic(err)
+		println("The internal server error is occurred: issueTicket-LastInsertId")
+		println(err.Error())
+		respondJSON(w, http.StatusInternalServerError, err.Error())
+		return
 	}
 	ticket.ID = int(id)
 	ticket.Uuid = uuid.String()
@@ -58,6 +66,8 @@ func issueTicket(w http.ResponseWriter, r *http.Request) {
 func useTicket(w http.ResponseWriter, r *http.Request) {
 	var arg Ticket
 	if err := decodeBody(r, &arg); err != nil {
+		println("The bad request is occurred: useTicket-decodeBody")
+		println(err.Error())
 		respondJSON(w, http.StatusBadRequest, err.Error())
 		return
 	}
@@ -66,7 +76,9 @@ func useTicket(w http.ResponseWriter, r *http.Request) {
 	var ticket Ticket
 	err := row.Scan(&ticket.ID, &ticket.UserId, &ticket.Uuid, &ticket.DateLimit)
 	if err != nil {
-		respondJSON(w, http.StatusBadRequest, err.Error())
+		println("The internal server error is occurred: useTicket-Scan")
+		println(err.Error())
+		respondJSON(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 

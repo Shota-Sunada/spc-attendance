@@ -164,13 +164,13 @@ func handleAuthRequire(h http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		authorizationHeader := r.Header.Get("Authorization")
 		if authorizationHeader == "" {
-			respondJSON(w, http.StatusUnauthorized, "no token")
+			respondJSON(w, http.StatusUnauthorized, "No token is set.")
 			return
 		}
 
 		bearerToken := strings.Split(authorizationHeader, " ")
 		if len(bearerToken) != 2 {
-			respondJSON(w, http.StatusUnauthorized, "invalid token")
+			respondJSON(w, http.StatusUnauthorized, "Invalid token was sent.")
 			return
 		}
 
@@ -186,12 +186,12 @@ func handleAuthRequire(h http.HandlerFunc) http.HandlerFunc {
 
 		claims, ok := token.Claims.(jwt.MapClaims)
 		if !ok {
-			respondJSON(w, http.StatusUnauthorized, "invalid token")
+			respondJSON(w, http.StatusUnauthorized, "Invalid token was sent.")
 			return
 		}
 		userID, ok := claims["user_id"].(float64)
 		if !ok {
-			respondJSON(w, http.StatusUnauthorized, "invalid token")
+			respondJSON(w, http.StatusUnauthorized, "Invalid token was sent.")
 			return
 		}
 
