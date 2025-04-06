@@ -18,7 +18,7 @@ const ReaderPage = () => {
   const [headerCss, setHeaderCss] = useState<string>('text-blue-400');
   const [currentStatus, setCurrentStatus] = useState<ReaderStatus>('standby');
   const [currentMode, setCurrentMode] = useState<ReaderMode>('get-on-off');
-  // const [readHistory, setReadHistory] = useState<string[]>([]);
+  const [readHistory, setReadHistory] = useState<string[]>([]);
 
   const [params] = useSearchParams();
 
@@ -337,13 +337,28 @@ const ReaderPage = () => {
                     break;
                 }
 
-                // if (readHistory.includes(scanResult.rawValue)) {
-                //   console.log('The UUID was not judged for valid, but its was contained in history. Skip.');
-                //   setCurrentStatus('error');
-                //   return;
-                // } else {
-                //   setReadHistory([...readHistory, scanResult.rawValue]);
-                // }
+                if (readHistory.includes(scanResult.rawValue)) {
+                  console.log('The UUID was not judged for valid, but its was contained in history. Skip.');
+                  setCurrentStatus('error');
+
+                  setTimeout(() => {
+                    switch (currentMode) {
+                      default:
+                      case 'get-on-off':
+                        setCurrentStatus('standby');
+                        break;
+                      case 'get-on':
+                        setCurrentStatus('standby-getOn');
+                        break;
+                      case 'get-off':
+                        setCurrentStatus('standby-getOff');
+                        break;
+                    }
+                  }, 5000);
+                  return;
+                } else {
+                  setReadHistory([...readHistory, scanResult.rawValue]);
+                }
 
                 setLastUUID(scanResult.rawValue);
                 setTimeout(() => {
