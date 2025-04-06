@@ -196,18 +196,15 @@ const ReaderPage = () => {
         rawValue: results[0].rawValue
       });
 
-      if (scanResult.rawValue == lastUUID) return;
-
-      console.log(`rawValue: ${scanResult.rawValue}`);
-      console.log(`lastUUID: ${lastUUID}`);
-
-      setCurrentStatus('isReading');
-      updateDisplay();
+      if (scanResult.rawValue == lastUUID || scanResult.rawValue == null || scanResult.rawValue == undefined || scanResult.rawValue == '') return;
 
       setLastUUID(scanResult.rawValue);
       const payload = {
-        uuid: lastUUID
+        uuid: scanResult.rawValue
       };
+
+      setCurrentStatus('isReading');
+      updateDisplay();
 
       const res = await fetch(`${BACKEND_ENDPOINT}/useTicket`, {
         method: 'POST',
