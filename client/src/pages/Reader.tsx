@@ -6,7 +6,7 @@ import Ticket from '../types/Ticket';
 import User from '../types/User';
 import { useSearchParams } from 'react-router-dom';
 
-type ReaderStatus = 'getOn' | 'getOff' | 'standby' | 'standby-getOn' | 'standby-getOff' | 'isReading';
+type ReaderStatus = 'getOn' | 'getOff' | 'standby' | 'standby-getOn' | 'standby-getOff' | 'isReading' | 'error';
 type ReaderMode = 'get-on' | 'get-off' | 'get-on-off';
 
 const ReaderPage = () => {
@@ -121,6 +121,17 @@ const ReaderPage = () => {
     []
   );
 
+  const tableError = useCallback(
+    () => (
+      <tr className="bg-red-800">
+        <td className="reader-left" colSpan={2}>
+          <p className="reader-text text-center text-2xl text-gray-800">エラーが発生しました。</p>
+        </td>
+      </tr>
+    ),
+    []
+  );
+
   const [tableTop, setTableTop] = useState<ReactElement>(tableTopNumber);
   const [tableMiddle, setTableMiddle] = useState<ReactElement>(tableNullRow);
   const [tableBottom, setTableBottom] = useState<ReactElement>(tableBottomWelcome);
@@ -165,6 +176,10 @@ const ReaderPage = () => {
       case 'isReading':
         setTableBottom(tableBottomWait);
         break;
+      case 'error':
+        setTableMiddle(tableError);
+        setTableBottom(tableNullRow);
+        break;
       default:
         setHeaderText('ヘッダー取得エラー');
         setHeaderCss('bg-blue-400 text-white');
@@ -173,7 +188,17 @@ const ReaderPage = () => {
         setTableBottom(tableNullRow);
         break;
     }
-  }, [currentStatus, tableBottomLimit, tableBottomWait, tableBottomWelcome, tableMiddleBalance, tableTopNumber, tableTopPaid, tableNullRow]);
+  }, [
+    currentStatus,
+    tableBottomLimit,
+    tableBottomWait,
+    tableBottomWelcome,
+    tableMiddleBalance,
+    tableTopNumber,
+    tableTopPaid,
+    tableNullRow,
+    tableError
+  ]);
 
   const handleScan = async () => {
     console.log('handle scan');
@@ -192,38 +217,42 @@ const ReaderPage = () => {
 
     const data = (await res.json()) as Ticket;
     if (res.ok) {
-      const payload2 = {
-        id: data.user_id
-      };
-      const res2 = await fetch(`${BACKEND_ENDPOINT}/api/users`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(payload2)
-      });
+      if (data == null) {
+        setCurrentStatus('error');
+      } else {
+        const payload2 = {
+          id: data.user_id
+        };
+        const res2 = await fetch(`${BACKEND_ENDPOINT}/api/users`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(payload2)
+        });
 
-      const data2 = (await res2.json()) as User;
-      if (res2.ok) {
-        setBalance(data2.balance);
+        const data2 = (await res2.json()) as User;
+        if (res2.ok) {
+          setBalance(data2.balance);
 
-        setCurrentStatus('getOn');
-
-        setTimeout(() => {
-          switch (currentMode) {
-            default:
-            case 'get-on-off':
-              setCurrentStatus('standby');
-              break;
-            case 'get-on':
-              setCurrentStatus('standby-getOn');
-              break;
-            case 'get-off':
-              setCurrentStatus('standby-getOff');
-              break;
-          }
-        }, 5000);
+          setCurrentStatus('getOn');
+        }
       }
+
+      setTimeout(() => {
+        switch (currentMode) {
+          default:
+          case 'get-on-off':
+            setCurrentStatus('standby');
+            break;
+          case 'get-on':
+            setCurrentStatus('standby-getOn');
+            break;
+          case 'get-off':
+            setCurrentStatus('standby-getOff');
+            break;
+        }
+      }, 5000);
     }
   };
 
@@ -240,7 +269,9 @@ const ReaderPage = () => {
         setCurrentStatus('standby-getOff');
         break;
     }
+  }, [currentMode]);
 
+  useEffect(() => {
     updateDisplay();
   }, [currentStatus, currentMode, updateDisplay]);
 
@@ -317,6 +348,7 @@ const ReaderPage = () => {
             }}
             formats={['qr_code', 'micro_qr_code']}
             allowMultiple
+            scanDelay={5000}
             // paused={isReaderPaused}
             components={{
               tracker: customTracker,
