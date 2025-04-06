@@ -4,6 +4,8 @@ import (
 	"net/http"
 	"time"
 
+	"fmt"
+
 	"github.com/google/uuid"
 )
 
@@ -60,6 +62,17 @@ func issueTicket(w http.ResponseWriter, r *http.Request) {
 	ticket.Uuid = uuid.String()
 	ticket.DateLimit = now.Format("2006-01-02 15:04:05")
 
+	println("========= The new ticket was issued.=========")
+	print("ID: ")
+	println(fmt.Sprint(ticket.ID))
+	print("UserID: ")
+	println(fmt.Sprint(ticket.UserId))
+	print("UUID: ")
+	println(ticket.Uuid)
+	print("Limit: ")
+	println(ticket.DateLimit)
+	println("=============================================")
+
 	respondJSON(w, http.StatusCreated, ticket)
 }
 
@@ -71,6 +84,10 @@ func useTicket(w http.ResponseWriter, r *http.Request) {
 		respondJSON(w, http.StatusBadRequest, err.Error())
 		return
 	}
+
+	println("The ticket was used by user.")
+	print("UUID: ")
+	println(arg.Uuid)
 
 	row := db.QueryRow(selectTicketByUUID, arg.Uuid)
 	var ticket Ticket
