@@ -36,7 +36,7 @@ const ReaderPage = () => {
 
   const tableTopNumber = (
     <tr className="">
-      <td className="reader-left">
+      <td className="reader-left border-r-[1px] border-gray-500">
         <p className="reader-text reader-text-left">整理券No.</p>
       </td>
       <td className="reader-right">
@@ -47,7 +47,7 @@ const ReaderPage = () => {
 
   const tableMiddleBalance = (
     <tr className="bg-blue-400">
-      <td className="reader-left">
+      <td className="reader-left border-r-[1px] border-gray-500">
         <p className="reader-text reader-text-left">残額</p>
       </td>
       <td className="reader-right">
@@ -61,7 +61,7 @@ const ReaderPage = () => {
 
   const tableBottomLimit = (
     <tr>
-      <td className="reader-left">
+      <td className="reader-left border-r-[1px] border-gray-500">
         <p className="reader-text reader-text-left">有効期限</p>
       </td>
       <td className="reader-right">
