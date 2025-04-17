@@ -10,7 +10,8 @@ import (
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/joho/godotenv"
-	_ "github.com/mattn/go-sqlite3"
+	_ "github.com/go-sql-driver/mysql"
+	// _ "github.com/mattn/go-sqlite3"
 )
 
 var secret []byte
@@ -69,11 +70,14 @@ func init() {
 }
 
 func main() {
+	dbDriver := "mysql"
+	dsn := "butsury_days:shota0817@(localhost:3306)/butsury_days"
+
 	logger.Info("Staring main process...")
 
 	logger.Info("Opening database file")
 	var err error
-	db, err = sql.Open("sqlite3", dbFileName)
+	db, err = sql.Open(dbDriver, dsn)
 	if err != nil {
 		logger.ErrorE(err)
 	}
