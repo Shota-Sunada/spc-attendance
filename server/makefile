@@ -1,0 +1,2 @@
+start:
+	screen -S BUTSURY-DAYS-SERVER ./BUTSURY-DAYS

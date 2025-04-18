@@ -18,7 +18,8 @@ var secret []byte
 var db *sql.DB
 var logger Logger
 
-const dbFileName = "db.sqlite3"
+const dbDriver = "mysql"
+const dsn = "butsury_days:shota0817@(localhost:3306)/butsury_days"
 
 func init() {
 	logger.Init()
@@ -44,7 +45,7 @@ func init() {
 	secret = []byte(secretRaw)
 
 	logger.Info("Initializing database...")
-	db, err = sql.Open("sqlite3", "db.sqlite3")
+	db, err = sql.Open(dbDriver, dsn)
 	if err != nil {
 		logger.ErrorE(err)
 	}
@@ -70,9 +71,6 @@ func init() {
 }
 
 func main() {
-	dbDriver := "mysql"
-	dsn := "butsury_days:shota0817@(localhost:3306)/butsury_days"
-
 	logger.Info("Staring main process...")
 
 	logger.Info("Opening database file")
