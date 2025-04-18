@@ -15,7 +15,7 @@ interface UserResponed {
 
 const LoginRegister = ({ setUser }: SetUserProps) => {
   const [isRegister, setIsRegister] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
+  // const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -69,7 +69,7 @@ const LoginRegister = ({ setUser }: SetUserProps) => {
           {isRegister ? '登録' : 'ログイン'}
         </button>
       </form>
-      {error && <p>{error}</p>}
+      {/* {error && <p>{error}</p>} */}
     </div>
   );
 };
