@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { BACKEND_ENDPOINT } from '../const';
 import User from '../types/User';
+import "../styles/login-register.css"
 
 export interface SetUserProps {
   setUser: React.Dispatch<React.SetStateAction<User | null>>;
@@ -26,7 +27,7 @@ const LoginRegister = ({ setUser }: SetUserProps) => {
     e.currentTarget.reset();
   };
 
-  const register = async (name: string, password: string) => {
+  const register = async (name: string, password: string) => {   
     const payload = {
       name: name,
       password: password,
@@ -74,16 +75,16 @@ const LoginRegister = ({ setUser }: SetUserProps) => {
   };
 
   return (
-    <>
-      <h2>{isRegister ? '新規登録' : 'ログイン'}</h2>
-      <button onClick={() => setIsRegister(!isRegister)}>{isRegister ? 'ログイン' : '新規登録'}</button>
-      <form onSubmit={handleSubmit}>
-        <input name="name" type="text" placeholder="ユーザー名" />
-        <input name="password" type="password" placeholder="パスワード" />
-        <button type="submit">{isRegister ? '登録' : 'ログイン'}</button>
+    <div className='m-[20%] flex flex-col justify-center items-center'>
+      <h2 className='text-[200%]'>{isRegister ? '新規登録' : 'ログイン'}</h2>
+      <button className='m-[10px] text-[2vh] px-[3vh] py-[1vh] border-[1px] rounded-[10px]' onClick={() => setIsRegister(!isRegister)}>{isRegister ? 'ログイン' : '新規登録'}</button>
+      <form className='flex flex-col justify-center items-center' onSubmit={handleSubmit}>
+        <input name="name" type="text" placeholder="ユーザー名"  required/>
+        <input name="password" type="password" placeholder="パスワード"  required/>
+        <button className='m-[10px] text-[2vh] px-[20%] py-[10%] border-[1px] rounded-[10px]' type="submit">{isRegister ? '登録' : 'ログイン'}</button>
       </form>
       {error && <p>{error}</p>}
-    </>
+    </div>
   );
 };
 

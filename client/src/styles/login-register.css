@@ -1,0 +1,7 @@
+form > input {
+    border: 1px black solid;
+    border-radius: 10px;
+    padding: 5px;
+    background-color: antiquewhite;
+    margin: 1vh;
+}
