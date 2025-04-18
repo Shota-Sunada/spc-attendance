@@ -75,7 +75,7 @@ const LoginRegister = ({ setUser }: SetUserProps) => {
   };
 
   return (
-    <div className="m-[20%] flex flex-col justify-center items-center">
+    <div className="m-[20vh] flex flex-col justify-center items-center">
       <h2 className="text-[200%]">{isRegister ? '新規登録' : 'ログイン'}</h2>
       <button className="m-[10px] text-[2vh] px-[3vh] py-[1vh] border-[1px] rounded-[10px]" onClick={() => setIsRegister(!isRegister)}>
         {isRegister ? 'ログイン' : '新規登録'}
