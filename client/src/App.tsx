@@ -7,6 +7,7 @@ import LoginRegister from './pages/LoginRegister';
 import User from './types/User';
 import ReaderPage from './pages/Reader';
 import Page404 from './pages/404';
+import ky from 'ky';
 
 export default function App() {
   const [user, setUser] = useState<User | null>(null);
@@ -17,14 +18,14 @@ export default function App() {
       return;
     }
 
-    const res = await fetch(`${BACKEND_ENDPOINT}/api/me`, {
+    const res = await ky.post(`${BACKEND_ENDPOINT}/api/me`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
     });
 
     if (res.ok) {
-      const data = await res.json();
+      const data = await res.json<User>();
       setUser(data);
     } else {
       localStorage.removeItem('token');

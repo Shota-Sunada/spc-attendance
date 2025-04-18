@@ -11,8 +11,8 @@ import (
 const (
 	createTicketTable = `
 		CREATE TABLE IF NOT EXISTS tickets (
-			id			INTEGER PRIMARY KEY AUTOINCREMENT,
-			user_id 	INTEGER NOT NULL,
+			id			INT PRIMARY KEY AUTO_INCREMENT,
+			user_id 	INT NOT NULL,
 			uuid 		TEXT NOT NULL,
 			disabled	BOOLEAN NOT NULL,
 			date_limit	DATETIME DEFAULT CURRENT_TIMESTAMP

@@ -12,11 +12,11 @@ import (
 const (
 	createUsersTable = `
 		CREATE TABLE IF NOT EXISTS users (
-			id 				INTEGER PRIMARY KEY AUTOINCREMENT,
+			id 				INT PRIMARY KEY AUTO_INCREMENT,
 			name	 		TEXT NOT NULL,
 			password 		TEXT NOT NULL,
 			is_admin 		BOOLEAN NOT NULL,
-			balance			INTEGER NOT NULL,
+			balance			INT NOT NULL,
 			is_getting_on	BOOLEAN NOT NULL,
 			created_at 		DATETIME DEFAULT CURRENT_TIMESTAMP
 		)

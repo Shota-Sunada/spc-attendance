@@ -2,9 +2,15 @@ import { useState } from 'react';
 import { BACKEND_ENDPOINT } from '../const';
 import User from '../types/User';
 import '../styles/login-register.css';
+import ky from 'ky';
 
 export interface SetUserProps {
   setUser: React.Dispatch<React.SetStateAction<User | null>>;
+}
+
+interface UserResponed {
+  token: string;
+  user: User;
 }
 
 const LoginRegister = ({ setUser }: SetUserProps) => {
@@ -34,21 +40,9 @@ const LoginRegister = ({ setUser }: SetUserProps) => {
       is_admin: false
     };
 
-    const res = await fetch(`${BACKEND_ENDPOINT}/register`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(payload)
-    });
-
-    const data = await res.json();
-    if (res.ok) {
-      setUser(data.user);
-      localStorage.setItem('token', data.token);
-    } else {
-      setError(data.message);
-    }
+    const data = await ky.post(`${BACKEND_ENDPOINT}/register`, { json: { payload } }).json<UserResponed>();
+    setUser(data.user);
+    localStorage.setItem('token', data.token);
   };
 
   const login = async (name: string, password: string) => {
@@ -57,21 +51,9 @@ const LoginRegister = ({ setUser }: SetUserProps) => {
       password: password
     };
 
-    const res = await fetch(`${BACKEND_ENDPOINT}/login`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(payload)
-    });
-
-    const data = await res.json();
-    if (res.ok) {
-      setUser(data.user);
-      localStorage.setItem('token', data.token);
-    } else {
-      setError(data.error);
-    }
+    const data = await ky.post(`${BACKEND_ENDPOINT}/login`, { json: { payload } }).json<UserResponed>();
+    setUser(data.user);
+    localStorage.setItem('token', data.token);
   };
 
   return (

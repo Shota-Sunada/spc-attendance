@@ -8,13 +8,13 @@ import (
 const (
 	createHistoriesTable = `
 		CREATE TABLE IF NOT EXISTS histories (
-			id 			INTEGER PRIMARY KEY AUTOINCREMENT,
-			get_on_id 	INTEGER NOT NULL,
-			get_off_id 	INTEGER NOT NULL,
+			id 			INT PRIMARY KEY AUTO_INCREMENT,
+			get_on_id 	INT NOT NULL,
+			get_off_id 	INT NOT NULL,
 			date 		DATETIME DEFAULT CURRENT_TIMESTAMP,
-			fair 		INTEGER NOT NULL,
-			balance 	INTEGER NOT NULL,
-			type_id 	INTEGER NOT NULL
+			fair 		INT NOT NULL,
+			balance 	INT NOT NULL,
+			type_id 	INT NOT NULL
 		)
 	`
 

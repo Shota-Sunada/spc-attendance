@@ -3,4 +3,4 @@ server
 .env
 *.exe
 log/*
-./BUTSURY-DAYS
+BUTSURY-DAYS

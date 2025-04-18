@@ -5,6 +5,7 @@ import { BACKEND_ENDPOINT } from '../const';
 import Ticket from '../types/Ticket';
 import User from '../types/User';
 import { useSearchParams } from 'react-router-dom';
+import ky from 'ky';
 
 type ReaderStatus = 'getOn' | 'getOff' | 'standby' | 'standby-getOn' | 'standby-getOff' | 'isReading' | 'error';
 type ReaderMode = 'get-on' | 'get-off' | 'get-on-off';
@@ -208,53 +209,32 @@ const ReaderPage = () => {
       uuid: scanResult.rawValue
     };
 
-    const res = await fetch(`${BACKEND_ENDPOINT}/useTicket`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(payload)
-    });
-
-    const data = (await res.json()) as Ticket;
-    if (res.ok) {
-      if (data == null) {
-        setCurrentStatus('error');
-      } else {
-        const payload2 = {
-          id: data.user_id
-        };
-        const res2 = await fetch(`${BACKEND_ENDPOINT}/api/users`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(payload2)
-        });
-
-        const data2 = (await res2.json()) as User;
-        if (res2.ok) {
-          setBalance(data2.balance);
-
-          setCurrentStatus('getOn');
-        }
-      }
-
-      setTimeout(() => {
-        switch (currentMode) {
-          default:
-          case 'get-on-off':
-            setCurrentStatus('standby');
-            break;
-          case 'get-on':
-            setCurrentStatus('standby-getOn');
-            break;
-          case 'get-off':
-            setCurrentStatus('standby-getOff');
-            break;
-        }
-      }, 5000);
+    const data = await ky.post(`${BACKEND_ENDPOINT}/useTicket`, { json: { payload } }).json<Ticket>();
+    if (data == null) {
+      setCurrentStatus('error');
+    } else {
+      const payload2 = {
+        id: data.user_id
+      };
+      const data2 = await ky.post(`${BACKEND_ENDPOINT}/api/users`, { json: { payload2 } }).json<User>();
+      setBalance(data2.balance);
+      setCurrentStatus('getOn');
     }
+
+    setTimeout(() => {
+      switch (currentMode) {
+        default:
+        case 'get-on-off':
+          setCurrentStatus('standby');
+          break;
+        case 'get-on':
+          setCurrentStatus('standby-getOn');
+          break;
+        case 'get-off':
+          setCurrentStatus('standby-getOff');
+          break;
+      }
+    }, 5000);
   };
 
   useEffect(() => {
