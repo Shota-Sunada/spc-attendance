@@ -23,7 +23,7 @@ const LoginRegister = ({ setUser }: SetUserProps) => {
     const name = formData.get('name') as string;
     const password = formData.get('password') as string;
 
-    setError(null)
+    setError(null);
     setIsNameInvalid(false);
     setIsPasswordInvalid(false);
 
@@ -109,6 +109,7 @@ const LoginRegister = ({ setUser }: SetUserProps) => {
         </button>
         <button
           className="m-[20px] text-[15px] w-[100%] py-[5%] rounded-[20vh] text-white bg-[#3e195b] cursor-pointer"
+          type="button"
           onClick={() => setIsRegister(!isRegister)}>
           {isRegister ? 'ログインの方はこちらから' : '新規登録の方はこちらから'}
         </button>
