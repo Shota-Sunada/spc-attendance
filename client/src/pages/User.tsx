@@ -112,14 +112,14 @@ const UserPage = (props: UserPageProps) => {
           ) : (
             <div
               onClick={onClick}
-              className="bg-purple-900 border-[20px] border-purple-900 rounded-[100%] fixed bottom-[-30px] left-[50%] transform-[translateX(-50%)] cursor-pointer">
+              className="bg-purple-900 border-[20px] border-purple-900 rounded-[100%] fixed bottom-[-30px] left-[50%] transform-[translateX(-50%)] cursor-pointer hover:border-purple-950 hover:bg-purple-950">
               <IoQrCode className="pb-[10px]" color="white" size={'40px'} />
             </div>
           )}
         </div>
       </div>
       {/* メイン画面 */}
-      <div className={isOpened ? 'blur-sm' : ''}>
+      <div className={isOpened ? 'blur-sm transition-[.1s]' : ''}>
         <div className="max-w-[360px] mx-auto">
           <p className="m-[10px] flex items-center justify-center font-medium">{'ホーム'}</p>
           <div className="flex flex-col items-center justify-center">
@@ -131,7 +131,7 @@ const UserPage = (props: UserPageProps) => {
                 {'1,350'}
               </p>
             </div>
-            <p className="text-center m-[10px] py-[8px] w-[200px] rounded-[20px] cursor-pointer text-white bg-[#219bce]">{'チャージする'}</p>
+            <p className="mobiry-button">{'チャージする'}</p>
           </div>
 
           <div className="flex flex-col items-center justify-center mt-[20px]">
@@ -145,7 +145,7 @@ const UserPage = (props: UserPageProps) => {
               start_date="2025.04.24"
               end_date="2025.04.25"
             />
-            <p className="text-center m-[10px] py-[8px] w-[200px] rounded-[20px] cursor-pointer text-white bg-[#219bce]">{'定期券を購入する'}</p>
+            <p className="mobiry-button">{'定期券を購入する'}</p>
           </div>
 
           <div className="m-[10px] flex flex-col items-center justify-center">
