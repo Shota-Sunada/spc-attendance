@@ -8,6 +8,9 @@ import User from './types/User';
 import ReaderPage from './pages/Reader';
 import Page404 from './pages/404';
 import { mediaQuery, UseMediaQuery } from './hooks/UseMediaQuery';
+import UserHeader from './components/UserHeader';
+import Menu from './components/Menu';
+import Charge from './pages/Charge';
 
 export default function App() {
   const isSmartphone = UseMediaQuery(mediaQuery.smartphone);
@@ -41,16 +44,27 @@ export default function App() {
   return (
     <>
       <main>
-        <BrowserRouter>
-          <Routes>
-            <Route
-              path="/"
-              element={user ? <UserPage user={user} setUser={setUser} isSmartphone={isSmartphone} isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} /> : <LoginRegister setUser={setUser} />}></Route>
-            <Route path="/history" element={<History />}></Route>
-            <Route path="/reader" element={<ReaderPage />}></Route>
-            <Route path="/*" element={<Page404 />}></Route>
-          </Routes>
-        </BrowserRouter>
+        <div className="h-[100%] bg-[#f7f4e5]">
+          <BrowserRouter>
+            <UserHeader setUser={setUser} isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
+            <Routes>
+              <Route
+                path="/"
+                element={
+                  user ? (
+                    <UserPage user={user} setUser={setUser} isSmartphone={isSmartphone} isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
+                  ) : (
+                    <LoginRegister setUser={setUser} />
+                  )
+                }></Route>
+              <Route path="/charge" element={<Charge />}></Route>
+              <Route path="/history" element={<History />}></Route>
+              <Route path="/reader" element={<ReaderPage />}></Route>
+              <Route path="/*" element={<Page404 />}></Route>
+            </Routes>
+            <Menu isOpen={isMenuOpen} setIsOpen={setIsMenuOpen} />
+          </BrowserRouter>
+        </div>
       </main>
     </>
   );

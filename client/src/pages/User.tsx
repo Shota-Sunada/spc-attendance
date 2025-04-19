@@ -5,11 +5,10 @@ import { BACKEND_ENDPOINT } from '../const';
 import Ticket from '../types/Ticket';
 import { IoQrCode } from 'react-icons/io5';
 import { TfiReload } from 'react-icons/tfi';
-import UserHeader from '../components/UserHeader';
 import { CommuterTicketCard } from '../components/CommuterTicketCard';
 // import { NoCommuterTicketCard } from '../components/CommuterTicketCard';
 import MobiryButton from '../components/MobiryButton';
-import Menu from '../components/Menu';
+import { useNavigate } from 'react-router-dom';
 
 type UserPageProps = {
   user: User;
@@ -22,6 +21,8 @@ type UserPageProps = {
 const QR_MAX_TIMEOUT_SEC = 300;
 
 const UserPage = (props: UserPageProps) => {
+  const navigate = useNavigate();
+
   const [qr, setQR] = useState<ReactElement | null>(null);
   const [count, setCount] = useState<number>(QR_MAX_TIMEOUT_SEC);
   const [isOpened, setIsOpened] = useState<boolean>(false);
@@ -81,8 +82,7 @@ const UserPage = (props: UserPageProps) => {
   const min = (count - sec) / 60;
 
   return (
-    <div className="h-[100%] bg-[#f7f4e5]">
-      <UserHeader setUser={props.setUser} isMenuOpen={props.isMenuOpen} setIsMenuOpen={props.setIsMenuOpen} />
+    <>
       {/* QRコード */}
       <div className="fixed bottom-[1vh] left-[50%] transform-[translateX(-50%)] bg-white p-[25px] rounded-2xl z-100">
         <div className="flex flex-col items-center justify-center">
@@ -137,7 +137,7 @@ const UserPage = (props: UserPageProps) => {
                 {'1,350'}
               </p>
             </div>
-            <MobiryButton text="チャージする" onClick={() => {}} />
+            <MobiryButton text="チャージする" onClick={() => navigate('/charge')} />
           </div>
 
           <div className="flex flex-col items-center justify-center mt-[20px]">
@@ -152,7 +152,7 @@ const UserPage = (props: UserPageProps) => {
               end_date="2025.04.25"
             />
             {/* <NoCommuterTicketCard /> */}
-            <MobiryButton text="定期券を購入する" onClick={() => {}} />
+            <MobiryButton text="定期券を購入する" onClick={() => navigate("/buy-commuter")} />
           </div>
 
           <div className="m-[10px] flex flex-col items-center justify-center">
@@ -173,9 +173,7 @@ const UserPage = (props: UserPageProps) => {
           </div>
         </div>
       </div>
-      {/* {!props.isSmartphone ? <Menu isOpen={props.isMenuOpen} /> : <></>} */}
-      <Menu isOpen={props.isMenuOpen} setIsOpen={props.setIsMenuOpen} />
-    </div>
+    </>
   );
 };
 
