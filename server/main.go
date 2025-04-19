@@ -215,13 +215,13 @@ func handleAuthRequire(h http.HandlerFunc) http.HandlerFunc {
 			respondJSON(w, http.StatusUnauthorized, "Invalid token was sent.")
 			return
 		}
-		userID, ok := claims["user_id"].(float64)
+		userName, ok := claims["user_name"].(string)
 		if !ok {
 			respondJSON(w, http.StatusUnauthorized, "Invalid token was sent.")
 			return
 		}
 
-		ctx := context.WithValue(r.Context(), AuthCtxKey("user_id"), int(userID))
+		ctx := context.WithValue(r.Context(), AuthCtxKey("user_name"), userName)
 
 		h(w, r.WithContext(ctx))
 	}

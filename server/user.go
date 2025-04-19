@@ -76,8 +76,8 @@ func registerUser(w http.ResponseWriter, r *http.Request) {
 	user.Password = ""
 
 	claims := jwt.MapClaims{
-		"user_id": user.ID,
-		"exp":     time.Now().Add(time.Hour * 72).Unix(),
+		"user_name": user.Name,
+		"exp":       time.Now().Add(time.Hour * 72).Unix(),
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
@@ -132,8 +132,8 @@ func loginUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	claims := jwt.MapClaims{
-		"user_id": temp.ID,
-		"exp":     time.Now().Add(time.Hour * 72).Unix(),
+		"user_name": temp.Name,
+		"exp":       time.Now().Add(time.Hour * 72).Unix(),
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
@@ -158,9 +158,9 @@ func loginUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func getMe(w http.ResponseWriter, r *http.Request) {
-	userID := r.Context().Value(AuthCtxKey("user_id")).(int)
+	userName := r.Context().Value(AuthCtxKey("user_name")).(string)
 
-	row := db.QueryRow(selectUserByName, userID)
+	row := db.QueryRow(selectUserByName, userName)
 	var user User
 	err := row.Scan(&user.ID, &user.Name, &user.Password, &user.IsAdmin, &user.Balance, &user.IsGettingOn, &user.CreatedAt)
 	if err != nil {
