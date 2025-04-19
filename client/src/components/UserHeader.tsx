@@ -18,7 +18,7 @@ const UserHeader = (props: Props) => {
   return (
     <div className="bg-white flex flex-row p-[10px] items-center justify-center">
       <h1 className="p-[10px] cursor-default">{'BUTSURY DAYS'}</h1>
-      <button className="bg-[#008fc0] rounded-[3px] p-[10px] text-white cursor-pointer" onClick={onLogoutClick}>
+      <button className="bg-[#219bce] rounded-[20px] px-[15px] py-[10px] text-white cursor-pointer" onClick={onLogoutClick}>
         {'ログアウト'}
       </button>
     </div>

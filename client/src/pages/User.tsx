@@ -131,7 +131,7 @@ const UserPage = (props: UserPageProps) => {
                 {'1,350'}
               </p>
             </div>
-            <p className="text-center m-[10px] py-[10px] w-[200px] rounded-2xl cursor-pointer text-white bg-[#219bce]">{'チャージする'}</p>
+            <p className="text-center m-[10px] py-[8px] w-[200px] rounded-[20px] cursor-pointer text-white bg-[#219bce]">{'チャージする'}</p>
           </div>
 
           <div className="flex flex-col items-center justify-center mt-[20px]">
@@ -145,7 +145,7 @@ const UserPage = (props: UserPageProps) => {
               start_date="2025.04.24"
               end_date="2025.04.25"
             />
-            <p className="text-center m-[10px] py-[10px] w-[200px] rounded-2xl cursor-pointer text-white bg-[#219bce]">{'定期券を購入する'}</p>
+            <p className="text-center m-[10px] py-[8px] w-[200px] rounded-[20px] cursor-pointer text-white bg-[#219bce]">{'定期券を購入する'}</p>
           </div>
 
           <div className="m-[10px] flex flex-col items-center justify-center">

@@ -104,11 +104,11 @@ const LoginRegister = ({ setUser }: SetUserProps) => {
       <form className="flex flex-col justify-center items-center" onSubmit={handleSubmit}>
         <input className={isNameInvalid ? 'bg-red-400' : 'bg-white'} name="name" type="text" placeholder="ユーザー名" required />
         <input className={isPasswordInvalid ? 'bg-red-400' : 'bg-white'} name="password" type="password" placeholder="パスワード" required />
-        <button className="m-[10px] text-[15px] w-[80%] py-[5%] rounded-[20vh] text-white bg-[#219bce] cursor-pointer" type="submit">
+        <button className="m-[10px] text-[15px] w-[80%] py-[8px] rounded-[20px] text-white bg-[#219bce] cursor-pointer" type="submit">
           {isRegister ? '登録' : 'ログイン'}
         </button>
         <button
-          className="m-[20px] text-[15px] w-[100%] py-[5%] rounded-[20vh] text-white bg-[#3e195b] cursor-pointer"
+          className="m-[20px] text-[15px] w-[100%] py-[5%] rounded-[20px] text-white bg-[#3e195b] cursor-pointer"
           type="button"
           onClick={() => setIsRegister(!isRegister)}>
           {isRegister ? 'ログインの方はこちらから' : '新規登録の方はこちらから'}
