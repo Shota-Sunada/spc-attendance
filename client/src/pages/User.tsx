@@ -6,6 +6,7 @@ import Ticket from '../types/Ticket';
 import { IoQrCode } from 'react-icons/io5';
 import { TfiReload } from 'react-icons/tfi';
 import UserHeader from '../components/UserHeader';
+import CommuterTicketCard from '../components/CommuterTicketCard';
 
 type UserPageProps = {
   user: User;
@@ -76,12 +77,13 @@ const UserPage = (props: UserPageProps) => {
   return (
     <div className="h-[100%] bg-[#f7f4e5]">
       <UserHeader setUser={props.setUser} />
-      <div className="fixed bottom-[1vh] left-[50%] transform-[translateX(-50%)] bg-white p-[25px] rounded-2xl">
+      {/* QRコード */}
+      <div className="fixed bottom-[1vh] left-[50%] transform-[translateX(-50%)] bg-white p-[25px] rounded-2xl z-100">
         <div className="flex flex-col items-center justify-center">
           {isOpened ? (
             qr ? (
               <>
-                <div className="flex flex-col items-center justify-center mb-[50%]">
+                <div className="flex flex-col items-center justify-center mb-[50%] ">
                   {qr}
                   <div className="m-[2vh] flex flex-row">
                     <p className="cursor-default text-[20px] flex items-center">{'有効期限'}</p>
@@ -110,10 +112,58 @@ const UserPage = (props: UserPageProps) => {
           ) : (
             <div
               onClick={onClick}
-              className="bg-purple-900 border-[3vh] border-purple-900 rounded-[100%] fixed bottom-[-4vh] left-[50%] transform-[translateX(-50%)]">
-              <IoQrCode className="pb-[1vh]" color="white" size={'5vh'} />
+              className="bg-purple-900 border-[20px] border-purple-900 rounded-[100%] fixed bottom-[-30px] left-[50%] transform-[translateX(-50%)]">
+              <IoQrCode className="pb-[10px]" color="white" size={'40px'} />
             </div>
           )}
+        </div>
+      </div>
+      {/* メイン画面 */}
+      <div className={isOpened ? 'blur-sm' : ''}>
+        <div className="max-w-[360px] mx-auto">
+          <p className="m-[10px] flex items-center justify-center font-medium">{'ホーム'}</p>
+          <div className="flex flex-col items-center justify-center">
+            <div className="flex flex-row items-end justify-between">
+              <p className="mb-[3px]">残高</p>
+              <p
+                className='text-4xl font-semibold text-[#462066] pl-[20px] after:content-["\5186"] after:text-[14px]'
+                style={{ unicodeBidi: 'isolate' }}>
+                {'1,350'}
+              </p>
+            </div>
+            <p className="text-center m-[10px] py-[10px] w-[200px] rounded-2xl cursor-pointer text-white bg-[#219bce]">{'チャージする'}</p>
+          </div>
+
+          <div className="flex flex-col items-center justify-center mt-[20px]">
+            <p className="m-[10px] flex items-center justify-center font-medium">定期券情報</p>
+            <CommuterTicketCard
+              isStudent={false}
+              company="物理班電鉄"
+              route_start_stop_id={1}
+              route_end_stop_id={2}
+              subtext="修道物理班 デモンストレーション"
+              start_date="2025.04.24"
+              end_date="2025.04.25"
+            />
+            <p className="text-center m-[10px] py-[10px] w-[200px] rounded-2xl cursor-pointer text-white bg-[#219bce]">{'定期券を購入する'}</p>
+          </div>
+
+          <div className="m-[10px] flex flex-col items-center justify-center">
+            {/* <div className="flex flex-col items-center justify-center">
+              <p className="font-bold">オートチャージ設定</p>
+              <div className="flex m-[10px]">
+                <p className="flex items-center m-[5px]">残高が</p>
+                <input className="p-[5px] bg-white rounded-[6px]" type="number" min={1000} max={10000} placeholder="" />
+                <p className="flex items-center m-[5px]">円 未満になったとき</p>
+              </div>
+              <div className="flex m-[10px]">
+                <input className="p-[5px] bg-white" type="number" min={1000} max={20000} step={1000} placeholder="" />
+                <p className="flex items-center m-[5px]">円 チャージする。</p>
+              </div>
+            </div> */}
+
+            {/*<p className="text-center m-[10px] py-[10px] w-[200px] rounded-2xl cursor-pointer text-white bg-[#219bce]">{'設定を保存'}</p> */}
+          </div>
         </div>
       </div>
     </div>
