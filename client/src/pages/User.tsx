@@ -74,9 +74,9 @@ const UserPage = (props: UserPageProps) => {
   const min = (count - sec) / 60;
 
   return (
-    <div className="h-[100%]">
+    <div className="h-[100%] bg-[#f7f4e5]">
       <UserHeader setUser={props.setUser} />
-      <div className="fixed bottom-[1vh] left-[50%] transform-[translateX(-50%)]">
+      <div className="fixed bottom-[1vh] left-[50%] transform-[translateX(-50%)] bg-white p-[25px] rounded-2xl">
         <div className="flex flex-col items-center justify-center">
           {isOpened ? (
             qr ? (

@@ -80,16 +80,17 @@ const LoginRegister = ({ setUser }: SetUserProps) => {
   };
 
   return (
-    <div className="h-[100%] flex flex-col justify-center items-center">
-      <h2 className="text-[200%]">{isRegister ? '新規登録' : 'ログイン'}</h2>
-      <button className="m-[10px] text-[2vh] px-[3vh] py-[1vh] border-[1px] rounded-[10px]" onClick={() => setIsRegister(!isRegister)}>
-        {isRegister ? 'ログイン' : '新規登録'}
-      </button>
+    <div className="h-[100%] flex flex-col justify-center items-center bg-[#f7f4e5]">
+      <h2 className="text-[200%] pointer-default">{'BUTSURY DAYS'}</h2>
+      <h2 className="text-[150%] pointer-default">{isRegister ? '新規登録' : 'ログイン'}</h2>
       <form className="flex flex-col justify-center items-center" onSubmit={handleSubmit}>
         <input name="name" type="text" placeholder="ユーザー名" required />
         <input name="password" type="password" placeholder="パスワード" required />
-        <button className="m-[10px] text-[2vh] px-[20%] py-[10%] border-[1px] rounded-[10px]" type="submit">
+        <button className="m-[10px] text-[15px] w-[80%] py-[5%] rounded-[20vh] text-white bg-[#219bce] cursor-pointer" type="submit">
           {isRegister ? '登録' : 'ログイン'}
+        </button>
+        <button className="m-[20px] text-[15px] w-[100%] py-[5%] rounded-[20vh] text-white bg-[#3e195b] cursor-pointer" onClick={() => setIsRegister(!isRegister)}>
+          {isRegister ? 'ログインの方はこちらから' : '新規登録の方はこちらから'}
         </button>
       </form>
       {error && <p>{error}</p>}
