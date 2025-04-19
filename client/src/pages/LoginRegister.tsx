@@ -7,12 +7,12 @@ export interface SetUserProps {
   setUser: React.Dispatch<React.SetStateAction<User | null>>;
 }
 
-// interface UserResponed {
-//   token: string;
-//   user: User;
-// }
+const regex = /^[a-zA-Z0-9^$*.[\]{}()?"!@#%&/\\,<>':;|_~`=+-]{8,32}$/;
 
 const LoginRegister = ({ setUser }: SetUserProps) => {
+  const [isNameInvalid, setIsNameInvalid] = useState<boolean>(false);
+  const [isPasswordInvalid, setIsPasswordInvalid] = useState<boolean>(false);
+
   const [isRegister, setIsRegister] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -22,6 +22,25 @@ const LoginRegister = ({ setUser }: SetUserProps) => {
     const formData = new FormData(e.currentTarget);
     const name = formData.get('name') as string;
     const password = formData.get('password') as string;
+
+    setIsNameInvalid(false);
+    setIsPasswordInvalid(false);
+
+    let invalid = false;
+
+    if (!regex.test(name)) {
+      console.log('invalid name!');
+      setIsNameInvalid(true);
+      invalid = true;
+    }
+
+    if (!regex.test(password)) {
+      console.log('invalid pass!');
+      setIsPasswordInvalid(true);
+      invalid = true
+    }
+
+    if (invalid) return;
 
     if (isRegister) {
       register(name, password);
@@ -84,12 +103,14 @@ const LoginRegister = ({ setUser }: SetUserProps) => {
       <h2 className="text-[200%] pointer-default">{'BUTSURY DAYS'}</h2>
       <h2 className="text-[150%] pointer-default">{isRegister ? '新規登録' : 'ログイン'}</h2>
       <form className="flex flex-col justify-center items-center" onSubmit={handleSubmit}>
-        <input name="name" type="text" placeholder="ユーザー名" required />
-        <input name="password" type="password" placeholder="パスワード" required />
+        <input className={isNameInvalid ? 'bg-red-400' : 'bg-white'} name="name" type="text" placeholder="ユーザー名" required />
+        <input className={isPasswordInvalid ? 'bg-red-400' : 'bg-white'} name="password" type="password" placeholder="パスワード" required />
         <button className="m-[10px] text-[15px] w-[80%] py-[5%] rounded-[20vh] text-white bg-[#219bce] cursor-pointer" type="submit">
           {isRegister ? '登録' : 'ログイン'}
         </button>
-        <button className="m-[20px] text-[15px] w-[100%] py-[5%] rounded-[20vh] text-white bg-[#3e195b] cursor-pointer" onClick={() => setIsRegister(!isRegister)}>
+        <button
+          className="m-[20px] text-[15px] w-[100%] py-[5%] rounded-[20vh] text-white bg-[#3e195b] cursor-pointer"
+          onClick={() => setIsRegister(!isRegister)}>
           {isRegister ? 'ログインの方はこちらから' : '新規登録の方はこちらから'}
         </button>
       </form>
