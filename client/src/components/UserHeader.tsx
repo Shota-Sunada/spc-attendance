@@ -6,6 +6,10 @@ type Props = {
 
 const UserHeader = (props: Props) => {
   const onLogoutClick = () => {
+    if (!window.confirm('ログアウトしてもよろしいですか?')) {
+      return;
+    }
+
     props.setUser(null);
     localStorage.removeItem('token');
     location.reload();
