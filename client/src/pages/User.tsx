@@ -3,7 +3,6 @@ import QRCode from '../components/QRCode';
 import User from '../types/User';
 import { BACKEND_ENDPOINT } from '../const';
 import Ticket from '../types/Ticket';
-import ky from 'ky';
 
 type UserPageProps = {
   user: User;
@@ -26,15 +25,19 @@ const UserPage = (props: UserPageProps) => {
 
     const token = localStorage.getItem('token');
 
-    const data = await ky
-      .post(`${BACKEND_ENDPOINT}/api/tickets`, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        },
-        json: { payload }
-      })
-      .json<Ticket>();
-    GenerateQRCode(data.uuid);
+    const res = await fetch(`${BACKEND_ENDPOINT}/api/tickets`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify(payload)
+    });
+
+    const data = (await res.json()) as Ticket;
+    if (res.ok) {
+      GenerateQRCode(data.uuid);
+    }
   }, [props.user.id]);
 
   function GenerateQRCode(data: string) {
