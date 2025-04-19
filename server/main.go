@@ -9,8 +9,8 @@ import (
 	"strings"
 
 	"github.com/dgrijalva/jwt-go"
-	"github.com/joho/godotenv"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/joho/godotenv"
 	// _ "github.com/mattn/go-sqlite3"
 )
 
@@ -127,7 +127,7 @@ func main() {
 		}
 	}))
 
-	logger.Info("Handling \"/api/useTicket\" function")
+	logger.Info("Handling \"/useTicket\" function")
 	http.HandleFunc("/useTicket", handleCORS(func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case http.MethodPost:
