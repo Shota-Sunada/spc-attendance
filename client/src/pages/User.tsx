@@ -7,6 +7,7 @@ import { IoQrCode } from 'react-icons/io5';
 import { TfiReload } from 'react-icons/tfi';
 import UserHeader from '../components/UserHeader';
 import CommuterTicketCard from '../components/CommuterTicketCard';
+import MobiryButton from '../components/MobiryButton';
 
 type UserPageProps = {
   user: User;
@@ -123,7 +124,7 @@ const UserPage = (props: UserPageProps) => {
         <div className="max-w-[360px] mx-auto">
           <p className="m-[10px] flex items-center justify-center font-medium">{'ホーム'}</p>
           <div className="flex flex-col items-center justify-center">
-            <div className="flex flex-row items-end justify-between">
+            <div className="flex flex-row items-end justify-between mb-[10px]">
               <p className="mb-[3px]">残高</p>
               <p
                 className='text-4xl font-semibold text-[#462066] pl-[20px] after:content-["\5186"] after:text-[14px]'
@@ -131,11 +132,11 @@ const UserPage = (props: UserPageProps) => {
                 {'1,350'}
               </p>
             </div>
-            <p className="mobiry-button">{'チャージする'}</p>
+            <MobiryButton text="チャージする" onClick={() => {}} />
           </div>
 
           <div className="flex flex-col items-center justify-center mt-[20px]">
-            <p className="m-[10px] flex items-center justify-center font-medium">定期券情報</p>
+            <p className="m-[10px] flex items-center justify-center font-medium mb-[30px]">定期券情報</p>
             <CommuterTicketCard
               isStudent={false}
               company="物理班電鉄"
@@ -145,7 +146,7 @@ const UserPage = (props: UserPageProps) => {
               start_date="2025.04.24"
               end_date="2025.04.25"
             />
-            <p className="mobiry-button">{'定期券を購入する'}</p>
+            <MobiryButton text="定期券を購入する" onClick={() => {}} />
           </div>
 
           <div className="m-[10px] flex flex-col items-center justify-center">

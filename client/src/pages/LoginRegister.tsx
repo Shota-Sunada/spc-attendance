@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { BACKEND_ENDPOINT } from '../const';
 import User from '../types/User';
 import '../styles/login-register.css';
+import MobiryButton from '../components/MobiryButton';
 
 export interface SetUserProps {
   setUser: React.Dispatch<React.SetStateAction<User | null>>;
@@ -104,8 +105,8 @@ const LoginRegister = ({ setUser }: SetUserProps) => {
       <form className="flex flex-col justify-center items-center" onSubmit={handleSubmit}>
         <input className={isNameInvalid ? 'bg-red-400' : 'bg-white'} name="name" type="text" placeholder="ユーザー名" required />
         <input className={isPasswordInvalid ? 'bg-red-400' : 'bg-white'} name="password" type="password" placeholder="パスワード" required />
-        <button className="mobiry-button" type="submit">
-          {isRegister ? 'ユーザー登録' : 'ログイン'}
+        <button className="" type="submit">
+          <MobiryButton text={isRegister ? 'ユーザー登録' : 'ログイン'} onClick={()=> {}} />
         </button>
         <div className="flex flex-col border-[#ebebde] rounded-[12px] max-w-[328px] w-fill bg-white p-[24px] mt-[30px]">
           <p className="font-medium min-w-[250px] w-[100%] flex items-center justify-center">

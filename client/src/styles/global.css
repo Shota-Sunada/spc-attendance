@@ -25,6 +25,7 @@ main,
   color: #fff;
   background-color: #219bce;
   transition: 0.1s;
+  font-size: 15px;
 }
 
 .mobiry-button:hover {

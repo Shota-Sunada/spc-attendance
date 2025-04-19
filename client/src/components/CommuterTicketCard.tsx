@@ -13,7 +13,7 @@ interface Props {
 
 const CommuterTicketCard = (props: Props) => {
   return (
-    <div className="bg-white rounded-[15px] cursor-pointer p-[20px] w-[296px] h-[167px]">
+    <div className="bg-white rounded-[15px] cursor-pointer p-[20px] w-[296px] h-[167px] hover:bg-[#f9f9fa] anim">
       <div className="flex flex-row">
         <p className="font-semibold">{props.isStudent ? '通学' : '通勤'}</p>
         <p className="font-medium">{'：'}</p>
