@@ -112,7 +112,7 @@ const UserPage = (props: UserPageProps) => {
           ) : (
             <div
               onClick={onClick}
-              className="bg-purple-900 border-[20px] border-purple-900 rounded-[100%] fixed bottom-[-30px] left-[50%] transform-[translateX(-50%)]">
+              className="bg-purple-900 border-[20px] border-purple-900 rounded-[100%] fixed bottom-[-30px] left-[50%] transform-[translateX(-50%)] cursor-pointer">
               <IoQrCode className="pb-[10px]" color="white" size={'40px'} />
             </div>
           )}
