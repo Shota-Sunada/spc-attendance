@@ -23,21 +23,20 @@ const LoginRegister = ({ setUser }: SetUserProps) => {
     const name = formData.get('name') as string;
     const password = formData.get('password') as string;
 
+    setError(null)
     setIsNameInvalid(false);
     setIsPasswordInvalid(false);
 
     let invalid = false;
 
     if (!regex.test(name)) {
-      console.log('invalid name!');
       setIsNameInvalid(true);
       invalid = true;
     }
 
     if (!regex.test(password)) {
-      console.log('invalid pass!');
       setIsPasswordInvalid(true);
-      invalid = true
+      invalid = true;
     }
 
     if (invalid) return;
@@ -94,7 +93,7 @@ const LoginRegister = ({ setUser }: SetUserProps) => {
       setUser(data.user);
       localStorage.setItem('token', data.token);
     } else {
-      setError(data.error);
+      setError(data.message);
     }
   };
 
@@ -114,7 +113,25 @@ const LoginRegister = ({ setUser }: SetUserProps) => {
           {isRegister ? 'ログインの方はこちらから' : '新規登録の方はこちらから'}
         </button>
       </form>
-      {error && <p>{error}</p>}
+      <div className="m-[2vh] text-white">
+        {isNameInvalid ? (
+          <p className="m-[3px] p-[3px] rounded-[5px] bg-red-400">
+            {'ユーザー名に使用できない文字が含まれているか、'}
+            {'文字数が8文字以上32文字以下ではありません。'}
+          </p>
+        ) : (
+          <></>
+        )}
+        {isPasswordInvalid ? (
+          <p className="m-[3px] p-[3px] rounded-[5px] bg-red-400">
+            {'パスワードに使用できない文字が含まれているか、'}
+            {'文字数が8文字以上32文字以下ではありません。'}
+          </p>
+        ) : (
+          <></>
+        )}
+        {error && <p className="m-[3px] p-[3px] rounded-[5px] bg-red-400">{error}</p>}
+      </div>
     </div>
   );
 };

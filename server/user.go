@@ -46,6 +46,18 @@ func registerUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	row := db.QueryRow(selectUserByName, user.Name)
+	if row != nil {
+	}
+	var temp User
+	err := row.Scan(&temp.ID, &temp.Name, &temp.Password, &temp.IsAdmin, &temp.Balance, &temp.IsGettingOn, &temp.CreatedAt)
+	if err == nil {
+		logger.Error("The internal server error is occurred: registerUser-QueryRow")
+		logger.Error("The given username is already exists!")
+		respondJSON(w, http.StatusBadRequest, map[string]string{"message": "ユーザー名が既に使用されています。別のユーザー名を入力してください。"})
+		return
+	}
+
 	now := time.Now()
 
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
