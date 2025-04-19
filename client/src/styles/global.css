@@ -7,3 +7,10 @@
     Hiragino Sans,
     sans-serif;
 }
+
+html,
+body,
+main,
+#root {
+  height: 100%;
+}

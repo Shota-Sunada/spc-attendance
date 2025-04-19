@@ -3,6 +3,9 @@ import QRCode from '../components/QRCode';
 import User from '../types/User';
 import { BACKEND_ENDPOINT } from '../const';
 import Ticket from '../types/Ticket';
+import { IoQrCode } from 'react-icons/io5';
+import { TfiReload } from 'react-icons/tfi';
+import UserHeader from '../components/UserHeader';
 
 type UserPageProps = {
   user: User;
@@ -14,15 +17,11 @@ const QR_MAX_TIMEOUT_SEC = 300;
 const UserPage = (props: UserPageProps) => {
   const [qr, setQR] = useState<ReactElement | null>(null);
   const [count, setCount] = useState<number>(QR_MAX_TIMEOUT_SEC);
+  const [isOpened, setIsOpened] = useState<boolean>(false);
 
   const onClick = () => {
+    setIsOpened(true);
     createTicket();
-  };
-
-  const onLogoutClick = () => {
-    props.setUser(null);
-    localStorage.removeItem('token');
-    location.reload();
   };
 
   const createTicket = useCallback(async () => {
@@ -75,34 +74,48 @@ const UserPage = (props: UserPageProps) => {
   const min = (count - sec) / 60;
 
   return (
-    <div className="m-10">
-      <h1>BUTSURY DAYS</h1>
-      <button onClick={onClick}>Press to generate QR code</button>
-      <button onClick={onLogoutClick}>ログアウト</button>
-      {qr}
-      {qr ? (
-        <>
-          <p>
-            {'有効期限　'}
-            {min}
-            {'分'}
-            {sec.toString().padStart(2, '0')}
-            {'秒'}
-          </p>
-          <button
-            onClick={() => {
-              createTicket();
-            }}>
-            再生成
-          </button>
-          <button
-            onClick={() => {
-              setQR(null);
-            }}>
-            閉じる
-          </button>
-        </>
-      ) : null}
+    <div className="h-[100%]">
+      <UserHeader setUser={props.setUser} />
+      <div className="fixed bottom-[1vh] left-[50%] transform-[translateX(-50%)]">
+        <div className="flex flex-col items-center justify-center">
+          {isOpened ? (
+            qr ? (
+              <>
+                <div className="flex flex-col items-center justify-center mb-[50%]">
+                  {qr}
+                  <div className="m-[2vh] flex flex-row">
+                    <p className="cursor-default text-[20px] flex items-center">{'有効期限'}</p>
+                    <p className="cursor-default text-[20px] flex items-center font-bold ml-[10px]">
+                      {min.toString().padStart(2, '0')}
+                      {':'}
+                      {sec.toString().padStart(2, '0')}
+                    </p>
+                    <div className="ml-[10px] border-blue-300 border-[10px] bg-blue-300 rounded-3xl cursor-pointer" onClick={createTicket}>
+                      <TfiReload color="#008fc0" size={'15px'} />
+                    </div>
+                  </div>
+                </div>
+                <p
+                  className="text-center py-[10px] px-[100px] border-[1px] rounded-2xl cursor-pointer"
+                  onClick={() => {
+                    setIsOpened(false);
+                    setQR(null);
+                  }}>
+                  {'閉じる'}
+                </p>
+              </>
+            ) : (
+              <></>
+            )
+          ) : (
+            <div
+              onClick={onClick}
+              className="bg-purple-900 border-[3vh] border-purple-900 rounded-[100%] fixed bottom-[-4vh] left-[50%] transform-[translateX(-50%)]">
+              <IoQrCode className="pb-[1vh]" color="white" size={'5vh'} />
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 };
