@@ -17,7 +17,9 @@ const Menu = (props: Props) => {
         <div className="fixed left-[5px] top-[5px] cursor-pointer">
           <IoClose size={'30px'} onClick={() => props.setIsOpen(false)} />
         </div>
-        <div></div>
+        <div>
+          <img src="/logo.png" alt="LOGO" className="w-[100px] absolute top-[44px] left-[80px]" />
+        </div>
         <div className="mt-[108px]">
           <ul className="flex flex-col m-0 p-0">
             <li>

@@ -100,7 +100,8 @@ const LoginRegister = ({ setUser }: SetUserProps) => {
 
   return (
     <div className="h-[100%] flex flex-col justify-center items-center bg-[#f7f4e5]">
-      <h2 className="text-[200%] pointer-default">{'BUTSURY DAYS'}</h2>
+      {/* <h2 className="text-[200%] pointer-default">{'BUTSURY DAYS'}</h2> */}
+      <img src="/logo.png" alt="LOGO" className='w-[300px]'/>
       <h2 className="text-[150%] pointer-default">{isRegister ? '新規登録' : 'ログイン'}</h2>
       <form className="flex flex-col justify-center items-center" onSubmit={handleSubmit}>
         <input className={isNameInvalid ? 'bg-red-400' : 'bg-white'} name="name" type="text" placeholder="ユーザー名" required />

@@ -22,7 +22,8 @@ const UserHeader = (props: Props) => {
       <button className="bg-[#219bce] rounded-[20px] px-[15px] py-[10px] text-white cursor-pointer hover:bg-[#008fc0] anim" onClick={() => props.setIsMenuOpen(!props.isMenuOpen)}>
         {'メニュー'}
       </button>
-      <h1 className="p-[10px] cursor-default">{'BUTSURY DAYS'}</h1>
+      {/* <h1 className="p-[10px] cursor-default">{'BUTSURY DAYS'}</h1> */}
+      <img src="/logo.png" alt="LOGO" className='w-[100px]'/>
       <button className="bg-[#219bce] rounded-[20px] px-[15px] py-[10px] text-white cursor-pointer hover:bg-[#008fc0] anim" onClick={onLogoutClick}>
         {'ログアウト'}
       </button>
