@@ -6,6 +6,7 @@ import Ticket from '../types/Ticket';
 
 type UserPageProps = {
   user: User;
+  setUser: React.Dispatch<React.SetStateAction<User | null>>;
 };
 
 const QR_MAX_TIMEOUT_SEC = 300;
@@ -16,6 +17,12 @@ const UserPage = (props: UserPageProps) => {
 
   const onClick = () => {
     createTicket();
+  };
+
+  const onLogoutClick = () => {
+    props.setUser(null);
+    localStorage.removeItem('token');
+    location.reload();
   };
 
   const createTicket = useCallback(async () => {
@@ -71,6 +78,7 @@ const UserPage = (props: UserPageProps) => {
     <div className="m-10">
       <h1>BUTSURY DAYS</h1>
       <button onClick={onClick}>Press to generate QR code</button>
+      <button onClick={onLogoutClick}>ログアウト</button>
       {qr}
       {qr ? (
         <>

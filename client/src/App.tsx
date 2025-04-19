@@ -40,7 +40,7 @@ export default function App() {
       <main>
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={user ? <UserPage user={user} /> : <LoginRegister setUser={setUser} />}></Route>
+            <Route path="/" element={user ? <UserPage user={user} setUser={setUser} /> : <LoginRegister setUser={setUser} />}></Route>
             <Route path="/history" element={<History />}></Route>
             <Route path="/reader" element={<ReaderPage />}></Route>
             <Route path="/*" element={<Page404 />}></Route>

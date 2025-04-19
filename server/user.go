@@ -24,7 +24,7 @@ const (
 
 	insertUser = "INSERT INTO users (name, password, is_admin, balance, is_getting_on, created_at) VALUES (?, ?, ?, ?, ?, ?)"
 
-	selectUserByID = "SELECT * FROM users WHERE id = ?"
+	selectUserByName = "SELECT * FROM users WHERE name = ?"
 )
 
 type User struct {
@@ -114,18 +114,18 @@ func loginUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	row := db.QueryRow(selectUserByID, user.ID)
+	row := db.QueryRow(selectUserByName, user.Name)
 	var temp User
 	err := row.Scan(&temp.ID, &temp.Name, &temp.Password, &temp.IsAdmin, &temp.Balance, &temp.IsGettingOn, &temp.CreatedAt)
 	if err != nil {
-		logger.Error("The bad request is occurred: loginUser-IDorPS")
+		logger.Error("The bad request is occurred: loginUser-ID")
 		logger.ErrorE(err)
 		respondJSON(w, http.StatusBadRequest, map[string]string{"message": "IDまたはパスワードが間違っています。"})
 		return
 	}
 
 	if err := bcrypt.CompareHashAndPassword([]byte(temp.Password), []byte(user.Password)); err != nil {
-		logger.Error("The bad request is occurred: loginUser-IDorPS")
+		logger.Error("The bad request is occurred: loginUser-PS")
 		logger.ErrorE(err)
 		respondJSON(w, http.StatusBadRequest, map[string]string{"message": "IDまたはパスワードが間違っています。"})
 		return
@@ -149,7 +149,7 @@ func loginUser(w http.ResponseWriter, r *http.Request) {
 	temp.Password = ""
 
 	logger.Info("The user was logged in.")
-	logger.Info(fmt.Sprintf("Logged in user ID: %d, Name: %s", user.ID, user.Name))
+	logger.Info(fmt.Sprintf("Logged in user ID: %d, Name: %s", temp.ID, temp.Name))
 
 	respondJSON(w, http.StatusOK, map[string]interface{}{
 		"token": tokenString,
@@ -160,7 +160,7 @@ func loginUser(w http.ResponseWriter, r *http.Request) {
 func getMe(w http.ResponseWriter, r *http.Request) {
 	userID := r.Context().Value(AuthCtxKey("user_id")).(int)
 
-	row := db.QueryRow(selectUserByID, userID)
+	row := db.QueryRow(selectUserByName, userID)
 	var user User
 	err := row.Scan(&user.ID, &user.Name, &user.Password, &user.IsAdmin, &user.Balance, &user.IsGettingOn, &user.CreatedAt)
 	if err != nil {
@@ -184,7 +184,7 @@ func getUserById(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	row := db.QueryRow(selectUserByID, arg.ID)
+	row := db.QueryRow(selectUserByName, arg.ID)
 	var user User
 	err := row.Scan(&user.ID, &user.Name, &user.Password, &user.IsAdmin, &user.Balance, &user.IsGettingOn, &user.CreatedAt)
 	if err != nil {
