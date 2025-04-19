@@ -147,7 +147,7 @@ const ReaderPage = () => {
         setTableBottom(tableNullRow);
         break;
       case 'getOff':
-        setHeaderText('降車');
+        setHeaderText('SF利用');
         setHeaderCss('bg-blue-400 text-white');
         setTableTop(tableTopPaid);
         setTableMiddle(tableMiddleBalance);
