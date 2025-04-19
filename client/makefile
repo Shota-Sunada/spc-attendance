@@ -1,8 +1,8 @@
 dev:
-  sudo npm run dev
+	sudo npm run dev
 build:
-  sudo npm run build
+	sudo npm run build
 format:
-  sudo npm run format
+	sudo npm run format
 reload:
-  sudo systemctl reload nginx
+	sudo systemctl reload nginx
