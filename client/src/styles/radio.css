@@ -1,0 +1,9 @@
+.radio-root > div > div > input {
+  display: none;
+  background-color: white;
+}
+
+.radio-root > div > div > input:checked + label {
+  background-color: #219bce;
+  color: white;
+}
