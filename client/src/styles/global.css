@@ -24,7 +24,7 @@ main,
   cursor: pointer;
   color: #fff;
   background-color: #219bce;
-  transition: 0.1s;
+  transition: 0.2s;
   font-size: 15px;
 }
 
@@ -33,5 +33,5 @@ main,
 }
 
 .anim {
-  transition: 0.1s;
+  transition: 0.2s;
 }

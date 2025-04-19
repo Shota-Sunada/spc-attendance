@@ -8,10 +8,14 @@ import { TfiReload } from 'react-icons/tfi';
 import UserHeader from '../components/UserHeader';
 import CommuterTicketCard from '../components/CommuterTicketCard';
 import MobiryButton from '../components/MobiryButton';
+import Menu from '../components/Menu';
 
 type UserPageProps = {
   user: User;
   setUser: React.Dispatch<React.SetStateAction<User | null>>;
+  isMenuOpen: boolean;
+  setIsMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  isSmartphone: boolean;
 };
 
 const QR_MAX_TIMEOUT_SEC = 300;
@@ -77,7 +81,7 @@ const UserPage = (props: UserPageProps) => {
 
   return (
     <div className="h-[100%] bg-[#f7f4e5]">
-      <UserHeader setUser={props.setUser} />
+      <UserHeader setUser={props.setUser} isMenuOpen={props.isMenuOpen} setIsMenuOpen={props.setIsMenuOpen} />
       {/* QRコード */}
       <div className="fixed bottom-[1vh] left-[50%] transform-[translateX(-50%)] bg-white p-[25px] rounded-2xl z-100">
         <div className="flex flex-col items-center justify-center">
@@ -167,6 +171,8 @@ const UserPage = (props: UserPageProps) => {
           </div>
         </div>
       </div>
+      {/* {!props.isSmartphone ? <Menu isOpen={props.isMenuOpen} /> : <></>} */}
+      <Menu isOpen={props.isMenuOpen} setIsOpen={props.setIsMenuOpen} />
     </div>
   );
 };
