@@ -1,8 +1,7 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import UserPage from './pages/User';
 import History from './pages/History';
-import { useEffect, useState } from 'react';
-import { BACKEND_ENDPOINT } from './const';
+import {  useEffect, useState } from 'react';
 import LoginRegister from './pages/LoginRegister';
 import User from './types/User';
 import ReaderPage from './pages/Reader';
@@ -11,6 +10,7 @@ import { mediaQuery, UseMediaQuery } from './hooks/UseMediaQuery';
 import UserHeader from './components/UserHeader';
 import Menu from './components/Menu';
 import Charge from './pages/Charge';
+import { BACKEND_ENDPOINT } from './const';
 
 export default function App() {
   const isSmartphone = UseMediaQuery(mediaQuery.smartphone);
@@ -57,7 +57,7 @@ export default function App() {
                     <LoginRegister setUser={setUser} />
                   )
                 }></Route>
-              <Route path="/charge" element={<Charge />}></Route>
+              <Route path="/charge" element={<Charge user={user} />}></Route>
               <Route path="/history" element={<History />}></Route>
               <Route path="/reader" element={<ReaderPage />}></Route>
               <Route path="/*" element={<Page404 />}></Route>

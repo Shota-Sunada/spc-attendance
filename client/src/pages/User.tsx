@@ -32,6 +32,30 @@ const UserPage = (props: UserPageProps) => {
     createTicket();
   };
 
+  const getAuthUser = useCallback(async () => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      return;
+    }
+
+    const res = await fetch(`${BACKEND_ENDPOINT}/api/me`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+
+    if (res.ok) {
+      const data = await res.json();
+      props.setUser(data);
+    } else {
+      localStorage.removeItem('token');
+    }
+  }, [props]);
+
+  useEffect(() => {
+    getAuthUser();
+  }, [getAuthUser]);
+
   const createTicket = useCallback(async () => {
     const payload = {
       user_id: props.user.id
@@ -134,7 +158,7 @@ const UserPage = (props: UserPageProps) => {
               <p
                 className='text-4xl font-semibold text-[#462066] pl-[20px] after:content-["\5186"] after:text-[14px]'
                 style={{ unicodeBidi: 'isolate' }}>
-                {'1,350'}
+                {props.user?.balance}
               </p>
             </div>
             <MobiryButton text="チャージする" onClick={() => navigate('/charge')} />
@@ -152,7 +176,7 @@ const UserPage = (props: UserPageProps) => {
               end_date="2025.04.25"
             />
             {/* <NoCommuterTicketCard /> */}
-            <MobiryButton text="定期券を購入する" onClick={() => navigate("/buy-commuter")} />
+            <MobiryButton text="定期券を購入する" onClick={() => navigate('/buy-commuter')} />
           </div>
 
           <div className="m-[10px] flex flex-col items-center justify-center">

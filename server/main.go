@@ -147,6 +147,16 @@ func main() {
 		}
 	}))
 
+	logger.Info("Handling \"/api/updateBalance\" function")
+	http.HandleFunc("/api/updateBalance", handleCORS(func(w http.ResponseWriter, r *http.Request) {
+		switch r.Method {
+		case http.MethodPost:
+			updateBalance(w, r)
+		default:
+			w.WriteHeader(http.StatusMethodNotAllowed)
+		}
+	}))
+
 	logger.Info("Server is booted. Endpoint: http://localhost:8080")
 	http.ListenAndServe(":8080", nil)
 }

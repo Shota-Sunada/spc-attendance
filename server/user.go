@@ -25,6 +25,10 @@ const (
 	insertUser = "INSERT INTO users (name, password, is_admin, balance, is_getting_on, created_at) VALUES (?, ?, ?, ?, ?, ?)"
 
 	selectUserByName = "SELECT * FROM users WHERE name = ?"
+
+	selectUserById = "SELECT * FROM users WHERE id = ?"
+
+	updateBalanceByName = "UPDATE users SET balance = ? WHERE name = ?"
 )
 
 type User struct {
@@ -196,7 +200,7 @@ func getUserById(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	row := db.QueryRow(selectUserByName, arg.ID)
+	row := db.QueryRow(selectUserById, arg.ID)
 	var user User
 	err := row.Scan(&user.ID, &user.Name, &user.Password, &user.IsAdmin, &user.Balance, &user.IsGettingOn, &user.CreatedAt)
 	if err != nil {
@@ -209,4 +213,26 @@ func getUserById(w http.ResponseWriter, r *http.Request) {
 	user.Password = ""
 
 	respondJSON(w, http.StatusOK, user)
+}
+
+func updateBalance(w http.ResponseWriter, r *http.Request) {
+	var arg User
+	if err := decodeBody(r, &arg); err != nil {
+		logger.Error("The internal server error is occurred: updateBalance-decodeBody")
+		logger.ErrorE(err)
+		respondJSON(w, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	_, err := db.Exec(updateBalanceByName, arg.Balance, arg.Name)
+	if err != nil {
+		logger.Error("The internal server error is occurred: updateBalance-Exec")
+		logger.ErrorE(err)
+		respondJSON(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	
+
+	respondJSON(w, http.StatusOK, nil)
 }
