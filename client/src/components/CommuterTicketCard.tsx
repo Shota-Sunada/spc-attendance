@@ -11,7 +11,15 @@ interface Props {
   end_date: string;
 }
 
-const CommuterTicketCard = (props: Props) => {
+export const NoCommuterTicketCard = () => {
+  return (
+    <div className="flex items-center justify-center bg-white rounded-[15px] cursor-pointer p-[20px] w-[296px] h-[167px] hover:bg-[#f9f9fa]">
+      <p>{'使用可能な定期券はありません'}</p>
+    </div>
+  );
+};
+
+export const CommuterTicketCard = (props: Props) => {
   return (
     <div className="bg-white rounded-[15px] cursor-pointer p-[20px] w-[296px] h-[167px] hover:bg-[#f9f9fa] anim">
       <div className="flex flex-row">
@@ -36,5 +44,3 @@ const CommuterTicketCard = (props: Props) => {
     </div>
   );
 };
-
-export default CommuterTicketCard;

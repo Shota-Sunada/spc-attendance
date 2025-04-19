@@ -6,7 +6,8 @@ import Ticket from '../types/Ticket';
 import { IoQrCode } from 'react-icons/io5';
 import { TfiReload } from 'react-icons/tfi';
 import UserHeader from '../components/UserHeader';
-import CommuterTicketCard from '../components/CommuterTicketCard';
+import { CommuterTicketCard } from '../components/CommuterTicketCard';
+// import { NoCommuterTicketCard } from '../components/CommuterTicketCard';
 import MobiryButton from '../components/MobiryButton';
 import Menu from '../components/Menu';
 
@@ -150,6 +151,7 @@ const UserPage = (props: UserPageProps) => {
               start_date="2025.04.24"
               end_date="2025.04.25"
             />
+            {/* <NoCommuterTicketCard /> */}
             <MobiryButton text="定期券を購入する" onClick={() => {}} />
           </div>
 
