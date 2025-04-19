@@ -105,14 +105,17 @@ const LoginRegister = ({ setUser }: SetUserProps) => {
         <input className={isNameInvalid ? 'bg-red-400' : 'bg-white'} name="name" type="text" placeholder="ユーザー名" required />
         <input className={isPasswordInvalid ? 'bg-red-400' : 'bg-white'} name="password" type="password" placeholder="パスワード" required />
         <button className="m-[10px] text-[15px] w-[80%] py-[8px] rounded-[20px] text-white bg-[#219bce] cursor-pointer" type="submit">
-          {isRegister ? '登録' : 'ログイン'}
+          {isRegister ? 'ユーザー登録' : 'ログイン'}
         </button>
-        <button
-          className="m-[20px] text-[15px] w-[100%] py-[5%] rounded-[20px] text-white bg-[#3e195b] cursor-pointer"
-          type="button"
-          onClick={() => setIsRegister(!isRegister)}>
-          {isRegister ? 'ログインの方はこちらから' : '新規登録の方はこちらから'}
-        </button>
+        <div className="flex flex-col border-[#ebebde] rounded-[12px] max-w-[328px] w-fill bg-white p-[24px] mt-[30px]">
+          <p className="font-medium min-w-[250px] w-[100%] flex items-center justify-center">{isRegister ? 'アカウントをお持ちですか？' : 'アカウントをお持ちでない方'}</p>
+          <button
+            className="m-auto mt-[10px] text-[15px] w-[100%] py-[5%] rounded-[20px] text-white bg-[#3e195b] cursor-pointer"
+            type="button"
+            onClick={() => setIsRegister(!isRegister)}>
+            {isRegister ? 'ログインの方はこちらから' : '新規登録の方はこちらから'}
+          </button>
+        </div>
       </form>
       <div className="m-[2vh] text-white">
         {isNameInvalid ? (
