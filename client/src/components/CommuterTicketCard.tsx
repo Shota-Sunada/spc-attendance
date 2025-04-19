@@ -27,11 +27,11 @@ const CommuterTicketCard = (props: Props) => {
         </div>
         <p className="font-semibold text-2xl items-center justify-center">{'仮電停2'}</p>
       </div>
-      <p className='flex items-center justify-center text-[12px] font-medium'>{props.subtext}</p>
-      <div className='mt-[10px] flex flex-row items-center justify-center'>
-        <p className='text-[18px]'>{props.start_date}</p>
-        <p className='text-[18px]'>{'-'}</p>
-        <p className='text-[18px]'>{props.end_date}</p>
+      <p className="flex items-center justify-center text-[12px] font-medium">{props.subtext}</p>
+      <div className="mt-[10px] flex flex-row items-center justify-center">
+        <p className="text-[18px]">{props.start_date}</p>
+        <p className="text-[18px]">{'-'}</p>
+        <p className="text-[18px]">{props.end_date}</p>
       </div>
     </div>
   );
