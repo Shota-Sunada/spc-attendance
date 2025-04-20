@@ -21,7 +21,37 @@ export async function apiCharge(user: User, charge: number, navigate: NavigateFu
   });
 
   if (res.ok) {
-    alert('チャージしました。');
+    const payload2 = {
+      user_id: user.id,
+      type_id: 1,
+      class_id: 1,
+      place_id: 1,
+      product_id: 0,
+      teiki_start_date: null,
+      teiki_end_date: null,
+      teiki_start_id: 0,
+      teiki_end_id: 0,
+      teiki_id: 0,
+      teiki_company_id: 0,
+      price: charge,
+      purchase_price: charge
+    };
+
+    const token = localStorage.getItem('token');
+    const res2 = await fetch(`${BACKEND_ENDPOINT}/api/purchases`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify(payload2)
+    });
+
+    if (res2.ok) {
+      alert('チャージしました。');
+    } else {
+      alert('チャージしましたが、購入履歴の登録に失敗しました。管理者にお問い合わせ下さい。');
+    }
   } else {
     alert('チャージに失敗しました。管理者にお問い合わせ下さい。');
   }

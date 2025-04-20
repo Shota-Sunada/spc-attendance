@@ -13,6 +13,8 @@ import Charge from './pages/Charge';
 import { BACKEND_ENDPOINT, NO_USER } from './const';
 import AutoCharge from './pages/AutoCharge';
 import UserPage from './pages/User';
+import Purchases from './pages/Purchases';
+import PurchaseView from './pages/PurchaseView';
 
 export default function App() {
   const isSmartphone = UseMediaQuery(mediaQuery.smartphone);
@@ -60,6 +62,8 @@ export default function App() {
                   )
                 }></Route>
               <Route path="/charge" element={<Charge user={user} />}></Route>
+              <Route path="/purchases" element={<Purchases user={user} />}></Route>
+              <Route path="/purchase" element={<PurchaseView user={user} />}></Route>
               <Route path="/history" element={<History />}></Route>
               <Route path="/auto-charge" element={<AutoCharge user={user} />}></Route>
               <Route path="/reader" element={<ReaderPage />}></Route>

@@ -6,6 +6,7 @@ import User from '../types/User';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import { apiCharge } from '../api';
+import CreditsCard from '../components/CreditsCard';
 
 interface Props {
   user: User;
@@ -21,8 +22,8 @@ const Charge = (props: Props) => {
   const radioButtons2: number[] = [2000, 5000, 10000];
 
   const chargeMoney = async () => {
-    if ((props.user.balance + charge) > 30000) {
-      alert("チャージ後の金額が、30,000円を超えるため、チャージできません。")
+    if (props.user.balance + charge > 30000) {
+      alert('チャージ後の金額が、30,000円を超えるため、チャージできません。');
       return;
     }
 
@@ -79,30 +80,9 @@ const Charge = (props: Props) => {
               ))}
             </div>
           </div>
-          <div className="flex items-center justify-center mt-[20px]">
-            <div className="rounded-[5px] px-[10px] py-[10px] bg-[#ebebde] text-[12px]">
-              <div className="flex flex-row">
-                <dt className="pr-[10px]">
-                  <span className="text-[12px]">{"支払手段:"}</span>
-                </dt>
-                <dd>
-                  <p className="text-[12px] font-medium">{"班長のクレジットカード"}</p>
-                  <p className="text-[12px] font-medium mt-[6px]">{"ButsuryCard **** **** **** *817"}</p>
-                  <p className="text-[12px] font-medium mt-[6px]">{"有効期限: 03/34"}</p>
-                </dd>
-              </div>
-              <div className="flex flex-row mt-[6px]">
-                <dt className="pr-[10px]">
-                  <span className="text-[12px]">{'　決済額:'}</span>
-                </dt>
-                <dd>
-                  <span className='text-[12px] font-medium after:content-["\5186"]'>{charge.toLocaleString('es-US')}</span>
-                </dd>
-              </div>
-            </div>
-          </div>
-          <div className='mt-[20px]'>
-            <p className='text-[13px] font-normal'>{"チャージ後の残高は最大30,000円です。"}</p>
+          <CreditsCard charge={charge} />
+          <div className="mt-[20px]">
+            <p className="text-[13px] font-normal">{'チャージ後の残高は最大30,000円です。'}</p>
           </div>
           <div className="flex items-center justify-center m-[20px]">
             <MobiryButton text={'チャージする'} onClick={chargeMoney} />

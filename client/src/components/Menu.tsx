@@ -48,7 +48,7 @@ const Menu = (props: Props) => {
             </li>
             <li
               onClick={() => {
-                navigate('/buy-histories');
+                navigate('/purchases');
                 props.setIsOpen(false);
               }}>
               <div className="icon">

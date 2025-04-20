@@ -67,6 +67,11 @@ func init() {
 		logger.ErrorE(err)
 	}
 
+	_, err = db.Exec(createPurchaseHistoriesTable)
+	if err != nil {
+		logger.ErrorE(err)
+	}
+
 	logger.Info("Initializing process is done.")
 }
 
@@ -152,6 +157,26 @@ func main() {
 		switch r.Method {
 		case http.MethodPost:
 			update(w, r)
+		default:
+			w.WriteHeader(http.StatusMethodNotAllowed)
+		}
+	}))
+
+	logger.Info("Handling \"/api/purchases\" function")
+	http.HandleFunc("/api/purchases", handleCORS(func(w http.ResponseWriter, r *http.Request) {
+		switch r.Method {
+		case http.MethodPost:
+			handleAuthRequire(createPurchaseHistory)(w, r)
+		default:
+			w.WriteHeader(http.StatusMethodNotAllowed)
+		}
+	}))
+
+	logger.Info("Handling \"/getPurchases\" function")
+	http.HandleFunc("/getPurchases", handleCORS(func(w http.ResponseWriter, r *http.Request) {
+		switch r.Method {
+		case http.MethodPost:
+			getPurchaseHistories(w, r)
 		default:
 			w.WriteHeader(http.StatusMethodNotAllowed)
 		}
