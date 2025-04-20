@@ -205,47 +205,47 @@ const ReaderPage = () => {
 
   const handleScan = async () => {
     const result = scanResult.rawValue;
-    const qr_data = JSON.parse(result) as QRFormat | undefined;
-    if (!qr_data) {
-      setCurrentStatus('error');
-      return;
-    }
+    try {
+      const qr_data = JSON.parse(result) as QRFormat;
 
-    const payload = {
-      uuid: qr_data.data
-    };
+      const payload = {
+        uuid: qr_data.data
+      };
 
-    const res = await fetch(`${BACKEND_ENDPOINT}/useTicket`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(payload)
-    });
+      const res = await fetch(`${BACKEND_ENDPOINT}/useTicket`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      });
 
-    const data = (await res.json()) as Ticket;
-    if (res.ok) {
-      if (data == null) {
-        setCurrentStatus('error');
-      } else {
-        const payload2 = {
-          id: data.user_id
-        };
-        const res2 = await fetch(`${BACKEND_ENDPOINT}/api/users`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(payload2)
-        });
+      const data = (await res.json()) as Ticket;
+      if (res.ok) {
+        if (data == null) {
+          setCurrentStatus('error');
+        } else {
+          const payload2 = {
+            id: data.user_id
+          };
+          const res2 = await fetch(`${BACKEND_ENDPOINT}/api/users`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload2)
+          });
 
-        const data2 = (await res2.json()) as User;
-        if (res2.ok) {
-          setBalance(data2.balance);
+          const data2 = (await res2.json()) as User;
+          if (res2.ok) {
+            setBalance(data2.balance);
 
-          setCurrentStatus('getOn');
+            setCurrentStatus('getOn');
+          }
         }
       }
+    } catch {
+      setCurrentStatus('error');
     }
 
     setTimeout(() => {
