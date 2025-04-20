@@ -110,7 +110,7 @@ export async function apiGetOn(user: User, stop_id: number): Promise<boolean> {
     console.log('乗車しました。');
     return true;
   } else {
-    alert('乗車に失敗しました。');
+    console.log('乗車に失敗しました。');
     return false;
   }
 }
@@ -137,7 +137,35 @@ export async function apiPay(user: User, balance: number): Promise<boolean> {
     console.log('精算しました。');
     return true;
   } else {
-    alert('精算に失敗しました。');
+    console.log('精算に失敗しました。');
+    return false;
+  }
+}
+
+export async function apiCreateHistory(user: User, get_off_id: number, fare: number, balance: number, type_id: number, company_id: number) {
+  const payload = {
+    user_id: user.id,
+    get_on_id: user.last_get_on_id,
+    get_off_id: get_off_id,
+    fair: fare,
+    balance: balance,
+    type_id: type_id,
+    company_id: company_id
+  };
+
+  const res = await fetch(`${BACKEND_ENDPOINT}/api/histories`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(payload)
+  });
+
+  if (res.ok) {
+    console.log('履歴を作成しました。');
+    return true;
+  } else {
+    console.log('履歴の作成に失敗しました。');
     return false;
   }
 }

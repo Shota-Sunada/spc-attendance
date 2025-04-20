@@ -21,7 +21,7 @@ const (
 		)
 	`
 
-	insertHistory = "INSERT INTO histories (get_on_id, get_off_id, date, fair, balance, type_id, company) VALUES (?, ?, ?, ?, ?, ?, ?)"
+	insertHistory = "INSERT INTO histories (user_id, get_on_id, get_off_id, date, fair, balance, type_id, company_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
 
 	selectHistories = "SELECT * FROM histories WHERE user_id = ? ORDER BY date DESC"
 )

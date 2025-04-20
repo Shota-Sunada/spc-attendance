@@ -6,9 +6,19 @@ import Ticket from '../types/Ticket';
 import User from '../types/User';
 import { useSearchParams } from 'react-router-dom';
 import { QRFormat } from '../components/QRCode';
-import { apiCharge, apiGetOn, apiPay } from '../api';
+import { apiCharge, apiCreateHistory, apiGetOn, apiPay } from '../api';
 
-type ReaderStatus = 'getOn' | 'getOff' | 'standby' | 'standby-getOn' | 'standby-getOff' | 'isReading' | 'error' | 'no_balance' | 'no_id' | 'already_on';
+type ReaderStatus =
+  | 'getOn'
+  | 'getOff'
+  | 'standby'
+  | 'standby-getOn'
+  | 'standby-getOff'
+  | 'isReading'
+  | 'error'
+  | 'no_balance'
+  | 'no_id'
+  | 'already_on';
 type ReaderMode = 'get-on' | 'get-off' | 'get-on-off';
 
 const ReaderPage = () => {
@@ -274,7 +284,9 @@ const ReaderPage = () => {
   ]);
 
   const handleScan = async () => {
-    const current_stop_id = Number.parseInt(params.get('stop_id') ?? NOT_GET_ON_ID.toString());
+    const current_stop_id = Number.parseInt(params.get('stop_id') ?? '-1');
+    const type_id = Number.parseInt(params.get('type_id') ?? '-1');
+    const company_id = Number.parseInt(params.get('company_id') ?? '-1');
 
     console.log('現在: ', current_stop_id);
 
@@ -318,7 +330,7 @@ const ReaderPage = () => {
           const user = (await res2.json()) as User;
           if (res2.ok) {
             if (user.last_get_on_id === current_stop_id) {
-              setCurrentStatus("already_on")
+              setCurrentStatus('already_on');
               return;
             }
 
@@ -359,6 +371,7 @@ const ReaderPage = () => {
                 const fare_result = await apiPay(user, zangaku);
                 if (fare_result) {
                   setCurrentStatus('getOff');
+                  await apiCreateHistory(user, current_stop_id, FARE_ADULT, zangaku, type_id, company_id);
                 } else {
                   setCurrentStatus('error');
                 }
