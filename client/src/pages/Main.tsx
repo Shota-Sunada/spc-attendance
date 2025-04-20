@@ -5,8 +5,8 @@ import { BACKEND_ENDPOINT, QR_VERSION } from '../const';
 import Ticket from '../types/Ticket';
 import { IoQrCode } from 'react-icons/io5';
 import { TfiReload } from 'react-icons/tfi';
-import { CommuterTicketCard } from '../components/CommuterTicketCard';
-// import { NoCommuterTicketCard } from '../components/CommuterTicketCard';
+// import { CommuterTicketCard, NoCommuterTicketCard } from '../components/CommuterTicketCard';
+import { NoCommuterTicketCard } from '../components/CommuterTicketCard';
 import MobiryButton from '../components/MobiryButton';
 import { useNavigate } from 'react-router-dom';
 
@@ -173,7 +173,7 @@ const UserPage = (props: UserPageProps) => {
 
           <div className="flex flex-col items-center justify-center mt-[20px]">
             <p className="m-[10px] flex items-center justify-center font-medium mb-[30px]">定期券情報</p>
-            <CommuterTicketCard
+            {/* <CommuterTicketCard
               isStudent={false}
               company="物理班電鉄"
               route_start_stop_id={1}
@@ -181,8 +181,8 @@ const UserPage = (props: UserPageProps) => {
               subtext="修道物理班 デモンストレーション"
               start_date="2025.04.24"
               end_date="2025.04.25"
-            />
-            {/* <NoCommuterTicketCard /> */}
+            /> */}
+            <NoCommuterTicketCard />
             <MobiryButton text="定期券を購入する" onClick={() => navigate('/buy-commuter')} />
           </div>
         </div>
