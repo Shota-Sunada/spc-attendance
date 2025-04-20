@@ -82,17 +82,17 @@ const Charge = (props: Props) => {
           <div className="flex items-center justify-center mt-[20px]">
             <div className="rounded-[5px] px-[10px] py-[10px] bg-[#ebebde] text-[12px]">
               <div className="flex flex-row">
-                <dt className="pr-[20px]">
+                <dt className="pr-[10px]">
                   <span className="text-[12px]">{"支払手段:"}</span>
                 </dt>
                 <dd>
                   <p className="text-[12px] font-medium">{"班長のクレジットカード"}</p>
-                  <p className="text-[12px] font-medium mt-[6px]">{"SHUDO CARD **** **** **** *817"}</p>
+                  <p className="text-[12px] font-medium mt-[6px]">{"ButsuryCard **** **** **** *817"}</p>
                   <p className="text-[12px] font-medium mt-[6px]">{"有効期限: 03/34"}</p>
                 </dd>
               </div>
               <div className="flex flex-row mt-[6px]">
-                <dt className="pr-[20px]">
+                <dt className="pr-[10px]">
                   <span className="text-[12px]">{'　決済額:'}</span>
                 </dt>
                 <dd>
