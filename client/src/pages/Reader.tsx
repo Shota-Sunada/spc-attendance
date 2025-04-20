@@ -26,12 +26,12 @@ const ReaderPage = () => {
     () => (
       <tr className="">
         <td className="reader-left">
-          <p className="reader-text reader-text-left">精算額</p>
+          <p className="reader-text reader-text-left">{"精算額"}</p>
         </td>
         <td className="reader-right">
           <p className="reader-text reader-text-right">
             {/* {paid} */}
-            <span className="text-2xl">円</span>
+            <span className="text-2xl">{"円"}</span>
           </p>
         </td>
       </tr>
@@ -43,7 +43,7 @@ const ReaderPage = () => {
     () => (
       <tr className="">
         <td className="reader-left border-r-[1px] border-gray-500">
-          <p className="reader-text reader-text-left">整理券No.</p>
+          <p className="reader-text reader-text-left">{"整理券No."}</p>
         </td>
         <td className="reader-right">
           <p className="reader-text reader-text-right">{params.get('stop_id') ?? '未指定'}</p>
@@ -57,12 +57,12 @@ const ReaderPage = () => {
     () => (
       <tr className="bg-blue-400">
         <td className="reader-left border-r-[1px] border-gray-500">
-          <p className="reader-text reader-text-left">残額</p>
+          <p className="reader-text reader-text-left">{"残額"}</p>
         </td>
         <td className="reader-right">
           <p className="reader-text reader-text-right">
             {balance}
-            <span className="text-2xl">円</span>
+            <span className="text-2xl">{"円"}</span>
           </p>
         </td>
       </tr>
@@ -74,11 +74,11 @@ const ReaderPage = () => {
     () => (
       <tr>
         <td className="reader-left border-r-[1px] border-gray-500">
-          <p className="reader-text reader-text-left">有効期限</p>
+          <p className="reader-text reader-text-left">{"有効期限"}</p>
         </td>
         <td className="reader-right">
           <p className="reader-text reader-text-right">
-            2025<span className="text-2xl">年</span>11<span className="text-2xl">月</span>4<span className="text-2xl">日</span>
+            {"2025"}<span className="text-2xl">{"年"}</span>11<span className="text-2xl">{"月"}</span>4<span className="text-2xl">{"日"}</span>
           </p>
         </td>
       </tr>
@@ -90,7 +90,7 @@ const ReaderPage = () => {
     () => (
       <tr className="bg-gray-600">
         <td className="reader-left" colSpan={2}>
-          <p className="reader-text text-center text-2xl text-green-500">QRコードをかざしてください。</p>
+          <p className="reader-text text-center text-2xl text-green-500">{"QRコードをかざしてください。"}</p>
         </td>
       </tr>
     ),
@@ -101,7 +101,7 @@ const ReaderPage = () => {
     () => (
       <tr className="bg-green-400">
         <td className="reader-left" colSpan={2}>
-          <p className="reader-text text-center text-2xl text-gray-800">しばらくお待ち下さい。</p>
+          <p className="reader-text text-center text-2xl text-gray-800">{"しばらくお待ち下さい。"}</p>
         </td>
       </tr>
     ),
@@ -126,7 +126,7 @@ const ReaderPage = () => {
     () => (
       <tr className="bg-red-800">
         <td className="reader-left" colSpan={2}>
-          <p className="reader-text text-center text-2xl text-gray-800">エラーが発生しました。</p>
+          <p className="reader-text text-center text-2xl text-gray-800">{"エラーが発生しました。"}</p>
         </td>
       </tr>
     ),
