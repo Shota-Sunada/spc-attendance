@@ -3,6 +3,7 @@ import { SiMoneygram } from 'react-icons/si';
 import { PiTimer } from 'react-icons/pi';
 import { FaUserAlt } from 'react-icons/fa';
 import { IoClose } from 'react-icons/io5';
+import { FaHouse } from "react-icons/fa6";
 import '../styles/menu.css';
 import { useNavigate } from 'react-router-dom';
 
@@ -25,6 +26,16 @@ const Menu = (props: Props) => {
         </div>
         <div className="mt-[108px]">
           <ul className="flex flex-col m-0 p-0">
+            <li
+              onClick={() => {
+                navigate('/');
+                props.setIsOpen(false);
+              }}>
+              <div className="icon">
+                <FaHouse size={'30px'} color="#fc1d25" />
+              </div>
+              <a>ホーム</a>
+            </li>
             <li
               onClick={() => {
                 navigate('/auto-charge');
