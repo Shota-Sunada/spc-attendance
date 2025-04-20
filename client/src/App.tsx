@@ -1,5 +1,5 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import UserPage from './pages/User';
+import Main from './pages/Main';
 import History from './pages/History';
 import { useEffect, useState } from 'react';
 import LoginRegister from './pages/LoginRegister';
@@ -53,7 +53,7 @@ export default function App() {
                 path="/"
                 element={
                   user.id != -1 ? (
-                    <UserPage user={user} setUser={setUser} isSmartphone={isSmartphone} isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
+                    <Main user={user} setUser={setUser} isSmartphone={isSmartphone} isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
                   ) : (
                     <LoginRegister setUser={setUser} />
                   )
