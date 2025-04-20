@@ -21,6 +21,11 @@ const Charge = (props: Props) => {
   const radioButtons2: number[] = [2000, 5000, 10000];
 
   const chargeMoney = async () => {
+    if ((props.user.balance + charge) > 30000) {
+      alert("チャージ後の金額が、30,000円を超えるため、チャージできません。")
+      return;
+    }
+
     apiCharge(props.user, charge, navigate);
   };
 
@@ -33,7 +38,7 @@ const Charge = (props: Props) => {
             <div className="flex flex-col w-[100%]">
               <p className="font-medium text-[12px] min-w-[130px] mb-[4px]">{'現在の残高'}</p>
               <p className='font-semibold text-[32px] after:content-["\5186"] after:text-[14px] text-[#462066] text-right tracking-wide leading-[1]'>
-                {(props.user.balance + charge).toLocaleString('es-US')}
+                {props.user.balance.toLocaleString('es-US')}
               </p>
             </div>
             <div className="m-[10px] flex items-center justify-center">
