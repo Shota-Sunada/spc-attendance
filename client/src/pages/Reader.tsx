@@ -6,6 +6,7 @@ import Ticket from '../types/Ticket';
 import User from '../types/User';
 import { useSearchParams } from 'react-router-dom';
 import { QRFormat } from '../components/QRCode';
+import { apiCharge } from '../api';
 
 type ReaderStatus = 'getOn' | 'getOff' | 'standby' | 'standby-getOn' | 'standby-getOff' | 'isReading' | 'error';
 type ReaderMode = 'get-on' | 'get-off' | 'get-on-off';
@@ -110,6 +111,28 @@ const ReaderPage = () => {
     []
   );
 
+  const tableBottomPleaseCharge = useCallback(
+    () => (
+      <tr className="bg-green-400">
+        <td className="reader-left" colSpan={2}>
+          <p className="reader-text text-center text-2xl text-gray-800">{'チャージしてください。'}</p>
+        </td>
+      </tr>
+    ),
+    []
+  );
+
+  const tableBottomAutoCharge = useCallback(
+    () => (
+      <tr className="bg-green-400">
+        <td className="reader-left" colSpan={2}>
+          <p className="reader-text text-center text-2xl text-gray-800">{'オートチャージします。'}</p>
+        </td>
+      </tr>
+    ),
+    []
+  );
+
   const tableNullRow = useCallback(
     () => (
       <tr className="">
@@ -146,7 +169,6 @@ const ReaderPage = () => {
         setHeaderCss('bg-blue-400 text-white');
         setTableTop(tableTopNumber);
         setTableMiddle(tableMiddleBalance);
-        setTableBottom(tableNullRow);
         break;
       case 'getOff':
         setHeaderText('SF利用');
@@ -209,7 +231,8 @@ const ReaderPage = () => {
       const qr_data = JSON.parse(result) as QRFormat;
 
       const payload = {
-        uuid: qr_data.data
+        uuid: qr_data.data,
+        stop_id: Number.parseInt(params.get('stop_id') ?? '0')
       };
 
       const res = await fetch(`${BACKEND_ENDPOINT}/useTicket`, {
@@ -236,11 +259,23 @@ const ReaderPage = () => {
             body: JSON.stringify(payload2)
           });
 
-          const data2 = (await res2.json()) as User;
+          const user = (await res2.json()) as User;
           if (res2.ok) {
-            setBalance(data2.balance);
+            setBalance(user.balance);
 
             setCurrentStatus('getOn');
+            if (user.balance < 1000) {
+              if (user.enable_auto_charge) {
+                if (user.balance < user.auto_charge_balance) {
+                  setTableBottom(tableBottomAutoCharge);
+                  apiCharge(user, 1000, false, null);
+                }
+              } else {
+                setTableBottom(tableBottomPleaseCharge);
+              }
+            } else {
+              setTableBottom(tableNullRow);
+            }
           }
         }
       }

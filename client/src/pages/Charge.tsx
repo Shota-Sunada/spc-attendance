@@ -27,7 +27,7 @@ const Charge = (props: Props) => {
       return;
     }
 
-    apiCharge(props.user, charge, navigate);
+    apiCharge(props.user, charge, true, navigate);
   };
 
   return (

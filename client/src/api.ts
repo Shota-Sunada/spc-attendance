@@ -2,7 +2,7 @@ import { NavigateFunction } from 'react-router-dom';
 import { BACKEND_ENDPOINT } from './const';
 import User from './types/User';
 
-export async function apiCharge(user: User, charge: number, navigate: NavigateFunction) {
+export async function apiCharge(user: User, charge: number, showNotify: boolean, navigate: NavigateFunction | null) {
   const payload = {
     name: user.name,
     balance: user.balance + charge,
@@ -37,25 +37,29 @@ export async function apiCharge(user: User, charge: number, navigate: NavigateFu
       purchase_price: charge
     };
 
-    const token = localStorage.getItem('token');
     const res2 = await fetch(`${BACKEND_ENDPOINT}/api/purchases`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify(payload2)
     });
 
-    if (res2.ok) {
-      alert('チャージしました。');
-    } else {
-      alert('チャージしましたが、購入履歴の登録に失敗しました。管理者にお問い合わせ下さい。');
+    if (showNotify) {
+      if (res2.ok) {
+        alert('チャージしました。');
+      } else {
+        alert('チャージしましたが、購入履歴の登録に失敗しました。管理者にお問い合わせ下さい。');
+      }
     }
   } else {
-    alert('チャージに失敗しました。管理者にお問い合わせ下さい。');
+    if (showNotify) {
+      alert('チャージに失敗しました。管理者にお問い合わせ下さい。');
+    }
   }
-  navigate('/');
+  if (navigate) {
+    navigate('/');
+  }
 }
 
 export async function apiAutoCharge(user: User, enabled: boolean, balance: number, charge: number, navigate: NavigateFunction) {

@@ -30,6 +30,7 @@ type Ticket struct {
 	ID        int    `json:"id"`
 	UserId    int    `json:"user_id"`
 	Uuid      string `json:"uuid"`
+	StopId    int    `json:"stop_id"`
 	Disabled  bool   `json:"disabled"`
 	DateLimit string `json:"date_limit"`
 }
@@ -89,7 +90,7 @@ func useTicket(w http.ResponseWriter, r *http.Request) {
 	var ticket Ticket
 	err := row.Scan(&ticket.ID, &ticket.UserId, &ticket.Uuid, &ticket.Disabled, &ticket.DateLimit)
 	if err != nil {
-		logger.Error("The internal server error is occurred: useTicket-Scan")
+		logger.Error("The internal server error is occurred: useTicket-Scan selectTicketByUUID")
 		logger.ErrorE(err)
 		respondJSON(w, http.StatusInternalServerError, err.Error())
 		return
@@ -106,11 +107,38 @@ func useTicket(w http.ResponseWriter, r *http.Request) {
 
 	_, err = db.Exec(updateTicketDisabled, ticket.Uuid)
 	if err != nil {
-		logger.Error("The internal server error is occurred: useTicket-Exec")
+		logger.Error("The internal server error is occurred: useTicket-Exec updateTicketDisabled")
 		logger.ErrorE(err)
 		respondJSON(w, http.StatusInternalServerError, err.Error())
 		return
 	}
+
+	row = db.QueryRow(selectUserById, ticket.UserId)
+	var user User
+	err = row.Scan(&user.ID, &user.Name, &user.Password, &user.IsAdmin, &user.Balance, &user.LastGetOnId, &user.CreatedAt, &user.EnableAutoCharge, &user.AutoChargeBalance, &user.AutoChargeCharge)
+	if err != nil {
+		logger.Error("The internal server error is occurred: getUserById-Scan selectUserById")
+		logger.ErrorE(err)
+		respondJSON(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	_, err = db.Exec(updateUserByName, user.Balance, arg.StopId, user.EnableAutoCharge, user.AutoChargeBalance, user.AutoChargeCharge, user.Name)
+	if err != nil {
+		logger.Error("The internal server error is occurred: useTicket-Exec updateUserByName")
+		logger.ErrorE(err)
+		respondJSON(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	logger.Info("======= The user status was updated. ========")
+	logger.Info(fmt.Sprintf("Name: %s", user.Name))
+	logger.Info(fmt.Sprintf("Balance: %d", user.Balance))
+	logger.Info(fmt.Sprintf("LastGetOnId: %d", user.LastGetOnId))
+	logger.Info(fmt.Sprintf("EnableAutoCharge: %t", user.EnableAutoCharge))
+	logger.Info(fmt.Sprintf("AutoChargeBalance: %d", user.AutoChargeBalance))
+	logger.Info(fmt.Sprintf("AutoChargeCharge: %d", user.AutoChargeCharge))
+	logger.Info("=============================================")
 
 	respondJSON(w, http.StatusOK, ticket)
 }
