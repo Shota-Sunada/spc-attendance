@@ -72,6 +72,11 @@ func init() {
 		logger.ErrorE(err)
 	}
 
+	_, err = db.Exec(createAdminTable)
+	if err != nil {
+		logger.ErrorE(err)
+	}
+
 	logger.Info("Initializing process is done.")
 }
 
@@ -185,6 +190,36 @@ func main() {
 		switch r.Method {
 		case http.MethodPost:
 			getPurchaseHistories(w, r)
+		default:
+			w.WriteHeader(http.StatusMethodNotAllowed)
+		}
+	}))
+
+	logger.Info("Handling \"/api/admin\" function")
+	http.HandleFunc("/api/admin", handleCORS(func(w http.ResponseWriter, r *http.Request) {
+		switch r.Method {
+		case http.MethodPost:
+			createAdmin(w, r)
+		default:
+			w.WriteHeader(http.StatusMethodNotAllowed)
+		}
+	}))
+
+	logger.Info("Handling \"/getAdmin\" function")
+	http.HandleFunc("/getAdmin", handleCORS(func(w http.ResponseWriter, r *http.Request) {
+		switch r.Method {
+		case http.MethodPost:
+			getAdmin(w, r)
+		default:
+			w.WriteHeader(http.StatusMethodNotAllowed)
+		}
+	}))
+
+	logger.Info("Handling \"/updateAdmin\" function")
+	http.HandleFunc("/updateAdmin", handleCORS(func(w http.ResponseWriter, r *http.Request) {
+		switch r.Method {
+		case http.MethodPost:
+			updateAdminF(w, r)
 		default:
 			w.WriteHeader(http.StatusMethodNotAllowed)
 		}

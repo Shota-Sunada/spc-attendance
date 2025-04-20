@@ -15,6 +15,7 @@ import AutoCharge from './pages/AutoCharge';
 import UserPage from './pages/User';
 import Purchases from './pages/Purchases';
 import PurchaseView from './pages/PurchaseView';
+import ReaderAdmin from './pages/ReaderAdmin';
 
 export default function App() {
   const isSmartphone = UseMediaQuery(mediaQuery.smartphone);
@@ -67,6 +68,7 @@ export default function App() {
               <Route path="/usage-histories" element={<History user={user} />}></Route>
               <Route path="/auto-charge" element={<AutoCharge user={user} />}></Route>
               <Route path="/reader" element={<ReaderPage />}></Route>
+              <Route path="/reader-admin" element={<ReaderAdmin />}></Route>
               <Route path="/user" element={<UserPage user={user} />}></Route>
               <Route path="/*" element={<Page404 />}></Route>
             </Routes>

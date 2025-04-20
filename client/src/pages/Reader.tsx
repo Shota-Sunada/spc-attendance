@@ -1,12 +1,13 @@
 import { Scanner, IDetectedBarcode } from '@yudiel/react-qr-scanner';
 import { ReactElement, useCallback, useEffect, useState } from 'react';
 import '../styles/reader.css';
-import { BACKEND_ENDPOINT, FARE_ADULT, NOT_GET_ON_ID } from '../const';
+import { BACKEND_ENDPOINT, FARE_ADULT, FARE_CHILDREN, NOT_GET_ON_ID } from '../const';
 import Ticket from '../types/Ticket';
 import User from '../types/User';
 import { useSearchParams } from 'react-router-dom';
 import { QRFormat } from '../components/QRCode';
-import { apiCharge, apiCreateChargeHistory, apiCreateHistory, apiGetOn, apiPay } from '../api';
+import { apiCancel, apiCharge, apiCreateChargeHistory, apiCreateHistory, apiGetOn, apiPay } from '../api';
+import { Admin } from '../types/Admin';
 
 type ReaderStatus =
   | 'getOn'
@@ -18,6 +19,7 @@ type ReaderStatus =
   | 'error'
   | 'no_balance'
   | 'no_id'
+  | 'cancel'
   | 'already_on';
 type ReaderMode = 'get-on' | 'get-off' | 'get-on-off';
 
@@ -32,7 +34,36 @@ const ReaderPage = () => {
   const [currentMode, setCurrentMode] = useState<ReaderMode>('get-on-off');
   const [readHistory, setReadHistory] = useState<string[]>([]);
 
+  const [id6, setId6] = useState<number>(10000);
+  const [adultNum, setAdultNum] = useState<number | null>(null);
+  const [childrenNum, setChildrenNum] = useState<number | null>(null);
+  const [isCancel, setIsCancel] = useState<boolean | null>(null);
+  const [startId, setStartId] = useState<number | null>(null);
+  const [endId, setEndId] = useState<number | null>(null);
+  const [fareDirect, setFareDirect] = useState<number | null>(null);
+
   const [params] = useSearchParams();
+
+  useEffect(() => {
+    async function fetchAdmin() {
+      const res = await fetch(`${BACKEND_ENDPOINT}/api/admin`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (res.ok) {
+        const data = (await res.json()) as Admin;
+        setId6(data.id6);
+        console.log('管理システム接続: ', data.id6);
+      } else {
+        console.log('管理システム接続失敗');
+      }
+    }
+
+    fetchAdmin();
+  }, []);
 
   const tableTopPaid = useCallback(
     () => (
@@ -137,6 +168,17 @@ const ReaderPage = () => {
       <tr className="bg-green-400">
         <td className="reader-left" colSpan={2}>
           <p className="reader-text text-center text-2xl text-gray-800">{'オートチャージします。'}</p>
+        </td>
+      </tr>
+    ),
+    []
+  );
+
+  const tableBottomCancel = useCallback(
+    () => (
+      <tr className="bg-green-400">
+        <td className="reader-left" colSpan={2}>
+          <p className="reader-text text-center text-2xl text-gray-800">{'乗車情報を取り消しました。'}</p>
         </td>
       </tr>
     ),
@@ -248,6 +290,10 @@ const ReaderPage = () => {
         setTableMiddle(tableError);
         setTableBottom(tableNullRow);
         break;
+      case 'cancel':
+        setTableMiddle(tableBottomCancel);
+        setTableBottom(tableNullRow);
+        break;
       case 'no_balance':
         setTableMiddle(tableNoBalance);
         setTableBottom(tableNullRow);
@@ -276,6 +322,7 @@ const ReaderPage = () => {
     tableMiddleBalance,
     tableTopNumber,
     tableTopPaid,
+    tableBottomCancel,
     tableNullRow,
     tableNoBalance,
     tableIdNotSet,
@@ -362,19 +409,56 @@ const ReaderPage = () => {
             } else {
               console.log('降車');
 
-              const zangaku = user.balance - FARE_ADULT;
-              if (zangaku < 0) {
-                setCurrentStatus('no_balance');
+              if (isCancel) {
+                apiCancel(user);
+                setCurrentStatus('cancel');
               } else {
-                setBalance(zangaku);
-                setPaid(FARE_ADULT);
+                let adult_num = 1;
+                let children_num = 0;
+                if (adultNum) {
+                  adult_num = adultNum;
+                  console.log(adult_num);
+                }
+                if (childrenNum) {
+                  children_num = childrenNum;
+                }
 
-                const fare_result = await apiPay(user, zangaku);
-                if (fare_result) {
-                  setCurrentStatus('getOff');
-                  apiCreateHistory(user, current_stop_id, FARE_ADULT, zangaku, type_id, company_id);
+                let fare = FARE_ADULT * adult_num + FARE_CHILDREN * children_num;
+                if (fareDirect) {
+                  fare = fareDirect;
+                }
+
+                const zan = user.balance - fare;
+                if (zan < 0) {
+                  setCurrentStatus('no_balance');
                 } else {
-                  setCurrentStatus('error');
+                  setBalance(zan);
+                  setPaid(fare);
+
+                  const fare_result = await apiPay(user, zan);
+                  if (fare_result) {
+                    setCurrentStatus('getOff');
+
+                    let start = null;
+                    let end = current_stop_id;
+                    if (startId) {
+                      start = startId;
+                    }
+                    if (endId) {
+                      end = endId;
+                    }
+
+                    apiCreateHistory(user, start, end, fare, zan, type_id, company_id);
+
+                    setAdultNum(null);
+                    setChildrenNum(null);
+                    setIsCancel(null);
+                    setStartId(null);
+                    setEndId(null);
+                    setFareDirect(null);
+                  } else {
+                    setCurrentStatus('error');
+                  }
                 }
               }
             }
@@ -434,7 +518,7 @@ const ReaderPage = () => {
   };
 
   return (
-    <div className="bg-black">
+    <div className="bg-black flex flex-row">
       <div className="m-auto h-screen w-screen max-w-[400px] flex flex-col">
         <p className={headerCss + ' pl-1 font-bold shrink'}>{headerText}</p>
         <div className="bg-gray-700 grow">
@@ -528,6 +612,50 @@ const ReaderPage = () => {
             }}
           />
         </div>
+      </div>
+
+      <div className="fixed bottom-0 right-0">
+        <p className="text-white">{id6}</p>
+        <p
+          className="text-black cursor-pointer bg-white text-center hover:bg-blue-300"
+          onClick={() => {
+            async function fetchAdmin() {
+              const payload = {
+                id6: id6
+              };
+
+              const res = await fetch(`${BACKEND_ENDPOINT}/getAdmin`, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+              });
+
+              if (res.ok) {
+                const data = (await res.json()) as Admin;
+                setAdultNum(data.adult_num);
+                console.log(data.adult_num);
+                setChildrenNum(data.children_num);
+                console.log(data.children_num);
+                setIsCancel(data.is_cancel);
+                console.log(data.is_cancel);
+                setStartId(data.start_id);
+                console.log(data.start_id);
+                setEndId(data.end_id);
+                console.log(data.end_id);
+                setFareDirect(data.fare_direct);
+                console.log(data.fare_direct);
+                console.log('管理システム接続 設定更新');
+              } else {
+                console.log('管理システム接続失敗');
+              }
+            }
+
+            fetchAdmin();
+          }}>
+          {'更新'}
+        </p>
       </div>
     </div>
   );

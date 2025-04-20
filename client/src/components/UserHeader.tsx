@@ -20,12 +20,12 @@ const UserHeader = (props: Props) => {
 
     props.setUser(NO_USER);
     localStorage.removeItem('token');
-    navigate("/")
+    navigate('/');
   };
 
   return (
     <>
-      {loc.pathname === '/reader' ? (
+      {loc.pathname === '/reader' || loc.pathname === '/reader-admin' ? (
         <></>
       ) : (
         <>

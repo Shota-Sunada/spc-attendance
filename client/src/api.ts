@@ -115,6 +115,33 @@ export async function apiGetOn(user: User, stop_id: number): Promise<boolean> {
   }
 }
 
+export async function apiCancel(user: User): Promise<boolean> {
+  const payload = {
+    name: user.name,
+    balance: user.balance,
+    last_get_on_id: NOT_GET_ON_ID,
+    enable_auto_charge: user.enable_auto_charge,
+    auto_charge_balance: user.auto_charge_balance,
+    auto_charge_charge: user.auto_charge_charge
+  };
+
+  const res = await fetch(`${BACKEND_ENDPOINT}/api/update`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(payload)
+  });
+
+  if (res.ok) {
+    console.log('乗車処理を取り消しました。');
+    return true;
+  } else {
+    console.log('乗車処理取り消しに失敗しました。');
+    return false;
+  }
+}
+
 export async function apiPay(user: User, balance: number): Promise<boolean> {
   const payload = {
     name: user.name,
@@ -142,10 +169,10 @@ export async function apiPay(user: User, balance: number): Promise<boolean> {
   }
 }
 
-export async function apiCreateHistory(user: User, get_off_id: number, fare: number, balance: number, type_id: number, company_id: number) {
+export async function apiCreateHistory(user: User, get_on_id: number | null, get_off_id: number, fare: number, balance: number, type_id: number, company_id: number) {
   const payload = {
     user_id: user.id,
-    get_on_id: user.last_get_on_id,
+    get_on_id: get_on_id ? get_on_id :user.last_get_on_id,
     get_off_id: get_off_id,
     fair: fare,
     balance: balance,
