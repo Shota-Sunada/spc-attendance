@@ -11,8 +11,8 @@ const (
 		CREATE TABLE IF NOT EXISTS histories (
 			id 			INT PRIMARY KEY AUTO_INCREMENT,
 			user_id		INT NOT NULL,
-			get_on_id 	INT NULL DEFAULT -1,
-			get_off_id 	INT NULL DEFAULT -1,
+			get_on_id 	INT NULL DEFAULT 0,
+			get_off_id 	INT NULL DEFAULT 0,
 			date 		DATETIME DEFAULT CURRENT_TIMESTAMP,
 			fair 		INT NOT NULL,
 			balance 	INT NOT NULL,

@@ -1,7 +1,7 @@
 import User from '../types/User';
 import '../styles/table.css';
 import { useEffect, useState } from 'react';
-import { BACKEND_ENDPOINT } from '../const';
+import { BACKEND_ENDPOINT, COMPANY, STATIONS, TYPE } from '../const';
 import { v4 as uuidv4 } from 'uuid';
 import { format, parse } from 'date-fns';
 import { History as TypeHistory } from '../types/History';
@@ -56,32 +56,47 @@ const History = (props: Props) => {
             </tr>
           </thead>
           <tbody>
-            {histories.map((x, i) => (
-              <>
+            {histories.map((x, i) =>
+              x.type_id === 1 ? (
+                <>
+                  <tr key={uuidv4()}>
+                    <td className={(i % 2 === 0 ? 'bg-[#ffffff]' : 'bg-[#fcfbf7]') + ' text-[12px]'} rowSpan={2}>
+                      {format(parse(x.date, 'yyyy-MM-dd HH:SS:mm', new Date()), 'yyyy.MM.dd')}
+                    </td>
+                    <td className={(i % 2 === 0 ? 'bg-[#ffffff]' : 'bg-[#fcfbf7]') + ' text-[12px]'}>
+                      {STATIONS[x.get_on_id]}
+                      <br />
+                      {STATIONS[x.get_off_id]}
+                    </td>
+                    <td className={(i % 2 === 0 ? 'bg-[#ffffff]' : 'bg-[#fcfbf7]') + ' text-[12px]'}>
+                      {x.balance.toLocaleString('en-US') + '円'}
+                      <br />
+                      {'-'}
+                      {x.fair.toLocaleString('en-US') + '円'}
+                    </td>
+                    <td className={(i % 2 === 0 ? 'bg-[#ffffff]' : 'bg-[#fcfbf7]') + ' text-[12px]'}>{TYPE[x.type_id]}</td>
+                  </tr>
+                  <tr key={uuidv4()}>
+                    <td className={(i % 2 === 0 ? 'bg-[#ffffff]' : 'bg-[#fcfbf7]') + ' text-[12px]'} colSpan={3}>
+                      {COMPANY[x.company_id]}
+                    </td>
+                  </tr>
+                </>
+              ) : (
                 <tr key={uuidv4()}>
-                  <td className={(i % 2 === 0 ? 'bg-[#ffffff]' : 'bg-[#fcfbf7]') + ' text-[12px]'} rowSpan={2}>
+                  <td className={(i % 2 === 0 ? 'bg-[#ffffff]' : 'bg-[#fcfbf7]') + ' text-[12px]'}>
                     {format(parse(x.date, 'yyyy-MM-dd HH:SS:mm', new Date()), 'yyyy.MM.dd')}
                   </td>
-                  <td className={(i % 2 === 0 ? 'bg-[#ffffff]' : 'bg-[#fcfbf7]') + ' text-[12px]'}>
-                    {x.get_on_id}
-                    <br />
-                    {x.get_off_id}
-                  </td>
+                  <td className={(i % 2 === 0 ? 'bg-[#ffffff]' : 'bg-[#fcfbf7]') + ' text-[12px]'}></td>
                   <td className={(i % 2 === 0 ? 'bg-[#ffffff]' : 'bg-[#fcfbf7]') + ' text-[12px]'}>
                     {x.balance.toLocaleString('en-US') + '円'}
                     <br />
-                    {'-'}
                     {x.fair.toLocaleString('en-US') + '円'}
                   </td>
-                  <td className={(i % 2 === 0 ? 'bg-[#ffffff]' : 'bg-[#fcfbf7]') + ' text-[12px]'}>{x.type_id}</td>
+                  <td className={(i % 2 === 0 ? 'bg-[#ffffff]' : 'bg-[#fcfbf7]') + ' text-[12px]'}>{TYPE[x.type_id]}</td>
                 </tr>
-                <tr>
-                  <td className={(i % 2 === 0 ? 'bg-[#ffffff]' : 'bg-[#fcfbf7]') + ' text-[12px]'} colSpan={3}>
-                    {x.company_id}
-                  </td>
-                </tr>
-              </>
-            ))}
+              )
+            )}
           </tbody>
         </table>
       </div>

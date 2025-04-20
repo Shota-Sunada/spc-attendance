@@ -20,7 +20,7 @@ const UserHeader = (props: Props) => {
 
     props.setUser(NO_USER);
     localStorage.removeItem('token');
-    location.reload();
+    navigate("/")
   };
 
   return (

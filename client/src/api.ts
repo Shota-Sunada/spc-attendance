@@ -169,3 +169,31 @@ export async function apiCreateHistory(user: User, get_off_id: number, fare: num
     return false;
   }
 }
+
+export async function apiCreateChargeHistory(user: User, fare: number, balance: number, type_id: number) {
+  const payload = {
+    user_id: user.id,
+    get_on_id: user.last_get_on_id,
+    get_off_id: 0,
+    fair: fare,
+    balance: balance,
+    type_id: type_id,
+    company_id: 0
+  };
+
+  const res = await fetch(`${BACKEND_ENDPOINT}/api/histories`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(payload)
+  });
+
+  if (res.ok) {
+    console.log('履歴を作成しました。');
+    return true;
+  } else {
+    console.log('履歴の作成に失敗しました。');
+    return false;
+  }
+}

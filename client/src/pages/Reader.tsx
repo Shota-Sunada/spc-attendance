@@ -6,7 +6,7 @@ import Ticket from '../types/Ticket';
 import User from '../types/User';
 import { useSearchParams } from 'react-router-dom';
 import { QRFormat } from '../components/QRCode';
-import { apiCharge, apiCreateHistory, apiGetOn, apiPay } from '../api';
+import { apiCharge, apiCreateChargeHistory, apiCreateHistory, apiGetOn, apiPay } from '../api';
 
 type ReaderStatus =
   | 'getOn'
@@ -284,9 +284,9 @@ const ReaderPage = () => {
   ]);
 
   const handleScan = async () => {
-    const current_stop_id = Number.parseInt(params.get('stop_id') ?? '-1');
-    const type_id = Number.parseInt(params.get('type_id') ?? '-1');
-    const company_id = Number.parseInt(params.get('company_id') ?? '-1');
+    const current_stop_id = Number.parseInt(params.get('stop_id') ?? '0');
+    const type_id = Number.parseInt(params.get('type_id') ?? '0');
+    const company_id = Number.parseInt(params.get('company_id') ?? '0');
 
     console.log('現在: ', current_stop_id);
 
@@ -334,7 +334,7 @@ const ReaderPage = () => {
               return;
             }
 
-            console.log(user);
+            console.log(user.last_get_on_id);
             if (user.last_get_on_id === NOT_GET_ON_ID) {
               console.log('乗車');
 
@@ -348,6 +348,7 @@ const ReaderPage = () => {
                     if (user.balance < user.auto_charge_balance) {
                       setTableBottom(tableBottomAutoCharge);
                       apiCharge(user, 1000, false, current_stop_id, null);
+                      apiCreateChargeHistory(user, 1000, user.balance + 1000, 2);
                     }
                   } else {
                     setTableBottom(tableBottomPleaseCharge);
@@ -371,7 +372,7 @@ const ReaderPage = () => {
                 const fare_result = await apiPay(user, zangaku);
                 if (fare_result) {
                   setCurrentStatus('getOff');
-                  await apiCreateHistory(user, current_stop_id, FARE_ADULT, zangaku, type_id, company_id);
+                  apiCreateHistory(user, current_stop_id, FARE_ADULT, zangaku, type_id, company_id);
                 } else {
                   setCurrentStatus('error');
                 }

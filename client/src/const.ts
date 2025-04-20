@@ -20,4 +20,8 @@ export const NO_USER: User = {
 export const FARE_ADULT = 220;
 export const FARE_CHILDREN = 110;
 
-export const NOT_GET_ON_ID = -1;
+export const NOT_GET_ON_ID = 0;
+
+export const STATIONS = ['　', '歩・物化第二', '歩・物理', '歩・鉄道研究', '歩・ｼﾞｬｸﾞﾘﾝｸﾞ'];
+export const TYPE = ['　', '乗降', 'オートチャージ', 'チャージ'];
+export const COMPANY = ['　', '修道物理班'];

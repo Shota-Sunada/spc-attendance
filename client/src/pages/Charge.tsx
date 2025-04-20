@@ -5,7 +5,7 @@ import { useState } from 'react';
 import User from '../types/User';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
-import { apiCharge } from '../api';
+import { apiCharge, apiCreateChargeHistory } from '../api';
 import CreditsCard from '../components/CreditsCard';
 
 interface Props {
@@ -28,6 +28,7 @@ const Charge = (props: Props) => {
     }
 
     apiCharge(props.user, charge, true, null, navigate);
+    apiCreateChargeHistory(props.user, charge, props.user.balance + charge, 3);
   };
 
   return (
