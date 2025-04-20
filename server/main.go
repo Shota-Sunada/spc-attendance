@@ -91,7 +91,7 @@ func main() {
 	http.HandleFunc("/api/histories", handleCORS(func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case http.MethodPost:
-			handleAuthRequire(createHistory)(w, r)
+			createHistory(w, r)
 		default:
 			w.WriteHeader(http.StatusMethodNotAllowed)
 		}
