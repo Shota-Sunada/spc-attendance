@@ -90,10 +90,18 @@ func main() {
 	logger.Info("Handling \"/api/histories\" function")
 	http.HandleFunc("/api/histories", handleCORS(func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
-		case http.MethodGet:
-			getHistories(w, r)
 		case http.MethodPost:
 			handleAuthRequire(createHistory)(w, r)
+		default:
+			w.WriteHeader(http.StatusMethodNotAllowed)
+		}
+	}))
+
+	logger.Info("Handling \"/getHistories\" function")
+	http.HandleFunc("/getHistories", handleCORS(func(w http.ResponseWriter, r *http.Request) {
+		switch r.Method {
+		case http.MethodPost:
+			getHistories(w, r)
 		default:
 			w.WriteHeader(http.StatusMethodNotAllowed)
 		}

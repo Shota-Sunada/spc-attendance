@@ -64,7 +64,7 @@ export default function App() {
               <Route path="/charge" element={<Charge user={user} />}></Route>
               <Route path="/purchases" element={<Purchases user={user} />}></Route>
               <Route path="/purchase" element={<PurchaseView user={user} />}></Route>
-              <Route path="/history" element={<History />}></Route>
+              <Route path="/usage-histories" element={<History user={user} />}></Route>
               <Route path="/auto-charge" element={<AutoCharge user={user} />}></Route>
               <Route path="/reader" element={<ReaderPage />}></Route>
               <Route path="/user" element={<UserPage user={user} />}></Route>

@@ -1,9 +1,9 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import User from '../types/User';
 import { BACKEND_ENDPOINT } from '../const';
 import { Purchase, PurchaseClasses, PurchaseTypes } from '../types/Purchase';
 import { v4 as uuidv4 } from 'uuid';
-import '../styles/purchases.css';
+import '../styles/table.css';
 import { parse, format } from 'date-fns';
 import { FaArrowAltCircleRight } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
@@ -17,38 +17,38 @@ const Purchases = (props: Props) => {
 
   const navigate = useNavigate();
 
-  const fetchPurchases = useCallback(async () => {
-    const payload = {
-      user_id: props.user.id
-    };
-
-    const res = await fetch(`${BACKEND_ENDPOINT}/getPurchases`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(payload)
-    });
-
-    if (res.ok) {
-      const data = (await res.json()) as Purchase[];
-      setPurchases(data);
-    } else {
-      alert('購入・払戻履歴の取得に失敗しました。管理担当者にお問い合わせください。');
-    }
-  }, [props.user.id]);
-
   useEffect(() => {
+    async function fetchPurchases() {
+      const payload = {
+        user_id: props.user.id
+      };
+
+      const res = await fetch(`${BACKEND_ENDPOINT}/getPurchases`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      });
+
+      if (res.ok) {
+        const data = (await res.json()) as Purchase[];
+        setPurchases(data);
+      } else {
+        alert('購入・払戻履歴の取得に失敗しました。管理担当者にお問い合わせください。');
+      }
+    }
+
     fetchPurchases();
-  }, [fetchPurchases]);
+  }, [props.user.id]);
 
   return (
     <div className="flex flex-col x-0">
       <p className="m-[10px] flex items-center justify-center font-bold">{'購入・払戻履歴'}</p>
       <div className="flex items-center justify-center">
-        <table className="">
+        <table className="max-w-[360px] w-[100%]">
           <thead>
-            <tr>
+            <tr className='min-h-[60px]'>
               <th className="text-[12px] w-[60px] border-r-white border-r-[.5px]">{'利用日'}</th>
               <th className="text-[12px] border-r-white border-r-[.5px]">{'種別・区分'}</th>
               <th className="text-[12px] w-[76px] border-r-white border-r-[.5px]">{'金額'}</th>
