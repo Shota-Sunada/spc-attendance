@@ -65,7 +65,7 @@ const AutoCharge = (props: Props) => {
             <p className="flex items-center m-[5px]">{'残高が'}</p>
             <input
               disabled={!isEnabled}
-              className="p-[5px] bg-white rounded-[6px]"
+              className="p-[10px] bg-white rounded-[6px] disabled:bg-[#c7d2d5] disabled:text-white"
               type="number"
               min={1000}
               max={10000}
@@ -79,7 +79,7 @@ const AutoCharge = (props: Props) => {
           <div className="flex m-[10px]">
             <input
               disabled={!isEnabled}
-              className="p-[5px] bg-white"
+              className="p-[10px] bg-white rounded-[6px] disabled:bg-[#c7d2d5] disabled:text-white"
               type="number"
               min={1000}
               max={20000}
