@@ -1,7 +1,7 @@
 import { ReactElement, useCallback, useEffect, useState } from 'react';
-import QRCode from '../components/QRCode';
+import { QRCode, QRFormat } from '../components/QRCode';
 import User from '../types/User';
-import { BACKEND_ENDPOINT } from '../const';
+import { BACKEND_ENDPOINT, QR_VERSION } from '../const';
 import Ticket from '../types/Ticket';
 import { IoQrCode } from 'react-icons/io5';
 import { TfiReload } from 'react-icons/tfi';
@@ -78,8 +78,15 @@ const UserPage = (props: UserPageProps) => {
     }
   }, [props.user.id]);
 
-  function GenerateQRCode(data: string) {
+  function GenerateQRCode(uuid: string) {
     setCount(QR_MAX_TIMEOUT_SEC);
+
+    const json: QRFormat = {
+      version: QR_VERSION,
+      data: uuid
+    };
+
+    const data = JSON.stringify(json);
 
     setQR(
       <>

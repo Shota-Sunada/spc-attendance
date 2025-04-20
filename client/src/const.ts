@@ -2,6 +2,8 @@ import User from './types/User';
 
 export const BACKEND_ENDPOINT = 'https://api.butsury-days.shudo-physics.com';
 
+export const QR_VERSION = 1;
+
 export const NO_USER: User = {
   id: -1,
   name: '',

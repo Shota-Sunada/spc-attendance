@@ -6,7 +6,12 @@ interface QRCodeProps {
   data: string;
 }
 
-const QRCode = (props: QRCodeProps) => {
+export interface QRFormat {
+  version: number;
+  data: string;
+}
+
+export const QRCode = (props: QRCodeProps) => {
   return (
     <QRCodeCanvas
       value={props.data}
@@ -25,5 +30,3 @@ const QRCode = (props: QRCodeProps) => {
     />
   );
 };
-
-export default QRCode;
