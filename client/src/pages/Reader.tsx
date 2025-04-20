@@ -1,7 +1,7 @@
 import { Scanner, IDetectedBarcode } from '@yudiel/react-qr-scanner';
 import { ReactElement, useCallback, useEffect, useState } from 'react';
 import '../styles/reader.css';
-import { BACKEND_ENDPOINT, FARE_ADULT } from '../const';
+import { BACKEND_ENDPOINT, FARE_ADULT, NOT_GET_ON_ID } from '../const';
 import Ticket from '../types/Ticket';
 import User from '../types/User';
 import { useSearchParams } from 'react-router-dom';
@@ -258,7 +258,7 @@ const ReaderPage = () => {
   ]);
 
   const handleScan = async () => {
-    const current_stop_id = Number.parseInt(params.get('stop_id') ?? '-1');
+    const current_stop_id = Number.parseInt(params.get('stop_id') ?? NOT_GET_ON_ID.toString());
 
     console.log('現在: ', current_stop_id);
 
@@ -302,7 +302,7 @@ const ReaderPage = () => {
           const user = (await res2.json()) as User;
           if (res2.ok) {
             console.log(user);
-            if (user.last_get_on_id === -1) {
+            if (user.last_get_on_id === NOT_GET_ON_ID) {
               console.log('乗車');
 
               const getOnResult = await apiGetOn(user, current_stop_id);

@@ -1,5 +1,5 @@
 import { NavigateFunction } from 'react-router-dom';
-import { BACKEND_ENDPOINT } from './const';
+import { BACKEND_ENDPOINT, NOT_GET_ON_ID } from './const';
 import User from './types/User';
 
 export async function apiCharge(user: User, charge: number, showNotify: boolean, stop_id: number | null, navigate: NavigateFunction | null) {
@@ -119,7 +119,7 @@ export async function apiPay(user: User, balance: number): Promise<boolean> {
   const payload = {
     name: user.name,
     balance: balance,
-    last_get_on_id: -1,
+    last_get_on_id: NOT_GET_ON_ID,
     enable_auto_charge: user.enable_auto_charge,
     auto_charge_balance: user.auto_charge_balance,
     auto_charge_charge: user.auto_charge_charge

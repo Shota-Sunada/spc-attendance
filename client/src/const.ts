@@ -19,3 +19,5 @@ export const NO_USER: User = {
 
 export const FARE_ADULT = 220;
 export const FARE_CHILDREN = 110;
+
+export const NOT_GET_ON_ID = -1;
