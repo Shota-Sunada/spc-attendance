@@ -25,25 +25,41 @@ const Menu = (props: Props) => {
         </div>
         <div className="mt-[108px]">
           <ul className="flex flex-col m-0 p-0">
-            <li onClick={() => navigate('/auto-charge')}>
+            <li
+              onClick={() => {
+                navigate('/auto-charge');
+                props.setIsOpen(false);
+              }}>
               <div className="icon">
                 <SiMoneygram size={'30px'} color="#219bce" />
               </div>
               <a>オートチャージ設定</a>
             </li>
-            <li onClick={() => navigate('/buy-histories')}>
+            <li
+              onClick={() => {
+                navigate('/buy-histories');
+                props.setIsOpen(false);
+              }}>
               <div className="icon">
                 <RiMoneyCnyCircleLine size={'30px'} color="#fc1d25" />
               </div>
               <a>購入・払戻履歴</a>
             </li>
-            <li onClick={() => navigate('/usage-histories')}>
+            <li
+              onClick={() => {
+                navigate('/usage-histories');
+                props.setIsOpen(false);
+              }}>
               <div className="icon">
                 <PiTimer size={'30px'} color="#f4c541" />
               </div>
               <a>利用履歴</a>
             </li>
-            <li onClick={() => navigate('/user')}>
+            <li
+              onClick={() => {
+                navigate('/user');
+                props.setIsOpen(false);
+              }}>
               <div className="icon">
                 <FaUserAlt size={'30px'} color="#219bce" />
               </div>

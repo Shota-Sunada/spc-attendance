@@ -178,23 +178,6 @@ const UserPage = (props: UserPageProps) => {
             {/* <NoCommuterTicketCard /> */}
             <MobiryButton text="定期券を購入する" onClick={() => navigate('/buy-commuter')} />
           </div>
-
-          <div className="m-[10px] flex flex-col items-center justify-center">
-            {/* <div className="flex flex-col items-center justify-center">
-              <p className="font-bold">オートチャージ設定</p>
-              <div className="flex m-[10px]">
-                <p className="flex items-center m-[5px]">残高が</p>
-                <input className="p-[5px] bg-white rounded-[6px]" type="number" min={1000} max={10000} placeholder="" />
-                <p className="flex items-center m-[5px]">円 未満になったとき</p>
-              </div>
-              <div className="flex m-[10px]">
-                <input className="p-[5px] bg-white" type="number" min={1000} max={20000} step={1000} placeholder="" />
-                <p className="flex items-center m-[5px]">円 チャージする。</p>
-              </div>
-            </div> */}
-
-            {/*<p className="text-center m-[10px] py-[10px] w-[200px] rounded-2xl cursor-pointer text-white bg-[#219bce]">{'設定を保存'}</p> */}
-          </div>
         </div>
       </div>
     </>

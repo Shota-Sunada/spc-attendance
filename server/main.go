@@ -147,11 +147,11 @@ func main() {
 		}
 	}))
 
-	logger.Info("Handling \"/api/updateBalance\" function")
-	http.HandleFunc("/api/updateBalance", handleCORS(func(w http.ResponseWriter, r *http.Request) {
+	logger.Info("Handling \"/api/update\" function")
+	http.HandleFunc("/api/update", handleCORS(func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case http.MethodPost:
-			updateBalance(w, r)
+			update(w, r)
 		default:
 			w.WriteHeader(http.StatusMethodNotAllowed)
 		}

@@ -3,9 +3,9 @@ import '../styles/radio.css';
 import MobiryButton from '../components/MobiryButton';
 import { useState } from 'react';
 import User from '../types/User';
-import { BACKEND_ENDPOINT } from '../const';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
+import { apiCharge } from '../api';
 
 interface Radio {
   label: string;
@@ -53,25 +53,11 @@ const Charge = (props: Props) => {
   ];
 
   const chargeMoney = async () => {
-    const payload = {
-      name: props.user?.name,
-      balance: props.user?.balance === undefined ? charge : props.user?.balance + charge
-    };
-
-    const res = await fetch(`${BACKEND_ENDPOINT}/api/updateBalance`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(payload)
-    });
-
-    if (res.ok) {
-      alert("チャージしました。")
+    if (props.user) {
+      apiCharge(props.user, charge, navigate);
     } else {
-      alert("チャージに失敗しました。管理者にお問い合わせ下さい。")
+      alert('チャージに失敗しました。管理者にお問い合わせ下さい。');
     }
-    navigate('/');
   };
 
   return (
