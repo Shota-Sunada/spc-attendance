@@ -8,7 +8,7 @@ import { useSearchParams } from 'react-router-dom';
 import { QRFormat } from '../components/QRCode';
 import { apiCharge, apiGetOn, apiPay } from '../api';
 
-type ReaderStatus = 'getOn' | 'getOff' | 'standby' | 'standby-getOn' | 'standby-getOff' | 'isReading' | 'error' | 'no_balance' | 'no_id';
+type ReaderStatus = 'getOn' | 'getOff' | 'standby' | 'standby-getOn' | 'standby-getOff' | 'isReading' | 'error' | 'no_balance' | 'no_id' | 'already_on';
 type ReaderMode = 'get-on' | 'get-off' | 'get-on-off';
 
 const ReaderPage = () => {
@@ -158,6 +158,17 @@ const ReaderPage = () => {
     []
   );
 
+  const tableAlreadyGotOn = useCallback(
+    () => (
+      <tr className="bg-red-800">
+        <td className="reader-left" colSpan={2}>
+          <p className="reader-text text-center text-2xl text-gray-800">{'乗車処理済みです。'}</p>
+        </td>
+      </tr>
+    ),
+    []
+  );
+
   const tableIdNotSet = useCallback(
     () => (
       <tr className="bg-red-800">
@@ -235,6 +246,10 @@ const ReaderPage = () => {
         setTableMiddle(tableIdNotSet);
         setTableBottom(tableNullRow);
         break;
+      case 'already_on':
+        setTableMiddle(tableAlreadyGotOn);
+        setTableBottom(tableNullRow);
+        break;
       default:
         setHeaderText('ヘッダー取得エラー');
         setHeaderCss('bg-blue-400 text-white');
@@ -254,6 +269,7 @@ const ReaderPage = () => {
     tableNullRow,
     tableNoBalance,
     tableIdNotSet,
+    tableAlreadyGotOn,
     tableError
   ]);
 
@@ -301,6 +317,11 @@ const ReaderPage = () => {
 
           const user = (await res2.json()) as User;
           if (res2.ok) {
+            if (user.last_get_on_id === current_stop_id) {
+              setCurrentStatus("already_on")
+              return;
+            }
+
             console.log(user);
             if (user.last_get_on_id === NOT_GET_ON_ID) {
               console.log('乗車');
