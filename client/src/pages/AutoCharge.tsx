@@ -4,7 +4,7 @@ import { apiAutoCharge } from '../api';
 import { useNavigate } from 'react-router-dom';
 
 interface Props {
-  user: User | null;
+  user: User;
 }
 
 const AutoCharge = (props: Props) => {
@@ -15,15 +15,32 @@ const AutoCharge = (props: Props) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    setIsEnabled(props.user?.enable_auto_charge === undefined ? false : props.user?.enable_auto_charge);
-    setBalance(props.user?.auto_charge_balance === undefined ? 1000 : props.user?.auto_charge_balance);
-    setCharge(props.user?.auto_charge_charge === undefined ? 1000 : props.user?.auto_charge_charge);
-  }, [props.user?.auto_charge_balance, props.user?.auto_charge_charge, props.user?.enable_auto_charge]);
+    setIsEnabled(props.user.enable_auto_charge);
+    setBalance(props.user.auto_charge_balance);
+    setCharge(props.user.auto_charge_charge);
+  }, [props.user.auto_charge_balance, props.user.auto_charge_charge, props.user.enable_auto_charge]);
 
   const saveSettings = () => {
-    if (props.user) {
-      apiAutoCharge(props.user, isEnabled, balance, charge, navigate);
+    if (balance < 1000 || balance > 10000) {
+      alert('残高は、1,000円以上10,000円以下で設定してください。');
+      return;
     }
+    if (charge < 1000 || charge > 20000) {
+      alert('チャージ額は、1,000円以上10,000円以下で設定してください。');
+      return;
+    }
+
+    if (!Number.isInteger(balance)) {
+      alert('残高は、整数値で設定してください。');
+      return;
+    }
+
+    if (!Number.isInteger(charge)) {
+      alert('残高は、整数値で設定してください。');
+      return;
+    }
+
+    apiAutoCharge(props.user, isEnabled, balance, charge, navigate);
   };
 
   return (
@@ -37,7 +54,7 @@ const AutoCharge = (props: Props) => {
               type="checkbox"
               name="is_enabled_auto_charge"
               id="is_enabled_auto_charge"
-              defaultChecked={props.user?.enable_auto_charge === undefined ? false : props.user?.enable_auto_charge}
+              defaultChecked={props.user.enable_auto_charge}
               onChange={() => setIsEnabled(!isEnabled)}
             />
             <label className="ml-[3px] cursor-pointer" htmlFor="is_enabled_auto_charge">
@@ -52,8 +69,9 @@ const AutoCharge = (props: Props) => {
               type="number"
               min={1000}
               max={10000}
-              placeholder=""
-              defaultValue={props.user?.auto_charge_balance}
+              step={1000}
+              placeholder="残高"
+              defaultValue={props.user.auto_charge_balance}
               onChange={(e) => setBalance(e.target.valueAsNumber)}
             />
             <p className="flex items-center m-[5px]">{'円 未満になったとき'}</p>
@@ -66,8 +84,8 @@ const AutoCharge = (props: Props) => {
               min={1000}
               max={20000}
               step={1000}
-              placeholder=""
-              defaultValue={props.user?.auto_charge_charge}
+              placeholder="チャージ額"
+              defaultValue={props.user.auto_charge_charge}
               onChange={(e) => setCharge(e.target.valueAsNumber)}
             />
             <p className="flex items-center m-[5px]">{'円 チャージする。'}</p>

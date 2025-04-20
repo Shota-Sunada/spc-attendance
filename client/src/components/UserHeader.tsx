@@ -1,9 +1,10 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import User from '../types/User';
 import { FaChevronLeft } from 'react-icons/fa';
+import { NO_USER } from '../const';
 
 type Props = {
-  setUser: React.Dispatch<React.SetStateAction<User | null>>;
+  setUser: React.Dispatch<React.SetStateAction<User>>;
   isMenuOpen: boolean;
   setIsMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
@@ -17,7 +18,7 @@ const UserHeader = (props: Props) => {
       return;
     }
 
-    props.setUser(null);
+    props.setUser(NO_USER);
     localStorage.removeItem('token');
     location.reload();
   };

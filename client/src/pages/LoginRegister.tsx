@@ -5,7 +5,7 @@ import '../styles/login-register.css';
 import MobiryButton from '../components/MobiryButton';
 
 export interface SetUserProps {
-  setUser: React.Dispatch<React.SetStateAction<User | null>>;
+  setUser: React.Dispatch<React.SetStateAction<User>>;
 }
 
 const regex = /^[a-zA-Z0-9^$*.[\]{}()?"!@#%&/\\,<>':;|_~`=+-]{8,32}$/;

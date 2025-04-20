@@ -1,7 +1,7 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import UserPage from './pages/User';
 import History from './pages/History';
-import {  useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import LoginRegister from './pages/LoginRegister';
 import User from './types/User';
 import ReaderPage from './pages/Reader';
@@ -10,12 +10,12 @@ import { mediaQuery, UseMediaQuery } from './hooks/UseMediaQuery';
 import UserHeader from './components/UserHeader';
 import Menu from './components/Menu';
 import Charge from './pages/Charge';
-import { BACKEND_ENDPOINT } from './const';
+import { BACKEND_ENDPOINT, NO_USER } from './const';
 import AutoCharge from './pages/AutoCharge';
 
 export default function App() {
   const isSmartphone = UseMediaQuery(mediaQuery.smartphone);
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User>(NO_USER);
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 
   const getAuthUser = async () => {
@@ -52,7 +52,7 @@ export default function App() {
               <Route
                 path="/"
                 element={
-                  user ? (
+                  user.id != -1 ? (
                     <UserPage user={user} setUser={setUser} isSmartphone={isSmartphone} isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
                   ) : (
                     <LoginRegister setUser={setUser} />

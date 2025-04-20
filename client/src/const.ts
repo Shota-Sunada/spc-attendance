@@ -1,1 +1,16 @@
+import User from './types/User';
+
 export const BACKEND_ENDPOINT = 'https://api.butsury-days.shudo-physics.com';
+
+export const NO_USER: User = {
+  id: -1,
+  name: '',
+  password: '',
+  is_admin: false,
+  balance: 0,
+  is_getting_on: false,
+  created_at: '',
+  enable_auto_charge: false,
+  auto_charge_balance: 0,
+  auto_charge_charge: 0
+};

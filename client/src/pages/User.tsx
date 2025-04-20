@@ -12,7 +12,7 @@ import { useNavigate } from 'react-router-dom';
 
 type UserPageProps = {
   user: User;
-  setUser: React.Dispatch<React.SetStateAction<User | null>>;
+  setUser: React.Dispatch<React.SetStateAction<User>>;
   isMenuOpen: boolean;
   setIsMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
   isSmartphone: boolean;
@@ -151,14 +151,14 @@ const UserPage = (props: UserPageProps) => {
       {/* メイン画面 */}
       <div className={isOpened ? 'blur-sm transition-[.1s]' : ''}>
         <div className="max-w-[360px] mx-auto">
-          <p className="m-[10px] flex items-center justify-center font-medium">{'ホーム'}</p>
+          <p className="m-[10px] flex items-center justify-center font-bold">{'ホーム'}</p>
           <div className="flex flex-col items-center justify-center">
             <div className="flex flex-row items-end justify-between mb-[10px]">
-              <p className="mb-[3px]">残高</p>
+              <p className="mb-[3px]">{'残高'}</p>
               <p
-                className='text-4xl font-semibold text-[#462066] pl-[20px] after:content-["\5186"] after:text-[14px]'
+                className='text-4xl font-bold text-[#462066] pl-[20px] after:content-["\5186"] after:text-[14px] after:ml-[4px]'
                 style={{ unicodeBidi: 'isolate' }}>
-                {props.user?.balance}
+                {props.user.balance.toLocaleString('es-US')}
               </p>
             </div>
             <MobiryButton text="チャージする" onClick={() => navigate('/charge')} />
