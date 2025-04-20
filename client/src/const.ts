@@ -10,9 +10,12 @@ export const NO_USER: User = {
   password: '',
   is_admin: false,
   balance: 0,
-  is_getting_on: false,
+  last_get_on_id: -1,
   created_at: '',
   enable_auto_charge: false,
   auto_charge_balance: 0,
   auto_charge_charge: 0
 };
+
+export const FARE_ADULT = 220;
+export const FARE_CHILDREN = 110;

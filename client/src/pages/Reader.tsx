@@ -1,19 +1,19 @@
 import { Scanner, IDetectedBarcode } from '@yudiel/react-qr-scanner';
 import { ReactElement, useCallback, useEffect, useState } from 'react';
 import '../styles/reader.css';
-import { BACKEND_ENDPOINT } from '../const';
+import { BACKEND_ENDPOINT, FARE_ADULT } from '../const';
 import Ticket from '../types/Ticket';
 import User from '../types/User';
 import { useSearchParams } from 'react-router-dom';
 import { QRFormat } from '../components/QRCode';
-import { apiCharge } from '../api';
+import { apiCharge, apiGetOn, apiPay } from '../api';
 
-type ReaderStatus = 'getOn' | 'getOff' | 'standby' | 'standby-getOn' | 'standby-getOff' | 'isReading' | 'error';
+type ReaderStatus = 'getOn' | 'getOff' | 'standby' | 'standby-getOn' | 'standby-getOff' | 'isReading' | 'error' | 'no_balance' | 'no_id';
 type ReaderMode = 'get-on' | 'get-off' | 'get-on-off';
 
 const ReaderPage = () => {
   const [scanResult, setScanResult] = useState({ format: '', rawValue: '' });
-  // const [paid, setPaid] = useState<number | null>(null);
+  const [paid, setPaid] = useState<number | null>(null);
   const [balance, setBalance] = useState<number | null>(null);
   const [lastUUID, setLastUUID] = useState<string | null>(null);
   const [headerText, setHeaderText] = useState<string>('兼用');
@@ -32,13 +32,13 @@ const ReaderPage = () => {
         </td>
         <td className="reader-right">
           <p className="reader-text reader-text-right">
-            {/* {paid} */}
+            {paid}
             <span className="text-2xl">{'円'}</span>
           </p>
         </td>
       </tr>
     ),
-    []
+    [paid]
   );
 
   const tableTopNumber = useCallback(
@@ -147,6 +147,28 @@ const ReaderPage = () => {
     []
   );
 
+  const tableNoBalance = useCallback(
+    () => (
+      <tr className="bg-red-800">
+        <td className="reader-left" colSpan={2}>
+          <p className="reader-text text-center text-2xl text-gray-800">{'残高不足です。'}</p>
+        </td>
+      </tr>
+    ),
+    []
+  );
+
+  const tableIdNotSet = useCallback(
+    () => (
+      <tr className="bg-red-800">
+        <td className="reader-left" colSpan={2}>
+          <p className="reader-text text-center text-2xl text-gray-800">{'整理券No.が未指定です。'}</p>
+        </td>
+      </tr>
+    ),
+    []
+  );
+
   const tableError = useCallback(
     () => (
       <tr className="bg-red-800">
@@ -205,6 +227,14 @@ const ReaderPage = () => {
         setTableMiddle(tableError);
         setTableBottom(tableNullRow);
         break;
+      case 'no_balance':
+        setTableMiddle(tableNoBalance);
+        setTableBottom(tableNullRow);
+        break;
+      case 'no_id':
+        setTableMiddle(tableIdNotSet);
+        setTableBottom(tableNullRow);
+        break;
       default:
         setHeaderText('ヘッダー取得エラー');
         setHeaderCss('bg-blue-400 text-white');
@@ -222,17 +252,27 @@ const ReaderPage = () => {
     tableTopNumber,
     tableTopPaid,
     tableNullRow,
+    tableNoBalance,
+    tableIdNotSet,
     tableError
   ]);
 
   const handleScan = async () => {
+    const current_stop_id = Number.parseInt(params.get('stop_id') ?? '-1');
+
+    console.log('現在: ', current_stop_id);
+
+    if (current_stop_id === -2) {
+      setCurrentStatus('no_id');
+      return;
+    }
+
     const result = scanResult.rawValue;
     try {
       const qr_data = JSON.parse(result) as QRFormat;
 
       const payload = {
-        uuid: qr_data.data,
-        stop_id: Number.parseInt(params.get('stop_id') ?? '0')
+        uuid: qr_data.data
       };
 
       const res = await fetch(`${BACKEND_ENDPOINT}/useTicket`, {
@@ -261,20 +301,47 @@ const ReaderPage = () => {
 
           const user = (await res2.json()) as User;
           if (res2.ok) {
-            setBalance(user.balance);
+            console.log(user);
+            if (user.last_get_on_id === -1) {
+              console.log('乗車');
 
-            setCurrentStatus('getOn');
-            if (user.balance < 1000) {
-              if (user.enable_auto_charge) {
-                if (user.balance < user.auto_charge_balance) {
-                  setTableBottom(tableBottomAutoCharge);
-                  apiCharge(user, 1000, false, null);
+              const getOnResult = await apiGetOn(user, current_stop_id);
+              if (getOnResult) {
+                setBalance(user.balance);
+                setCurrentStatus('getOn');
+
+                if (user.balance < 1000) {
+                  if (user.enable_auto_charge) {
+                    if (user.balance < user.auto_charge_balance) {
+                      setTableBottom(tableBottomAutoCharge);
+                      apiCharge(user, 1000, false, current_stop_id, null);
+                    }
+                  } else {
+                    setTableBottom(tableBottomPleaseCharge);
+                  }
+                } else {
+                  setTableBottom(tableNullRow);
                 }
               } else {
-                setTableBottom(tableBottomPleaseCharge);
+                setCurrentStatus('error');
               }
             } else {
-              setTableBottom(tableNullRow);
+              console.log('降車');
+
+              const zangaku = user.balance - FARE_ADULT;
+              if (zangaku < 0) {
+                setCurrentStatus('no_balance');
+              } else {
+                setBalance(zangaku);
+                setPaid(FARE_ADULT);
+
+                const fare_result = await apiPay(user, zangaku);
+                if (fare_result) {
+                  setCurrentStatus('getOff');
+                } else {
+                  setCurrentStatus('error');
+                }
+              }
             }
           }
         }

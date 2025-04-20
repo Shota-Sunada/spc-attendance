@@ -4,9 +4,9 @@ export default interface User {
   password: string;
   is_admin: boolean;
   balance: number;
-  is_getting_on: boolean;
+  last_get_on_id: number;
   created_at: string;
-  enable_auto_charge: boolean
-  auto_charge_balance: number
-  auto_charge_charge: number
+  enable_auto_charge: boolean;
+  auto_charge_balance: number;
+  auto_charge_charge: number;
 }
