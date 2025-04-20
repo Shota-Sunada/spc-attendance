@@ -21,19 +21,19 @@ export const NoCommuterTicketCard = () => {
 
 export const CommuterTicketCard = (props: Props) => {
   return (
-    <div className="bg-white rounded-[15px] cursor-pointer p-[20px] w-[296px] h-[167px] hover:bg-[#f9f9fa] anim">
-      <div className="flex flex-row">
+    <div className="bg-white rounded-[15px] cursor-pointer p-[15px] w-[296px] h-[167px] hover:bg-[#f9f9fa] anim">
+      <div className="flex flex-row ml-[5px]">
         <p className="font-bold">{props.isStudent ? '通学' : '通勤'}</p>
         <p className="font-medium">{'：'}</p>
         <p className="font-medium">{props.company}</p>
       </div>
       <div className="flex flex-row m-[10px] items-center justify-center">
-        <p className="font-bold text-2xl items-center justify-center">{'仮電停1'}</p>
-        <div className="flex flex-row items-center justify-center">
+        <p className="font-bold text-[24px] items-center justify-center">{'物理班'}</p>
+        <div className="flex flex-row items-center justify-center px-[4px]">
           <FaArrowLeft className="transform-[translateX(5px)]" size={'20px'} color={'#c7d2d5'} />
           <FaArrowRight className="transform-[translateX(-5px)]" size={'20px'} color={'#c7d2d5'} />
         </div>
-        <p className="font-bold text-2xl items-center justify-center">{'仮電停2'}</p>
+        <p className="font-bold text-[24px] items-center justify-center">{'鉄道研究班'}</p>
       </div>
       <p className="flex items-center justify-center text-[12px] font-medium">{props.subtext}</p>
       <div className="mt-[10px] flex flex-row items-center justify-center">
