@@ -101,6 +101,9 @@ const Charge = (props: Props) => {
               </div>
             </div>
           </div>
+          <div className='mt-[20px]'>
+            <p className='text-[13px] font-normal'>{"チャージ後の残高は最大30,000円です。"}</p>
+          </div>
           <div className="flex items-center justify-center m-[20px]">
             <MobiryButton text={'チャージする'} onClick={chargeMoney} />
           </div>

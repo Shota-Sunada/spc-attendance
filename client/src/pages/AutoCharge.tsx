@@ -91,7 +91,10 @@ const AutoCharge = (props: Props) => {
             <p className="flex items-center m-[5px]">{'円 チャージする。'}</p>
           </div>
         </div>
-
+        <div className="m-[10px]">
+          <p className="text-[13px] font-normal">{'残高の設定可能金額は、1,000円以上10,000円以下です。'}</p>
+          <p className="text-[13px] font-normal">{'チャージ額の設定可能金額は、1,000円以上20,000円以下です。'}</p>
+        </div>
         <p className="text-center m-[10px] py-[10px] w-[200px] rounded-2xl cursor-pointer text-white bg-[#219bce]" onClick={saveSettings}>
           {'設定を保存'}
         </p>
