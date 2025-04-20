@@ -12,6 +12,7 @@ import Menu from './components/Menu';
 import Charge from './pages/Charge';
 import { BACKEND_ENDPOINT, NO_USER } from './const';
 import AutoCharge from './pages/AutoCharge';
+import UserPage from './pages/User';
 
 export default function App() {
   const isSmartphone = UseMediaQuery(mediaQuery.smartphone);
@@ -62,6 +63,7 @@ export default function App() {
               <Route path="/history" element={<History />}></Route>
               <Route path="/auto-charge" element={<AutoCharge user={user} />}></Route>
               <Route path="/reader" element={<ReaderPage />}></Route>
+              <Route path="/user" element={<UserPage user={user} />}></Route>
               <Route path="/*" element={<Page404 />}></Route>
             </Routes>
             <Menu isOpen={isMenuOpen} setIsOpen={setIsMenuOpen} />
