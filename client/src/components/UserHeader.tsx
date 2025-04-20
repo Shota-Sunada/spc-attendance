@@ -32,7 +32,7 @@ const UserHeader = (props: Props) => {
             <></>
           ) : (
             <div
-              className="fixed block left-[10px] m-[5px] top-[10px] p-[8px] rounded-[20px] cursor-pointer hover:bg-[#f9f9fa] bg-white"
+              className="fixed block left-0 m-[5px] top-[5px] p-[8px] rounded-[20px] cursor-pointer hover:bg-[#f9f9fa] bg-white"
               onClick={() => navigate('/')}>
               <FaChevronLeft size={'30px'} />
             </div>
