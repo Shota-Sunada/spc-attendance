@@ -79,7 +79,7 @@ const ReaderAdmin = () => {
             <p>大人の人数</p>
             <div>
               <input type="checkbox" name="adult_num_null" id="adult_num_null" onChange={() => setAdultNumNull(!adultNumNull)} />
-              <label htmlFor="adult_num_null">設定しない</label>
+              <label className='ml-[5px]' htmlFor="adult_num_null">設定しない</label>
             </div>
             <input
               disabled={adultNumNull}
@@ -94,7 +94,7 @@ const ReaderAdmin = () => {
             <p>子供の人数</p>
             <div>
               <input type="checkbox" name="children_num_null" id="children_num_null" onChange={() => setChildrenNumNull(!childrenNumNull)} />
-              <label htmlFor="children_num_null">設定しない</label>
+              <label className='ml-[5px]' htmlFor="children_num_null">設定しない</label>
             </div>
             <input
               disabled={childrenNumNull}
@@ -108,7 +108,7 @@ const ReaderAdmin = () => {
           <div className="m-[10px]">
             <div>
               <input type="checkbox" name="is_cancel_null" id="is_cancel_null" onChange={() => setIsCancelNull(!isCancelNull)} />
-              <label htmlFor="is_cancel_null">設定しない</label>
+              <label className='ml-[5px]' htmlFor="is_cancel_null">設定しない</label>
             </div>
             <input
               disabled={isCancelNull}
@@ -119,13 +119,13 @@ const ReaderAdmin = () => {
               onChange={() => setIsCancel(!isCancel)}
               defaultChecked={isCancel}
             />
-            <label htmlFor="is_cancel">乗車情報取り消し</label>
+            <label className='ml-[5px]' htmlFor="is_cancel">乗車情報取り消し</label>
           </div>
           <div className="m-[10px]">
             <p>乗車駅</p>
             <div>
               <input type="checkbox" name="start_id_null" id="start_id_null" onChange={() => setStartIdNull(!startIdNull)} />
-              <label htmlFor="start_id_null">設定しない</label>
+              <label className='ml-[5px]' htmlFor="start_id_null">設定しない</label>
             </div>
             <input
               disabled={startIdNull}
@@ -140,7 +140,7 @@ const ReaderAdmin = () => {
             <p>降車駅</p>
             <div>
               <input type="checkbox" name="end_id_null" id="end_id_null" onChange={() => setEndIdNull(!endIdNull)} />
-              <label htmlFor="end_id_null">設定しない</label>
+              <label className='ml-[5px]' htmlFor="end_id_null">設定しない</label>
             </div>
             <input
               disabled={endIdNull}
@@ -155,7 +155,7 @@ const ReaderAdmin = () => {
             <p>運賃直接入力</p>
             <div>
               <input type="checkbox" name="fare_direct_null" id="fare_direct_null" onChange={() => setFareDirectNull(!fareDirectNull)} />
-              <label htmlFor="fare_direct_null">設定しない</label>
+              <label className='ml-[5px]' htmlFor="fare_direct_null">設定しない</label>
             </div>
             <input
               disabled={fareDirectNull}
