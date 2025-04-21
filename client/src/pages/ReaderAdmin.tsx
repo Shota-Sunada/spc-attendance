@@ -63,6 +63,7 @@ const ReaderAdmin = () => {
     });
 
     if (res.ok) {
+      alert('送信しました');
       console.log('送信しました');
     } else {
       console.log('送信失敗');
