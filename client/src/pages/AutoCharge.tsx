@@ -25,8 +25,14 @@ const AutoCharge = (props: Props) => {
       alert('残高は、1,000円以上10,000円以下で設定してください。');
       return;
     }
+
     if (charge < 1000 || charge > 20000) {
       alert('チャージ額は、1,000円以上10,000円以下で設定してください。');
+      return;
+    }
+
+    if (balance >= charge) {
+      alert('チャージ額は、残高以上の金額で設定してください。');
       return;
     }
 
