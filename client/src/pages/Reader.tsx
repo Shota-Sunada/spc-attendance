@@ -342,6 +342,8 @@ const ReaderPage = () => {
       return;
     }
 
+    await fetchAdmin();
+
     const result = scanResult.rawValue;
     try {
       const qr_data = JSON.parse(result) as QRFormat;
@@ -469,6 +471,30 @@ const ReaderPage = () => {
       setCurrentStatus('error');
     }
 
+    const payload = {
+      id6: id6,
+      adult_num: null,
+      children_num: null,
+      is_cancel: null,
+      start_id: null,
+      end_id: null,
+      fare_direct: null
+    };
+
+    const res = await fetch(`${BACKEND_ENDPOINT}/updateAdmin`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    });
+
+    if (res.ok) {
+      console.log('送信しました');
+    } else {
+      console.log('送信失敗');
+    }
+
     setTimeout(() => {
       switch (currentMode) {
         default:
@@ -516,6 +542,39 @@ const ReaderPage = () => {
       ctx.strokeRect(code.boundingBox.x, code.boundingBox.y, code.boundingBox.width, code.boundingBox.height);
     });
   };
+
+  async function fetchAdmin() {
+    const payload = {
+      id6: id6
+    };
+
+    const res = await fetch(`${BACKEND_ENDPOINT}/getAdmin`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    });
+
+    if (res.ok) {
+      const data = (await res.json()) as Admin;
+      setAdultNum(data.adult_num);
+      console.log(data.adult_num);
+      setChildrenNum(data.children_num);
+      console.log(data.children_num);
+      setIsCancel(data.is_cancel);
+      console.log(data.is_cancel);
+      setStartId(data.start_id);
+      console.log(data.start_id);
+      setEndId(data.end_id);
+      console.log(data.end_id);
+      setFareDirect(data.fare_direct);
+      console.log(data.fare_direct);
+      console.log('管理システム接続 設定更新');
+    } else {
+      console.log('管理システム接続失敗');
+    }
+  }
 
   return (
     <div className="bg-black flex flex-row">
@@ -616,46 +675,13 @@ const ReaderPage = () => {
 
       <div className="fixed bottom-0 right-0">
         <p className="text-white">{id6}</p>
-        <p
+        {/* <p
           className="text-black cursor-pointer bg-white text-center hover:bg-blue-300"
           onClick={() => {
-            async function fetchAdmin() {
-              const payload = {
-                id6: id6
-              };
-
-              const res = await fetch(`${BACKEND_ENDPOINT}/getAdmin`, {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(payload)
-              });
-
-              if (res.ok) {
-                const data = (await res.json()) as Admin;
-                setAdultNum(data.adult_num);
-                console.log(data.adult_num);
-                setChildrenNum(data.children_num);
-                console.log(data.children_num);
-                setIsCancel(data.is_cancel);
-                console.log(data.is_cancel);
-                setStartId(data.start_id);
-                console.log(data.start_id);
-                setEndId(data.end_id);
-                console.log(data.end_id);
-                setFareDirect(data.fare_direct);
-                console.log(data.fare_direct);
-                console.log('管理システム接続 設定更新');
-              } else {
-                console.log('管理システム接続失敗');
-              }
-            }
-
             fetchAdmin();
           }}>
           {'更新'}
-        </p>
+        </p> */}
       </div>
     </div>
   );
