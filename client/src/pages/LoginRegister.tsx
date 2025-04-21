@@ -99,7 +99,7 @@ const LoginRegister = ({ setUser }: SetUserProps) => {
   };
 
   return (
-    <div className="mt-[30px] flex flex-col justify-center items-center bg-[#f7f4e5]">
+    <div className="h-[100%] flex flex-col justify-center items-center bg-[#f7f4e5]">
       {/* <h2 className="text-[200%] pointer-default">{'BUTSURY DAYS'}</h2> */}
       <img className="w-[300px]" src="/logo.png" alt="LOGO" />
       <h2 className="text-[150%] pointer-default font-bold p-[3px]">{isRegister ? '新規登録画面' : 'ログイン画面'}</h2>

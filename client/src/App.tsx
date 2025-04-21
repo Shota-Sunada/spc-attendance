@@ -51,7 +51,7 @@ export default function App() {
       <main>
         <div className="h-[100%] bg-[#f7f4e5]">
           <BrowserRouter>
-            <UserHeader setUser={setUser} isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
+            {user.id === -1 ? <></> : <UserHeader setUser={setUser} isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />}
             <Routes>
               <Route
                 path="/"
