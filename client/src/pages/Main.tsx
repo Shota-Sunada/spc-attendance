@@ -172,7 +172,7 @@ const UserPage = (props: UserPageProps) => {
           </div>
 
           <div className="flex flex-col items-center justify-center mt-[20px]">
-            <p className="m-[10px] flex items-center justify-center font-medium mb-[30px]">定期券情報</p>
+            <p className="m-[10px] flex items-center justify-center font-medium mb-[30px]">{"定期券情報"}</p>
             {/* <CommuterTicketCard
               isStudent={false}
               company="物理班電鉄"
