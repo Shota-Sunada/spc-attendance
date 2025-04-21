@@ -167,7 +167,9 @@ const ReaderAdmin = () => {
             />
           </div>
 
-          <MobiryButton text={'送信'} onClick={send} />
+          <div className='flex items-center justify-center m-[15px]'>
+            <MobiryButton text={'送信'} onClick={send} />
+          </div>
         </div>
       ) : (
         <>
