@@ -20,6 +20,7 @@ import ReaderAdmin from './pages/ReaderAdmin';
 export default function App() {
   const isSmartphone = UseMediaQuery(mediaQuery.smartphone);
   const [user, setUser] = useState<User>(NO_USER);
+  const [isQROpened, setIsQROpened] = useState<boolean>(false);
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 
   const getAuthUser = async () => {
@@ -51,13 +52,21 @@ export default function App() {
       <main>
         <div className="h-[100%] bg-[#f7f4e5]">
           <BrowserRouter>
-            {user.id === -1 ? <></> : <UserHeader setUser={setUser} isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />}
+            {user.id === -1 ? <></> : <UserHeader setUser={setUser} isQROpened={isQROpened} isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />}
             <Routes>
               <Route
                 path="/"
                 element={
                   user.id != -1 ? (
-                    <Main user={user} setUser={setUser} isSmartphone={isSmartphone} isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
+                    <Main
+                      user={user}
+                      setUser={setUser}
+                      isSmartphone={isSmartphone}
+                      isQROpened={isQROpened}
+                      setIsQROpened={setIsQROpened}
+                      isMenuOpen={isMenuOpen}
+                      setIsMenuOpen={setIsMenuOpen}
+                    />
                   ) : (
                     <LoginRegister setUser={setUser} />
                   )

@@ -13,6 +13,8 @@ import { useNavigate } from 'react-router-dom';
 type UserPageProps = {
   user: User;
   setUser: React.Dispatch<React.SetStateAction<User>>;
+  isQROpened: boolean;
+  setIsQROpened: React.Dispatch<React.SetStateAction<boolean>>;
   isMenuOpen: boolean;
   setIsMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
   isSmartphone: boolean;
@@ -25,10 +27,9 @@ const UserPage = (props: UserPageProps) => {
 
   const [qr, setQR] = useState<ReactElement | null>(null);
   const [count, setCount] = useState<number>(QR_MAX_TIMEOUT_SEC);
-  const [isOpened, setIsOpened] = useState<boolean>(false);
 
   const onClick = () => {
-    setIsOpened(true);
+    props.setIsQROpened(true);
     createTicket();
   };
 
@@ -117,7 +118,7 @@ const UserPage = (props: UserPageProps) => {
       {/* QRコード */}
       <div className="fixed bottom-[1vh] left-[50%] transform-[translateX(-50%)] bg-white p-[25px] rounded-2xl z-100">
         <div className="flex flex-col items-center justify-center">
-          {isOpened ? (
+          {props.isQROpened ? (
             qr ? (
               <>
                 <div className="flex flex-col items-center justify-center mb-[50%] ">
@@ -137,7 +138,7 @@ const UserPage = (props: UserPageProps) => {
                 <p
                   className="text-center py-[10px] px-[100px] border-[1px] rounded-2xl cursor-pointer"
                   onClick={() => {
-                    setIsOpened(false);
+                    props.setIsQROpened(false);
                     setQR(null);
                   }}>
                   {'閉じる'}
@@ -156,7 +157,7 @@ const UserPage = (props: UserPageProps) => {
         </div>
       </div>
       {/* メイン画面 */}
-      <div className={isOpened ? 'blur-sm transition-[.1s]' : ''}>
+      <div className={props.isQROpened ? 'blur-sm transition-[.1s]' : ''}>
         <div className="max-w-[360px] mx-auto">
           <p className="m-[10px] flex items-center justify-center font-bold">{'ホーム'}</p>
           <div className="flex flex-col items-center justify-center">
@@ -168,11 +169,18 @@ const UserPage = (props: UserPageProps) => {
                 {props.user.balance.toLocaleString('es-US')}
               </p>
             </div>
-            <MobiryButton text="チャージする" onClick={() => navigate('/charge')} />
+            <MobiryButton
+              text="チャージする"
+              onClick={() => {
+                if (!props.isQROpened) {
+                  navigate('/charge');
+                }
+              }}
+            />
           </div>
 
           <div className="flex flex-col items-center justify-center mt-[20px]">
-            <p className="m-[10px] flex items-center justify-center font-medium mb-[30px]">{"定期券情報"}</p>
+            <p className="m-[10px] flex items-center justify-center font-medium mb-[30px]">{'定期券情報'}</p>
             {/* <CommuterTicketCard
               isStudent={false}
               company="物理班電鉄"
@@ -183,7 +191,14 @@ const UserPage = (props: UserPageProps) => {
               end_date="2025.04.25"
             /> */}
             <NoCommuterTicketCard />
-            <MobiryButton text="定期券を購入する" onClick={() => navigate('/buy-commuter')} />
+            <MobiryButton
+              text="定期券を購入する"
+              onClick={() => {
+                if (!props.isQROpened) {
+                  navigate('/buy-commuter');
+                }
+              }}
+            />
           </div>
         </div>
       </div>
