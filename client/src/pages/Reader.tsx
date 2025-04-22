@@ -1,4 +1,4 @@
-import { Scanner, IDetectedBarcode } from '@yudiel/react-qr-scanner';
+import { Scanner, IDetectedBarcode, useDevices } from '@yudiel/react-qr-scanner';
 import { ReactElement, useCallback, useEffect, useState } from 'react';
 import '../styles/reader.css';
 import { BACKEND_ENDPOINT, FARE_ADULT, FARE_CHILDREN, NOT_GET_ON_ID } from '../const';
@@ -42,7 +42,11 @@ const ReaderPage = () => {
   const [endId, setEndId] = useState<number | null>(null);
   const [fareDirect, setFareDirect] = useState<number | null>(null);
 
+  const [deviceIndex, setDeviceIndex] = useState<number>(0);
+
   const [params] = useSearchParams();
+
+  const devices = useDevices();
 
   useEffect(() => {
     async function fetchAdmin() {
@@ -576,6 +580,11 @@ const ReaderPage = () => {
     }
   }
 
+  const switchCamera = () => {
+    const index = deviceIndex + 1 > devices.length ? 0 : deviceIndex + 1;
+    setDeviceIndex(index);
+  };
+
   return (
     <div className="bg-black flex flex-row">
       <div className="m-auto h-screen w-screen max-w-[400px] flex flex-col">
@@ -661,6 +670,9 @@ const ReaderPage = () => {
             allowMultiple
             scanDelay={5000}
             // paused={isReaderPaused}
+            constraints={{
+              deviceId: devices[deviceIndex].deviceId
+            }}
             components={{
               tracker: customTracker,
               audio: false,
@@ -674,7 +686,7 @@ const ReaderPage = () => {
       </div>
 
       <div className="fixed bottom-0 right-0">
-        <p className="text-white">{id6}</p>
+        <p className="text-white text-right">{id6}</p>
         {/* <p
           className="text-black cursor-pointer bg-white text-center hover:bg-blue-300"
           onClick={() => {
@@ -682,6 +694,13 @@ const ReaderPage = () => {
           }}>
           {'更新'}
         </p> */}
+        <p
+          className="text-black cursor-pointer bg-white text-center hover:bg-blue-300"
+          onClick={() => {
+            switchCamera();
+          }}>
+          {'カメラ切り替え'}
+        </p>
       </div>
     </div>
   );
