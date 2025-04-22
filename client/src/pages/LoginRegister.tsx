@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { BACKEND_ENDPOINT } from '../const';
 import User from '../types/User';
 import '../styles/login-register.css';
 import MobiryButton from '../components/MobiryButton';
+import { useSearchParams } from 'react-router-dom';
 
 export interface SetUserProps {
   setUser: React.Dispatch<React.SetStateAction<User>>;
@@ -16,6 +17,8 @@ const LoginRegister = ({ setUser }: SetUserProps) => {
 
   const [isRegister, setIsRegister] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+
+  const [params] = useSearchParams();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -98,6 +101,12 @@ const LoginRegister = ({ setUser }: SetUserProps) => {
     }
   };
 
+  useEffect(() => {
+    if (params.get('is_register') === 'true') {
+      setIsRegister(true);
+    }
+  }, [params]);
+
   return (
     <div className="h-[100%] flex flex-col justify-center items-center bg-[#f7f4e5]">
       {/* <h2 className="text-[200%] pointer-default">{'BUTSURY DAYS'}</h2> */}
@@ -106,11 +115,11 @@ const LoginRegister = ({ setUser }: SetUserProps) => {
       <form className="flex flex-col justify-center items-center" onSubmit={handleSubmit}>
         <input className={isNameInvalid ? 'bg-red-400' : 'bg-white'} name="name" type="text" placeholder="ユーザー名" required />
         <input className={isPasswordInvalid ? 'bg-red-400' : 'bg-white'} name="password" type="password" placeholder="パスワード" required />
-        <p>{"ユーザー名およびパスワードは、"}</p>
-        <p>{"文字数が8文字以上32文字以下、"}</p>
-        <p>{"半角英数字と記号文字を組み合わせてください。"}</p>
-        <p>{"一部記号とスペースは使えません。"}</p>
-        <p>{"ひらがな、カタカナ、漢字も使えません。"}</p>
+        <p>{'ユーザー名およびパスワードは、'}</p>
+        <p>{'文字数が8文字以上32文字以下、'}</p>
+        <p>{'半角英数字と記号文字を組み合わせてください。'}</p>
+        <p>{'一部記号とスペースは使えません。'}</p>
+        <p>{'ひらがな、カタカナ、漢字も使えません。'}</p>
         <button className="" type="submit">
           <MobiryButton text={isRegister ? 'ユーザー登録' : 'ログイン'} onClick={() => {}} />
         </button>
