@@ -3,9 +3,13 @@ import MobiryButton from '../components/MobiryButton';
 import { BACKEND_ENDPOINT } from '../const';
 import { Admin } from '../types/Admin';
 
+const regex = /^[0-9]{5}$/;
+
 const ReaderAdmin = () => {
   const [isConnected, setIsConnected] = useState<boolean>(false);
   const [id, setId] = useState<number>(0);
+
+  const [isInvalid, setIsInvalid] = useState<boolean>(false);
 
   const [adultNum, setAdultNum] = useState<number>(1);
   const [childrenNum, setChildrenNum] = useState<number>(0);
@@ -22,6 +26,13 @@ const ReaderAdmin = () => {
   const [fareDirectNull, setFareDirectNull] = useState<boolean>(false);
 
   const onClick = async () => {
+    if (!regex.test(id.toString())) {
+      setIsInvalid(true);
+      return;
+    }
+
+    setIsInvalid(false);
+
     const payload = {
       id6: id
     };
@@ -39,6 +50,7 @@ const ReaderAdmin = () => {
       console.log('管理システム接続: ', data.id6);
       setIsConnected(true);
     } else {
+      setIsInvalid(true);
       console.log('管理システム接続失敗');
     }
   };
@@ -196,6 +208,7 @@ const ReaderAdmin = () => {
               setId(e.target.valueAsNumber);
             }}
           />
+          {isInvalid ? <p className="m-[3px] p-[3px] rounded-[5px] bg-red-400">{'IDが不正です。'}</p> : <></>}
           <MobiryButton text={'接続'} onClick={onClick} />
         </>
       )}
