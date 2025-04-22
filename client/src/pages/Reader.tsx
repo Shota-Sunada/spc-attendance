@@ -113,22 +113,22 @@ const ReaderPage = () => {
     [balance]
   );
 
-  const tableBottomLimit = useCallback(
-    () => (
-      <tr>
-        <td className="reader-left border-r-[1px] border-gray-500">
-          <p className="reader-text reader-text-left">{'有効期限'}</p>
-        </td>
-        <td className="reader-right">
-          <p className="reader-text reader-text-right">
-            {'2025'}
-            <span className="text-2xl">{'年'}</span>11<span className="text-2xl">{'月'}</span>4<span className="text-2xl">{'日'}</span>
-          </p>
-        </td>
-      </tr>
-    ),
-    []
-  );
+  // const tableBottomLimit = useCallback(
+  //   () => (
+  //     <tr>
+  //       <td className="reader-left border-r-[1px] border-gray-500">
+  //         <p className="reader-text reader-text-left">{'有効期限'}</p>
+  //       </td>
+  //       <td className="reader-right">
+  //         <p className="reader-text reader-text-right">
+  //           {'2025'}
+  //           <span className="text-2xl">{'年'}</span>11<span className="text-2xl">{'月'}</span>4<span className="text-2xl">{'日'}</span>
+  //         </p>
+  //       </td>
+  //     </tr>
+  //   ),
+  //   []
+  // );
 
   const tableBottomWelcome = useCallback(
     () => (
@@ -260,7 +260,7 @@ const ReaderPage = () => {
         setHeaderCss('bg-blue-400 text-white');
         setTableTop(tableTopPaid);
         setTableMiddle(tableMiddleBalance);
-        setTableBottom(tableBottomLimit);
+        setTableBottom(tableNullRow);
         break;
       case 'standby':
         setHeaderText('兼用');
@@ -316,7 +316,7 @@ const ReaderPage = () => {
     }
   }, [
     currentStatus,
-    tableBottomLimit,
+    // tableBottomLimit,
     tableBottomWait,
     tableBottomWelcome,
     tableMiddleBalance,
