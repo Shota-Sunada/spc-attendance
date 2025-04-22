@@ -132,7 +132,7 @@ const ReaderPage = () => {
 
   const tableBottomWelcome = useCallback(
     () => (
-      <tr className="bg-gray-600">
+      <tr className="bg-gray-600 ">
         <td className="reader-left" colSpan={2}>
           <p className="reader-text text-center text-2xl text-green-500">{'QRコードをかざしてください。'}</p>
         </td>
@@ -597,7 +597,9 @@ const ReaderPage = () => {
             </tbody>
           </table>
         </div>
-        <div className="h-[8%] bg-white"></div>
+        <div className="h-[8%] bg-white flex items-center justify-center">
+          <img src="/logo.png" alt="LOGO" className="w-[100px]" />
+        </div>
         <div className="bg-gray-900 shrink">
           <Scanner
             onScan={(detectedCodes: IDetectedBarcode[]) => {
