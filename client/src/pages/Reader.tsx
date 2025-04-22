@@ -287,24 +287,24 @@ const ReaderPage = () => {
         setTableBottom(tableBottomWait);
         break;
       case 'error':
-        setTableMiddle(tableError);
-        setTableBottom(tableNullRow);
+        setTableMiddle(tableNullRow);
+        setTableBottom(tableError);
         break;
       case 'cancel':
-        setTableMiddle(tableBottomCancel);
-        setTableBottom(tableNullRow);
+        setTableMiddle(tableNullRow);
+        setTableBottom(tableBottomCancel);
         break;
       case 'no_balance':
-        setTableMiddle(tableNoBalance);
-        setTableBottom(tableNullRow);
+        setTableMiddle(tableNullRow);
+        setTableBottom(tableNoBalance);
         break;
       case 'no_id':
-        setTableMiddle(tableIdNotSet);
-        setTableBottom(tableNullRow);
+        setTableMiddle(tableNullRow);
+        setTableBottom(tableIdNotSet);
         break;
       case 'already_on':
-        setTableMiddle(tableAlreadyGotOn);
-        setTableBottom(tableNullRow);
+        setTableMiddle(tableNullRow);
+        setTableBottom(tableAlreadyGotOn);
         break;
       default:
         setHeaderText('ヘッダー取得エラー');
