@@ -577,10 +577,10 @@ const ReaderPage = () => {
   }
 
   return (
-    <div className="bg-black flex flex-row">
-      <div className="m-auto h-screen max-w-[30%] flex flex-col">
+    <div className="bg-black flex flex-row overflow-y-hidden">
+      <div className="m-auto h-screen w-screen max-w-[400px] flex flex-col">
         <p className={headerCss + ' pl-1 font-bold shrink'}>{headerText}</p>
-        <div className="bg-gray-700 grow min-h-[400px] h-[100%]">
+        <div className="bg-gray-700 grow min-h-[400px]">
           <table className="text-white w-full h-full">
             <tbody className="max-h-[400px]">
               {tableTop}
