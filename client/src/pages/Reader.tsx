@@ -84,7 +84,7 @@ const ReaderPage = () => {
 
   const tableTopNumber = useCallback(
     () => (
-      <tr className="">
+      <tr className="h-[100px]">
         <td className="reader-left border-r-[1px] border-gray-500">
           <p className="reader-text reader-text-left">{'整理券No.'}</p>
         </td>
@@ -98,7 +98,7 @@ const ReaderPage = () => {
 
   const tableMiddleBalance = useCallback(
     () => (
-      <tr className="bg-blue-400">
+      <tr className="bg-blue-400 h-[100px]">
         <td className="reader-left border-r-[1px] border-gray-500">
           <p className="reader-text reader-text-left">{'残額'}</p>
         </td>
@@ -132,7 +132,7 @@ const ReaderPage = () => {
 
   const tableBottomWelcome = useCallback(
     () => (
-      <tr className="bg-gray-600 ">
+      <tr className="bg-gray-600 h-[100px]">
         <td className="reader-left" colSpan={2}>
           <p className="reader-text text-center text-2xl text-green-500">{'QRコードをかざしてください。'}</p>
         </td>
@@ -143,7 +143,7 @@ const ReaderPage = () => {
 
   const tableBottomWait = useCallback(
     () => (
-      <tr className="bg-green-400">
+      <tr className="bg-green-400 h-[100px]">
         <td className="reader-left" colSpan={2}>
           <p className="reader-text text-center text-2xl text-gray-800">{'しばらくお待ち下さい。'}</p>
         </td>
@@ -154,7 +154,7 @@ const ReaderPage = () => {
 
   const tableBottomPleaseCharge = useCallback(
     () => (
-      <tr className="bg-green-400">
+      <tr className="bg-green-400 h-[100px]">
         <td className="reader-left" colSpan={2}>
           <p className="reader-text text-center text-2xl text-gray-800">{'チャージしてください。'}</p>
         </td>
@@ -165,7 +165,7 @@ const ReaderPage = () => {
 
   const tableBottomAutoCharge = useCallback(
     () => (
-      <tr className="bg-green-400">
+      <tr className="bg-green-400 h-[100px]">
         <td className="reader-left" colSpan={2}>
           <p className="reader-text text-center text-2xl text-gray-800">{'オートチャージします。'}</p>
         </td>
@@ -176,7 +176,7 @@ const ReaderPage = () => {
 
   const tableBottomCancel = useCallback(
     () => (
-      <tr className="bg-green-400">
+      <tr className="bg-green-400 h-[100px]">
         <td className="reader-left" colSpan={2}>
           <p className="reader-text text-center text-2xl text-gray-800">{'乗車情報を取り消しました。'}</p>
         </td>
@@ -187,7 +187,7 @@ const ReaderPage = () => {
 
   const tableNullRow = useCallback(
     () => (
-      <tr className="">
+      <tr className="h-[100px]">
         <td className="reader-left border-r-[1px] border-gray-500">
           <p className="reader-text reader-text-left">{'　'}</p>
         </td>
@@ -201,7 +201,7 @@ const ReaderPage = () => {
 
   const tableNoBalance = useCallback(
     () => (
-      <tr className="bg-red-800">
+      <tr className="bg-red-800 h-[100px]">
         <td className="reader-left" colSpan={2}>
           <p className="reader-text text-center text-2xl text-gray-800">{'残高不足です。'}</p>
         </td>
@@ -212,7 +212,7 @@ const ReaderPage = () => {
 
   const tableAlreadyGotOn = useCallback(
     () => (
-      <tr className="bg-red-800">
+      <tr className="bg-red-800 h-[100px]">
         <td className="reader-left" colSpan={2}>
           <p className="reader-text text-center text-2xl text-gray-800">{'乗車処理済みです。'}</p>
         </td>
@@ -223,7 +223,7 @@ const ReaderPage = () => {
 
   const tableIdNotSet = useCallback(
     () => (
-      <tr className="bg-red-800">
+      <tr className="bg-red-800 h-[100px]">
         <td className="reader-left" colSpan={2}>
           <p className="reader-text text-center text-2xl text-gray-800">{'整理券No.が未指定です。'}</p>
         </td>
@@ -234,7 +234,7 @@ const ReaderPage = () => {
 
   const tableError = useCallback(
     () => (
-      <tr className="bg-red-800">
+      <tr className="bg-red-800 h-[100px]">
         <td className="reader-left" colSpan={2}>
           <p className="reader-text text-center text-2xl text-gray-800">{'エラーが発生しました。'}</p>
         </td>
@@ -578,15 +578,15 @@ const ReaderPage = () => {
 
   return (
     <div className="bg-black flex flex-row">
-      <div className="m-auto h-screen w-screen max-w-[400px] flex flex-col">
+      <div className="m-auto h-screen max-w-[30%] flex flex-col">
         <p className={headerCss + ' pl-1 font-bold shrink'}>{headerText}</p>
-        <div className="bg-gray-700 grow">
+        <div className="bg-gray-700 grow min-h-[400px] h-[100%]">
           <table className="text-white w-full h-full">
-            <tbody className="">
+            <tbody className="max-h-[400px]">
               {tableTop}
               {tableMiddle}
               {tableBottom}
-              <tr className="">
+              <tr className="h-[100px]">
                 <td className="reader-left border-r-[1px] border-gray-500">
                   <p className="reader-text text-[5px]">{'　'}</p>
                 </td>
@@ -597,10 +597,10 @@ const ReaderPage = () => {
             </tbody>
           </table>
         </div>
-        <div className="h-[8%] bg-white flex items-center justify-center">
-          <img src="/logo.png" alt="LOGO" className="w-[100px]" />
+        <div className="bg-white flex items-center justify-center">
+          <img src="/logo.png" alt="LOGO" className="w-[30%] m-[20px]" />
         </div>
-        <div className="bg-gray-900 shrink">
+        <div className="bg-gray-900">
           <Scanner
             onScan={(detectedCodes: IDetectedBarcode[]) => {
               if (detectedCodes.length > 0) {
