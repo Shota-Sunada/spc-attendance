@@ -54,7 +54,16 @@ const UserHeader = (props: Props) => {
                 {'メニュー'}
               </button>
               {/* <h1 className="p-[10px] cursor-default">{'BUTSURY DAYS'}</h1> */}
-              <img src="/logo.png" alt="LOGO" className="w-[100px]" />
+              <img
+                src="/logo.png"
+                alt="LOGO"
+                className="w-[100px] cursor-pointer"
+                onClick={() => {
+                  if (!props.isQROpened) {
+                    navigate('/');
+                  }
+                }}
+              />
               <button
                 className="bg-[#219bce] rounded-[20px] px-[15px] py-[10px] text-white cursor-pointer hover:bg-[#008fc0] anim"
                 onClick={onLogoutClick}>
