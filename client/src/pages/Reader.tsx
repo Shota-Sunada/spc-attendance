@@ -1,4 +1,4 @@
-import { Scanner, IDetectedBarcode, useDevices } from '@yudiel/react-qr-scanner';
+import { Scanner, IDetectedBarcode } from '@yudiel/react-qr-scanner';
 import { ReactElement, useCallback, useEffect, useState } from 'react';
 import '../styles/reader.css';
 import { BACKEND_ENDPOINT, FARE_ADULT, FARE_CHILDREN, NOT_GET_ON_ID } from '../const';
@@ -41,9 +41,6 @@ const ReaderPage = () => {
   const [startId, setStartId] = useState<number | null>(null);
   const [endId, setEndId] = useState<number | null>(null);
   const [fareDirect, setFareDirect] = useState<number | null>(null);
-
-  const [deviceId, setDeviceId] = useState<string | undefined>(undefined);
-  const devices = useDevices();
 
   const [params] = useSearchParams();
 
@@ -672,9 +669,6 @@ const ReaderPage = () => {
               finder: false,
               torch: false
             }}
-            constraints={{
-              deviceId: deviceId
-            }}
           />
         </div>
       </div>
@@ -688,18 +682,6 @@ const ReaderPage = () => {
           }}>
           {'更新'}
         </p> */}
-        <select className="bg-white" onChange={(e) => setDeviceId(e.target.value)}>
-          <option value={undefined}>選択してください</option>
-          {devices.map((x, i) => {
-            if (!x.label.startsWith('OBS')) {
-              return (
-                <option key={i} value={x.deviceId}>
-                  {x.label}
-                </option>
-              );
-            }
-          })}
-        </select>
       </div>
     </div>
   );
