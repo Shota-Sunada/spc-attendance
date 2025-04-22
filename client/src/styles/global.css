@@ -5,6 +5,7 @@
     Inter,
     Noto Sans JP,
     sans-serif;
+  user-select: none;
 }
 
 html,
