@@ -662,7 +662,7 @@ const ReaderPage = () => {
             }}
             formats={['qr_code', 'micro_qr_code']}
             allowMultiple
-            scanDelay={5000}
+            scanDelay={2000}
             // paused={isReaderPaused}
             components={{
               tracker: customTracker,
