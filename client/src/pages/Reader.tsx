@@ -35,12 +35,6 @@ const ReaderPage = () => {
   const [readHistory, setReadHistory] = useState<string[]>([]);
 
   const [id6, setId6] = useState<number>(10000);
-  const [adultNum, setAdultNum] = useState<number | null>(null);
-  const [childrenNum, setChildrenNum] = useState<number | null>(null);
-  const [isCancel, setIsCancel] = useState<boolean | null>(null);
-  const [startId, setStartId] = useState<number | null>(null);
-  const [endId, setEndId] = useState<number | null>(null);
-  const [fareDirect, setFareDirect] = useState<number | null>(null);
 
   const [params] = useSearchParams();
 
@@ -342,133 +336,149 @@ const ReaderPage = () => {
       return;
     }
 
-    await fetchAdmin();
+    const payloadConfig = {
+      id6: id6
+    };
 
-    const result = scanResult.rawValue;
-    try {
-      const qr_data = JSON.parse(result) as QRFormat;
+    const resConfig = await fetch(`${BACKEND_ENDPOINT}/getAdmin`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payloadConfig)
+    });
 
-      const payload = {
-        uuid: qr_data.data
-      };
+    if (resConfig.ok) {
+      const configData = (await resConfig.json()) as Admin;
+      console.log('大人人数: ', configData.adult_num);
+      console.log('子供人数: ', configData.children_num);
+      console.log('乗車キャンセル: ', configData.is_cancel);
+      console.log('乗車開始電停ID: ', configData.start_id);
+      console.log('乗車終了電停ID: ', configData.end_id);
+      console.log('運賃直接入力: ', configData.fare_direct);
+      console.log('管理システム接続 設定更新');
 
-      const res = await fetch(`${BACKEND_ENDPOINT}/useTicket`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(payload)
-      });
+      const result = scanResult.rawValue;
+      try {
+        const qr_data = JSON.parse(result) as QRFormat;
 
-      const data = (await res.json()) as Ticket;
-      if (res.ok) {
-        if (data == null) {
-          setCurrentStatus('error');
-        } else {
-          const payload2 = {
-            id: data.user_id
-          };
-          const res2 = await fetch(`${BACKEND_ENDPOINT}/api/users`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(payload2)
-          });
+        const payload = {
+          uuid: qr_data.data
+        };
 
-          const user = (await res2.json()) as User;
-          if (res2.ok) {
-            if (user.last_get_on_id === current_stop_id) {
-              setCurrentStatus('already_on');
-              return;
-            }
+        const res = await fetch(`${BACKEND_ENDPOINT}/useTicket`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(payload)
+        });
 
-            console.log(user.last_get_on_id);
-            if (user.last_get_on_id === NOT_GET_ON_ID) {
-              console.log('乗車');
+        const data = (await res.json()) as Ticket;
+        if (res.ok) {
+          if (data == null) {
+            setCurrentStatus('error');
+          } else {
+            const payload2 = {
+              id: data.user_id
+            };
+            const res2 = await fetch(`${BACKEND_ENDPOINT}/api/users`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(payload2)
+            });
 
-              const getOnResult = await apiGetOn(user, current_stop_id);
-              if (getOnResult) {
-                setBalance(user.balance);
-                setCurrentStatus('getOn');
+            const user = (await res2.json()) as User;
+            if (res2.ok) {
+              if (user.last_get_on_id === current_stop_id) {
+                setCurrentStatus('already_on');
+                return;
+              }
 
-                if (user.balance < 1000) {
-                  if (user.enable_auto_charge) {
-                    if (user.balance < user.auto_charge_balance) {
-                      setTableBottom(tableBottomAutoCharge);
-                      apiCharge(user, 1000, false, current_stop_id, null);
-                      apiCreateChargeHistory(user, 1000, user.balance + 1000, 2);
+              console.log(user.last_get_on_id);
+              if (user.last_get_on_id === NOT_GET_ON_ID) {
+                console.log('乗車');
+
+                const getOnResult = await apiGetOn(user, current_stop_id);
+                if (getOnResult) {
+                  setBalance(user.balance);
+                  setCurrentStatus('getOn');
+
+                  if (user.balance < 1000) {
+                    if (user.enable_auto_charge) {
+                      if (user.balance < user.auto_charge_balance) {
+                        setTableBottom(tableBottomAutoCharge);
+                        apiCharge(user, 1000, false, current_stop_id, null);
+                        apiCreateChargeHistory(user, 1000, user.balance + 1000, 2);
+                      }
+                    } else {
+                      setTableBottom(tableBottomPleaseCharge);
                     }
                   } else {
-                    setTableBottom(tableBottomPleaseCharge);
+                    setTableBottom(tableNullRow);
                   }
                 } else {
-                  setTableBottom(tableNullRow);
+                  setCurrentStatus('error');
                 }
               } else {
-                setCurrentStatus('error');
-              }
-            } else {
-              console.log('降車');
+                console.log('降車');
 
-              if (isCancel) {
-                apiCancel(user);
-                setCurrentStatus('cancel');
-              } else {
-                let adult_num = 1;
-                let children_num = 0;
-                if (adultNum) {
-                  adult_num = adultNum;
-                  console.log(adult_num);
-                }
-                if (childrenNum) {
-                  children_num = childrenNum;
-                }
-
-                let fare = FARE_ADULT * adult_num + FARE_CHILDREN * children_num;
-                if (fareDirect) {
-                  fare = fareDirect;
-                }
-
-                const zan = user.balance - fare;
-                if (zan < 0) {
-                  setCurrentStatus('no_balance');
+                if (configData.is_cancel) {
+                  apiCancel(user);
+                  setCurrentStatus('cancel');
                 } else {
-                  setBalance(zan);
-                  setPaid(fare);
+                  let adult_num = 1;
+                  let children_num = 0;
+                  if (configData.adult_num) {
+                    adult_num = configData.adult_num;
+                    console.log(adult_num);
+                  }
+                  if (configData.children_num) {
+                    children_num = configData.children_num;
+                  }
 
-                  const fare_result = await apiPay(user, zan);
-                  if (fare_result) {
-                    setCurrentStatus('getOff');
+                  let fare = FARE_ADULT * adult_num + FARE_CHILDREN * children_num;
+                  if (configData.fare_direct) {
+                    fare = configData.fare_direct;
+                  }
 
-                    let start = null;
-                    let end = current_stop_id;
-                    if (startId) {
-                      start = startId;
-                    }
-                    if (endId) {
-                      end = endId;
-                    }
-
-                    apiCreateHistory(user, start, end, fare, zan, type_id, company_id);
-
-                    setAdultNum(null);
-                    setChildrenNum(null);
-                    setIsCancel(null);
-                    setStartId(null);
-                    setEndId(null);
-                    setFareDirect(null);
+                  const zan = user.balance - fare;
+                  if (zan < 0) {
+                    setCurrentStatus('no_balance');
                   } else {
-                    setCurrentStatus('error');
+                    setBalance(zan);
+                    setPaid(fare);
+
+                    const fare_result = await apiPay(user, zan);
+                    if (fare_result) {
+                      setCurrentStatus('getOff');
+
+                      let start = null;
+                      let end = current_stop_id;
+                      if (configData.start_id) {
+                        start = configData.start_id;
+                      }
+                      if (configData.end_id) {
+                        end = configData.end_id;
+                      }
+
+                      apiCreateHistory(user, start, end, fare, zan, type_id, company_id);
+                    } else {
+                      setCurrentStatus('error');
+                    }
                   }
                 }
               }
             }
           }
         }
+      } catch {
+        setCurrentStatus('error');
       }
-    } catch {
-      setCurrentStatus('error');
+    } else {
+      console.log('管理システム接続失敗');
     }
 
     const payload = {
@@ -542,39 +552,6 @@ const ReaderPage = () => {
       ctx.strokeRect(code.boundingBox.x, code.boundingBox.y, code.boundingBox.width, code.boundingBox.height);
     });
   };
-
-  async function fetchAdmin() {
-    const payload = {
-      id6: id6
-    };
-
-    const res = await fetch(`${BACKEND_ENDPOINT}/getAdmin`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(payload)
-    });
-
-    if (res.ok) {
-      const data = (await res.json()) as Admin;
-      setAdultNum(data.adult_num);
-      console.log(data.adult_num);
-      setChildrenNum(data.children_num);
-      console.log(data.children_num);
-      setIsCancel(data.is_cancel);
-      console.log(data.is_cancel);
-      setStartId(data.start_id);
-      console.log(data.start_id);
-      setEndId(data.end_id);
-      console.log(data.end_id);
-      setFareDirect(data.fare_direct);
-      console.log(data.fare_direct);
-      console.log('管理システム接続 設定更新');
-    } else {
-      console.log('管理システム接続失敗');
-    }
-  }
 
   return (
     <div className="bg-black flex flex-row overflow-y-hidden">
