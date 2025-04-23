@@ -5,11 +5,12 @@ import { useState } from 'react';
 import User from '../types/User';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
-import { apiCharge, apiCreateChargeHistory } from '../api';
+import { apiBan, apiCharge, apiCreateChargeHistory } from '../api';
 import CreditsCard from '../components/CreditsCard';
 
 interface Props {
   user: User;
+  setIsBanned: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const Charge = (props: Props) => {
@@ -24,6 +25,14 @@ const Charge = (props: Props) => {
   const chargeMoney = async () => {
     if (props.user.balance + charge > 30000) {
       alert('チャージ後の金額が、30,000円を超えるため、チャージできません。');
+      return;
+    }
+
+    if (!radioButtons1.includes(charge) && !radioButtons2.includes(charge)) {
+      alert('不正なチャージを検知しました。詳しくは管理担当者にお問い合わせください。');
+      props.setIsBanned(true);
+      apiBan(props.user);
+      navigate("/")
       return;
     }
 

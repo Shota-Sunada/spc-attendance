@@ -74,7 +74,7 @@ export default function App() {
                     <LoginRegister setUser={setUser} />
                   )
                 }></Route>
-              <Route path="/charge" element={<Charge user={user} />}></Route>
+              <Route path="/charge" element={<Charge user={user} setIsBanned={setIsBanned} />}></Route>
               <Route path="/purchases" element={<Purchases user={user} />}></Route>
               <Route path="/purchase" element={<PurchaseView user={user} />}></Route>
               <Route path="/usage-histories" element={<History user={user} />}></Route>
