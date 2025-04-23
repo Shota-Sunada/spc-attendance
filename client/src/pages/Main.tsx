@@ -28,9 +28,11 @@ const UserPage = (props: UserPageProps) => {
   const [qr, setQR] = useState<ReactElement | null>(null);
   const [count, setCount] = useState<number>(QR_MAX_TIMEOUT_SEC);
 
+  const [initialized, setInitialized] = useState<boolean>(false);
+
   const onClick = () => {
     props.setIsQROpened(true);
-    props.setIsMenuOpen(false)
+    props.setIsMenuOpen(false);
     createTicket();
   };
 
@@ -90,7 +92,7 @@ const UserPage = (props: UserPageProps) => {
   const sec = count % 60;
   const min = (count - sec) / 60;
 
-  const getMe = async () => {
+  const getMe = useCallback(async () => {
     const token = localStorage.getItem('token');
     if (!token) {
       return;
@@ -108,7 +110,14 @@ const UserPage = (props: UserPageProps) => {
     } else {
       localStorage.removeItem('token');
     }
-  };
+  }, [props]);
+
+  useEffect(() => {
+    if (!initialized) {
+      getMe();
+      setInitialized(true);
+    }
+  }, [getMe, initialized]);
 
   return (
     <>
@@ -154,7 +163,7 @@ const UserPage = (props: UserPageProps) => {
         </div>
       </div>
       {/* メイン画面 */}
-      <div className={props.isQROpened ? 'blur-sm transition-[.1s]' : ''} onLoad={() => getMe}>
+      <div className={props.isQROpened ? 'blur-sm transition-[.1s]' : ''}>
         <div className="max-w-[360px] mx-auto">
           <p className="m-[10px] flex items-center justify-center font-bold">{'ホーム'}</p>
           <div className="flex flex-col items-center justify-center">

@@ -33,7 +33,7 @@ const AutoCharge = (props: Props) => {
       return;
     }
 
-    if (balance >= charge) {
+    if (balance > charge) {
       alert('チャージ額は、残高以上の金額で設定してください。');
       return;
     }
