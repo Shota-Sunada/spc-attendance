@@ -30,6 +30,7 @@ const UserPage = (props: UserPageProps) => {
 
   const onClick = () => {
     props.setIsQROpened(true);
+    props.setIsMenuOpen(false)
     createTicket();
   };
 
