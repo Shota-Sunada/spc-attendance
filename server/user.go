@@ -86,7 +86,7 @@ func registerUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	result, err := db.Exec(insertUser, user.Name, string(hashedPassword), false, 0, false, now, true, 1000, 1000, false, false, "物理班電鉄", 0, 0)
+	result, err := db.Exec(insertUser, user.Name, string(hashedPassword), false, 0, false, now, true, 1000, 1000, false, false, "物理班電鉄", "bk2", "physics")
 	if err != nil {
 		logger.Error("The internal server error is occurred: registerUser-Exec")
 		logger.ErrorE(err)
