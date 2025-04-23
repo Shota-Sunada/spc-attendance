@@ -50,7 +50,7 @@ export default function App() {
   return (
     <>
       <main>
-        <div className="h-[100%] bg-[#f7f4e5]">
+        <div className="h-[100%] bg-[#f7f4e5] overflow-y-auto">
           <BrowserRouter>
             {user.id === -1 ? <></> : <UserHeader setUser={setUser} isQROpened={isQROpened} isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />}
             <Routes>
