@@ -4,6 +4,7 @@ import { FaChevronLeft } from 'react-icons/fa';
 import { NO_USER } from '../const';
 
 type Props = {
+  isBanned: boolean;
   setUser: React.Dispatch<React.SetStateAction<User>>;
   isQROpened: boolean;
   isMenuOpen: boolean;
@@ -44,15 +45,19 @@ const UserHeader = (props: Props) => {
           )}
           <div className={props.isQROpened ? 'blur-sm transition-[.1s]' : ''}>
             <div className="bg-white flex flex-row p-[10px] items-center justify-center x-50">
-              <button
-                className="bg-[#219bce] rounded-[20px] px-[15px] py-[10px] text-white cursor-pointer hover:bg-[#008fc0] anim"
-                onClick={() => {
-                  if (!props.isQROpened) {
-                    props.setIsMenuOpen(!props.isMenuOpen);
-                  }
-                }}>
-                {'メニュー'}
-              </button>
+              {props.isBanned ? (
+                <></>
+              ) : (
+                <button
+                  className="bg-[#219bce] rounded-[20px] px-[15px] py-[10px] text-white cursor-pointer hover:bg-[#008fc0] anim"
+                  onClick={() => {
+                    if (!props.isQROpened) {
+                      props.setIsMenuOpen(!props.isMenuOpen);
+                    }
+                  }}>
+                  {'メニュー'}
+                </button>
+              )}
               {/* <h1 className="p-[10px] cursor-default">{'BUTSURY DAYS'}</h1> */}
               <img
                 src="/logo.png"
@@ -64,11 +69,15 @@ const UserHeader = (props: Props) => {
                   }
                 }}
               />
-              <button
-                className="bg-[#219bce] rounded-[20px] px-[15px] py-[10px] text-white cursor-pointer hover:bg-[#008fc0] anim"
-                onClick={onLogoutClick}>
-                {'ログアウト'}
-              </button>
+              {props.isBanned ? (
+                <></>
+              ) : (
+                <button
+                  className="bg-[#219bce] rounded-[20px] px-[15px] py-[10px] text-white cursor-pointer hover:bg-[#008fc0] anim"
+                  onClick={onLogoutClick}>
+                  {'ログアウト'}
+                </button>
+              )}
             </div>
           </div>
         </>

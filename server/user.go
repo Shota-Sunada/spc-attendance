@@ -21,17 +21,18 @@ const (
 			created_at 			DATETIME DEFAULT CURRENT_TIMESTAMP,
 			enable_auto_charge 	BOOLEAN NOT NULL DEFAULT TRUE,
 			auto_charge_balance INT NOT NULL DEFAULT 1000,
-			auto_charge_charge  INT NOT NULL DEFAULT 1000
+			auto_charge_charge  INT NOT NULL DEFAULT 1000,
+			is_banned			BOOLEAN NOT NULL DEFAULT FALSE
 		)
 	`
 
-	insertUser = "INSERT INTO users (name, password, is_admin, balance, last_get_on_id, created_at, enable_auto_charge, auto_charge_balance, auto_charge_charge) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
+	insertUser = "INSERT INTO users (name, password, is_admin, balance, last_get_on_id, created_at, enable_auto_charge, auto_charge_balance, auto_charge_charge, is_banned) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
 
 	selectUserByName = "SELECT * FROM users WHERE name = ?"
 
 	selectUserById = "SELECT * FROM users WHERE id = ?"
 
-	updateUserByName = "UPDATE users SET balance = ?, last_get_on_id = ?, enable_auto_charge = ?, auto_charge_balance = ?, auto_charge_charge = ? WHERE name = ?"
+	updateUserByName = "UPDATE users SET balance = ?, last_get_on_id = ?, enable_auto_charge = ?, auto_charge_balance = ?, auto_charge_charge = ?, is_banned = ? WHERE name = ?"
 )
 
 type User struct {
@@ -45,6 +46,7 @@ type User struct {
 	EnableAutoCharge  bool   `json:"enable_auto_charge"`
 	AutoChargeBalance int    `json:"auto_charge_balance"`
 	AutoChargeCharge  int    `json:"auto_charge_charge"`
+	IsBanned          bool   `json:"is_banned"`
 }
 
 func registerUser(w http.ResponseWriter, r *http.Request) {
@@ -58,7 +60,7 @@ func registerUser(w http.ResponseWriter, r *http.Request) {
 
 	row := db.QueryRow(selectUserByName, user.Name)
 	var temp User
-	err := row.Scan(&temp.ID, &temp.Name, &temp.Password, &temp.IsAdmin, &temp.Balance, &temp.LastGetOnId, &temp.CreatedAt, &temp.EnableAutoCharge, &temp.AutoChargeBalance, &temp.AutoChargeCharge)
+	err := row.Scan(&temp.ID, &temp.Name, &temp.Password, &temp.IsAdmin, &temp.Balance, &temp.LastGetOnId, &temp.CreatedAt, &temp.EnableAutoCharge, &temp.AutoChargeBalance, &temp.AutoChargeCharge, &temp.IsBanned)
 	if err == nil {
 		logger.Error("The internal server error is occurred: registerUser-QueryRow")
 		logger.Error("The given username is already exists!")
@@ -76,7 +78,7 @@ func registerUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	result, err := db.Exec(insertUser, user.Name, string(hashedPassword), false, 0, false, now, true, 1000, 1000)
+	result, err := db.Exec(insertUser, user.Name, string(hashedPassword), false, 0, false, now, true, 1000, 1000, false)
 	if err != nil {
 		logger.Error("The internal server error is occurred: registerUser-Exec")
 		logger.ErrorE(err)
@@ -120,6 +122,7 @@ func registerUser(w http.ResponseWriter, r *http.Request) {
 	logger.Info(fmt.Sprintf("EnableAutoCharge: %t", user.EnableAutoCharge))
 	logger.Info(fmt.Sprintf("AutoChargeBalance: %d", user.AutoChargeBalance))
 	logger.Info(fmt.Sprintf("AutoChargeCharge: %d", user.AutoChargeCharge))
+	logger.Info(fmt.Sprintf("IsBanned: %t", user.IsBanned))
 	logger.Info("=============================================")
 
 	respondJSON(w, http.StatusCreated, map[string]interface{}{
@@ -139,7 +142,7 @@ func loginUser(w http.ResponseWriter, r *http.Request) {
 
 	row := db.QueryRow(selectUserByName, user.Name)
 	var temp User
-	err := row.Scan(&temp.ID, &temp.Name, &temp.Password, &temp.IsAdmin, &temp.Balance, &temp.LastGetOnId, &temp.CreatedAt, &temp.EnableAutoCharge, &temp.AutoChargeBalance, &temp.AutoChargeCharge)
+	err := row.Scan(&temp.ID, &temp.Name, &temp.Password, &temp.IsAdmin, &temp.Balance, &temp.LastGetOnId, &temp.CreatedAt, &temp.EnableAutoCharge, &temp.AutoChargeBalance, &temp.AutoChargeCharge, &temp.IsBanned)
 	if err != nil {
 		logger.Error("The bad request is occurred: loginUser-ID")
 		logger.ErrorE(err)
@@ -185,7 +188,7 @@ func getMe(w http.ResponseWriter, r *http.Request) {
 
 	row := db.QueryRow(selectUserByName, userName)
 	var user User
-	err := row.Scan(&user.ID, &user.Name, &user.Password, &user.IsAdmin, &user.Balance, &user.LastGetOnId, &user.CreatedAt, &user.EnableAutoCharge, &user.AutoChargeBalance, &user.AutoChargeCharge)
+	err := row.Scan(&user.ID, &user.Name, &user.Password, &user.IsAdmin, &user.Balance, &user.LastGetOnId, &user.CreatedAt, &user.EnableAutoCharge, &user.AutoChargeBalance, &user.AutoChargeCharge, &user.IsBanned)
 	if err != nil {
 		logger.Error("The internal server error is occurred: getMe-Scan")
 		logger.ErrorE(err)
@@ -209,7 +212,7 @@ func getUserById(w http.ResponseWriter, r *http.Request) {
 
 	row := db.QueryRow(selectUserById, arg.ID)
 	var user User
-	err := row.Scan(&user.ID, &user.Name, &user.Password, &user.IsAdmin, &user.Balance, &user.LastGetOnId, &user.CreatedAt, &user.EnableAutoCharge, &user.AutoChargeBalance, &user.AutoChargeCharge)
+	err := row.Scan(&user.ID, &user.Name, &user.Password, &user.IsAdmin, &user.Balance, &user.LastGetOnId, &user.CreatedAt, &user.EnableAutoCharge, &user.AutoChargeBalance, &user.AutoChargeCharge, &user.IsBanned)
 	if err != nil {
 		logger.Error("The internal server error is occurred: getUserById-Scan")
 		logger.ErrorE(err)
@@ -231,7 +234,7 @@ func update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, err := db.Exec(updateUserByName, arg.Balance, arg.LastGetOnId, arg.EnableAutoCharge, arg.AutoChargeBalance, arg.AutoChargeCharge, arg.Name)
+	_, err := db.Exec(updateUserByName, arg.Balance, arg.LastGetOnId, arg.EnableAutoCharge, arg.AutoChargeBalance, arg.AutoChargeCharge, arg.IsBanned, arg.Name)
 	if err != nil {
 		logger.Error("The internal server error is occurred: update-Exec")
 		logger.ErrorE(err)
@@ -246,6 +249,7 @@ func update(w http.ResponseWriter, r *http.Request) {
 	logger.Info(fmt.Sprintf("EnableAutoCharge: %t", arg.EnableAutoCharge))
 	logger.Info(fmt.Sprintf("AutoChargeBalance: %d", arg.AutoChargeBalance))
 	logger.Info(fmt.Sprintf("AutoChargeCharge: %d", arg.AutoChargeCharge))
+	logger.Info(fmt.Sprintf("IsBanned: %t", arg.IsBanned))
 	logger.Info("=============================================")
 
 	respondJSON(w, http.StatusOK, nil)

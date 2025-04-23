@@ -9,6 +9,7 @@ import { TfiReload } from 'react-icons/tfi';
 import { NoCommuterTicketCard } from '../components/CommuterTicketCard';
 import MobiryButton from '../components/MobiryButton';
 import { useNavigate } from 'react-router-dom';
+import { apiBan } from '../api';
 
 type UserPageProps = {
   user: User;
@@ -17,16 +18,23 @@ type UserPageProps = {
   setIsQROpened: React.Dispatch<React.SetStateAction<boolean>>;
   isMenuOpen: boolean;
   setIsMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  isBanned: boolean;
+  setIsBanned: React.Dispatch<React.SetStateAction<boolean>>;
   isSmartphone: boolean;
 };
 
 const QR_MAX_TIMEOUT_SEC = 300;
+const GEN_RESET_TIMEOUT_SEC = 10;
+const GEN_LIMIT_PER_SECONDS = 20;
 
 const UserPage = (props: UserPageProps) => {
   const navigate = useNavigate();
 
   const [qr, setQR] = useState<ReactElement | null>(null);
   const [count, setCount] = useState<number>(QR_MAX_TIMEOUT_SEC);
+
+  const [genCount, setGenCount] = useState<number>(0);
+  const [genResetCount, setGenResetCount] = useState<number>(GEN_RESET_TIMEOUT_SEC);
 
   const [initialized, setInitialized] = useState<boolean>(false);
 
@@ -37,6 +45,36 @@ const UserPage = (props: UserPageProps) => {
   };
 
   const createTicket = useCallback(async () => {
+    function GenerateQRCode(uuid: string) {
+      setCount(QR_MAX_TIMEOUT_SEC);
+
+      const json: QRFormat = {
+        version: QR_VERSION,
+        data: uuid
+      };
+
+      const data = JSON.stringify(json);
+
+      setQR(
+        <>
+          <QRCode data={data} />
+        </>
+      );
+
+      setGenCount(genCount + 1);
+      console.log('QRコード生成数: ', genCount + 1);
+
+      if (genCount === 1) {
+        setGenResetCount(GEN_RESET_TIMEOUT_SEC);
+      }
+
+      if (genCount > GEN_LIMIT_PER_SECONDS) {
+        props.setIsBanned(true);
+        props.setIsQROpened(false);
+        apiBan(props.user);
+      }
+    }
+
     const payload = {
       user_id: props.user.id
     };
@@ -56,24 +94,7 @@ const UserPage = (props: UserPageProps) => {
     if (res.ok) {
       GenerateQRCode(data.uuid);
     }
-  }, [props.user.id]);
-
-  function GenerateQRCode(uuid: string) {
-    setCount(QR_MAX_TIMEOUT_SEC);
-
-    const json: QRFormat = {
-      version: QR_VERSION,
-      data: uuid
-    };
-
-    const data = JSON.stringify(json);
-
-    setQR(
-      <>
-        <QRCode data={data} />
-      </>
-    );
-  }
+  }, [genCount, props]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -88,6 +109,18 @@ const UserPage = (props: UserPageProps) => {
 
     return () => clearTimeout(timer);
   }, [qr, count, createTicket]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (genResetCount <= 0) {
+        setGenCount(0);
+      } else {
+        setGenResetCount(genResetCount - 1);
+      }
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, [genResetCount]);
 
   const sec = count % 60;
   const min = (count - sec) / 60;
@@ -119,75 +152,95 @@ const UserPage = (props: UserPageProps) => {
     }
   }, [getMe, initialized]);
 
+  useEffect(() => {
+    if (props.user.is_banned) {
+      props.setIsBanned(true);
+    }
+  }, [props.user.is_banned, props]);
+
   return (
     <>
       {/* QRコード */}
-      <div className="fixed bottom-[1vh] left-[50%] transform-[translateX(-50%)] bg-white p-[25px] rounded-2xl z-100">
-        <div className="flex flex-col items-center justify-center">
-          {props.isQROpened ? (
-            qr ? (
-              <>
-                <div className="flex flex-col items-center justify-center mb-[50%] ">
-                  {qr}
-                  <div className="m-[2vh] flex flex-row">
-                    <p className="cursor-default text-[20px] flex items-center">{'有効期限'}</p>
-                    <p className="cursor-default text-[20px] flex items-center font-bold ml-[10px]">
-                      {min.toString().padStart(2, '0')}
-                      {':'}
-                      {sec.toString().padStart(2, '0')}
-                    </p>
-                    <div className="ml-[10px] border-blue-300 border-[10px] bg-blue-300 rounded-3xl cursor-pointer" onClick={createTicket}>
-                      <TfiReload color="#008fc0" size={'15px'} />
-                    </div>
-                  </div>
-                </div>
-                <p
-                  className="text-center py-[10px] px-[100px] border-[1px] rounded-2xl cursor-pointer"
-                  onClick={() => {
-                    props.setIsQROpened(false);
-                    setQR(null);
-                  }}>
-                  {'閉じる'}
-                </p>
-              </>
-            ) : (
-              <></>
-            )
-          ) : (
-            <div
-              onClick={onClick}
-              className="bg-purple-900 border-[20px] border-purple-900 rounded-[100%] fixed bottom-[-30px] left-[50%] transform-[translateX(-50%)] cursor-pointer hover:border-purple-950 hover:bg-purple-950">
-              <IoQrCode className="pb-[10px]" color="white" size={'40px'} />
-            </div>
-          )}
-        </div>
-      </div>
-      {/* メイン画面 */}
-      <div className={props.isQROpened ? 'blur-sm transition-[.1s]' : ''}>
-        <div className="max-w-[360px] mx-auto">
-          <p className="m-[10px] flex items-center justify-center font-bold">{'ホーム'}</p>
-          <div className="flex flex-col items-center justify-center">
-            <div className="flex flex-row items-end justify-between mb-[10px]">
-              <p className="mb-[3px]">{'残高'}</p>
-              <p
-                className='text-4xl font-bold text-[#462066] pl-[20px] after:content-["\5186"] after:text-[14px] after:ml-[4px]'
-                style={{ unicodeBidi: 'isolate' }}>
-                {props.user.balance.toLocaleString('es-US')}
-              </p>
-            </div>
-            <MobiryButton
-              text="チャージする"
-              onClick={() => {
-                if (!props.isQROpened) {
-                  navigate('/charge');
-                }
-              }}
-            />
+      {props.isBanned ? (
+        <>
+          <div className="content items-center justify-center m-[10px]">
+            <p className="text-center">{'【お知らせ】'}</p>
+            <p className="text-center">{'現在、このアカウントへのサービスの提供を停止させていただいております。'}</p>
+            <br />
+            <p className="text-center">{'詳しくは、管理担当者までお問い合わせください。'}</p>
+            <br />
+            <br />
+            <p className="text-center">{'開発・管理担当: 修道物理班'}</p>
           </div>
+        </>
+      ) : (
+        <>
+          <div className="fixed bottom-[1vh] left-[50%] transform-[translateX(-50%)] bg-white p-[25px] rounded-2xl z-100">
+            <div className="flex flex-col items-center justify-center">
+              {props.isQROpened ? (
+                qr ? (
+                  <>
+                    <div className="flex flex-col items-center justify-center mb-[50%] ">
+                      {qr}
+                      <div className="m-[2vh] flex flex-row">
+                        <p className="cursor-default text-[20px] flex items-center">{'有効期限'}</p>
+                        <p className="cursor-default text-[20px] flex items-center font-bold ml-[10px]">
+                          {min.toString().padStart(2, '0')}
+                          {':'}
+                          {sec.toString().padStart(2, '0')}
+                        </p>
+                        <div className="ml-[10px] border-blue-300 border-[10px] bg-blue-300 rounded-3xl cursor-pointer" onClick={createTicket}>
+                          <TfiReload color="#008fc0" size={'15px'} />
+                        </div>
+                      </div>
+                    </div>
+                    <p
+                      className="text-center py-[10px] px-[100px] border-[1px] rounded-2xl cursor-pointer"
+                      onClick={() => {
+                        props.setIsQROpened(false);
+                        setQR(null);
+                      }}>
+                      {'閉じる'}
+                    </p>
+                  </>
+                ) : (
+                  <></>
+                )
+              ) : (
+                <div
+                  onClick={onClick}
+                  className="bg-purple-900 border-[20px] border-purple-900 rounded-[100%] fixed bottom-[-30px] left-[50%] transform-[translateX(-50%)] cursor-pointer hover:border-purple-950 hover:bg-purple-950">
+                  <IoQrCode className="pb-[10px]" color="white" size={'40px'} />
+                </div>
+              )}
+            </div>
+          </div>
+          {/* メイン画面 */}
+          <div className={props.isQROpened ? 'blur-sm transition-[.1s]' : ''}>
+            <div className="max-w-[360px] mx-auto">
+              <p className="m-[10px] flex items-center justify-center font-bold">{'ホーム'}</p>
+              <div className="flex flex-col items-center justify-center">
+                <div className="flex flex-row items-end justify-between mb-[10px]">
+                  <p className="mb-[3px]">{'残高'}</p>
+                  <p
+                    className='text-4xl font-bold text-[#462066] pl-[20px] after:content-["\5186"] after:text-[14px] after:ml-[4px]'
+                    style={{ unicodeBidi: 'isolate' }}>
+                    {props.user.balance.toLocaleString('es-US')}
+                  </p>
+                </div>
+                <MobiryButton
+                  text="チャージする"
+                  onClick={() => {
+                    if (!props.isQROpened) {
+                      navigate('/charge');
+                    }
+                  }}
+                />
+              </div>
 
-          <div className="flex flex-col items-center justify-center mt-[20px]">
-            <p className="m-[10px] flex items-center justify-center font-medium mb-[30px]">{'定期券情報'}</p>
-            {/* <CommuterTicketCard
+              <div className="flex flex-col items-center justify-center mt-[20px]">
+                <p className="m-[10px] flex items-center justify-center font-medium mb-[30px]">{'定期券情報'}</p>
+                {/* <CommuterTicketCard
               isStudent={false}
               company="物理班電鉄"
               route_start_stop_id={1}
@@ -196,18 +249,20 @@ const UserPage = (props: UserPageProps) => {
               start_date="2025.04.24"
               end_date="2025.04.25"
             /> */}
-            <NoCommuterTicketCard />
-            <MobiryButton
-              text="定期券を購入する"
-              onClick={() => {
-                if (!props.isQROpened) {
-                  navigate('/buy-commuter');
-                }
-              }}
-            />
+                <NoCommuterTicketCard />
+                <MobiryButton
+                  text="定期券を購入する"
+                  onClick={() => {
+                    if (!props.isQROpened) {
+                      navigate('/buy-commuter');
+                    }
+                  }}
+                />
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
+        </>
+      )}
     </>
   );
 };

@@ -22,6 +22,7 @@ export default function App() {
   const [user, setUser] = useState<User>(NO_USER);
   const [isQROpened, setIsQROpened] = useState<boolean>(false);
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
+  const [isBanned, setIsBanned] = useState<boolean>(false);
 
   const getAuthUser = async () => {
     const token = localStorage.getItem('token');
@@ -52,7 +53,7 @@ export default function App() {
       <main>
         <div className="h-[100%] bg-[#f7f4e5] overflow-y-auto">
           <BrowserRouter>
-            {user.id === -1 ? <></> : <UserHeader setUser={setUser} isQROpened={isQROpened} isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />}
+            {user.id === -1 ? <></> : <UserHeader isBanned={isBanned} setUser={setUser} isQROpened={isQROpened} isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />}
             <Routes>
               <Route
                 path="/"
@@ -66,6 +67,8 @@ export default function App() {
                       setIsQROpened={setIsQROpened}
                       isMenuOpen={isMenuOpen}
                       setIsMenuOpen={setIsMenuOpen}
+                      isBanned={isBanned}
+                      setIsBanned={setIsBanned}
                     />
                   ) : (
                     <LoginRegister setUser={setUser} />

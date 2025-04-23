@@ -9,4 +9,5 @@ export default interface User {
   enable_auto_charge: boolean;
   auto_charge_balance: number;
   auto_charge_charge: number;
+  is_banned: boolean;
 }

@@ -9,7 +9,8 @@ export async function apiCharge(user: User, charge: number, showNotify: boolean,
     last_get_on_id: stop_id ? stop_id : user.last_get_on_id,
     enable_auto_charge: user.enable_auto_charge,
     auto_charge_balance: user.auto_charge_balance,
-    auto_charge_charge: user.auto_charge_charge
+    auto_charge_charge: user.auto_charge_charge,
+    is_banned: user.is_banned
   };
 
   const res = await fetch(`${BACKEND_ENDPOINT}/api/update`, {
@@ -49,12 +50,12 @@ export async function apiCharge(user: User, charge: number, showNotify: boolean,
       if (res2.ok) {
         alert('チャージしました。');
       } else {
-        alert('チャージしましたが、購入履歴の登録に失敗しました。管理者にお問い合わせ下さい。');
+        alert('チャージしましたが、購入履歴の登録に失敗しました。管理担当者にお問い合わせ下さい。');
       }
     }
   } else {
     if (showNotify) {
-      alert('チャージに失敗しました。管理者にお問い合わせ下さい。');
+      alert('チャージに失敗しました。管理担当者にお問い合わせ下さい。');
     }
   }
   if (navigate) {
@@ -69,7 +70,8 @@ export async function apiAutoCharge(user: User, enabled: boolean, balance: numbe
     last_get_on_id: user.last_get_on_id,
     enable_auto_charge: enabled,
     auto_charge_balance: balance,
-    auto_charge_charge: charge
+    auto_charge_charge: charge,
+    is_banned: user.is_banned
   };
 
   const res = await fetch(`${BACKEND_ENDPOINT}/api/update`, {
@@ -83,7 +85,7 @@ export async function apiAutoCharge(user: User, enabled: boolean, balance: numbe
   if (res.ok) {
     alert('設定を更新しました。');
   } else {
-    alert('設定の更新に失敗しました。管理者にお問い合わせ下さい。');
+    alert('設定の更新に失敗しました。管理担当者にお問い合わせ下さい。');
   }
   navigate('/');
 }
@@ -95,7 +97,8 @@ export async function apiGetOn(user: User, stop_id: number): Promise<boolean> {
     last_get_on_id: stop_id,
     enable_auto_charge: user.enable_auto_charge,
     auto_charge_balance: user.auto_charge_balance,
-    auto_charge_charge: user.auto_charge_charge
+    auto_charge_charge: user.auto_charge_charge,
+    is_banned: user.is_banned
   };
 
   const res = await fetch(`${BACKEND_ENDPOINT}/api/update`, {
@@ -122,7 +125,8 @@ export async function apiCancel(user: User): Promise<boolean> {
     last_get_on_id: NOT_GET_ON_ID,
     enable_auto_charge: user.enable_auto_charge,
     auto_charge_balance: user.auto_charge_balance,
-    auto_charge_charge: user.auto_charge_charge
+    auto_charge_charge: user.auto_charge_charge,
+    is_banned: user.is_banned
   };
 
   const res = await fetch(`${BACKEND_ENDPOINT}/api/update`, {
@@ -149,7 +153,8 @@ export async function apiPay(user: User, balance: number): Promise<boolean> {
     last_get_on_id: NOT_GET_ON_ID,
     enable_auto_charge: user.enable_auto_charge,
     auto_charge_balance: user.auto_charge_balance,
-    auto_charge_charge: user.auto_charge_charge
+    auto_charge_charge: user.auto_charge_charge,
+    is_banned: user.is_banned
   };
 
   const res = await fetch(`${BACKEND_ENDPOINT}/api/update`, {
@@ -165,6 +170,34 @@ export async function apiPay(user: User, balance: number): Promise<boolean> {
     return true;
   } else {
     console.log('精算に失敗しました。');
+    return false;
+  }
+}
+
+export async function apiBan(user: User): Promise<boolean> {
+  const payload = {
+    name: user.name,
+    balance: user.balance,
+    last_get_on_id: user.last_get_on_id,
+    enable_auto_charge: user.enable_auto_charge,
+    auto_charge_balance: user.auto_charge_balance,
+    auto_charge_charge: user.auto_charge_charge,
+    is_banned: true
+  };
+
+  const res = await fetch(`${BACKEND_ENDPOINT}/api/update`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(payload)
+  });
+
+  if (res.ok) {
+    console.log('BANしました。');
+    return true;
+  } else {
+    console.log('BANに失敗しました。');
     return false;
   }
 }
