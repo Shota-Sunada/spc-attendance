@@ -250,14 +250,15 @@ const UserPage = (props: UserPageProps) => {
               end_date="2025.04.25"
             /> */}
                 <NoCommuterTicketCard />
-                <MobiryButton
+                {/* <MobiryButton
                   text="定期券を購入する"
                   onClick={() => {
                     if (!props.isQROpened) {
                       navigate('/buy-commuter');
                     }
                   }}
-                />
+                /> */}
+                <p className='m-[5px] text-[12px]'>{"※定期券は購入できません。"}</p>
               </div>
             </div>
           </div>
