@@ -258,7 +258,7 @@ const UserPage = (props: UserPageProps) => {
                     }
                   }}
                 /> */}
-                <p className='m-[5px] text-[12px]'>{"※定期券は購入できません。"}</p>
+                <p className="m-[5px] text-[12px]">{'※定期券は購入できません。'}</p>
               </div>
             </div>
           </div>
