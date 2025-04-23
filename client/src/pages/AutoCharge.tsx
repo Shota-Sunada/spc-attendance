@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 
 interface Props {
   user: User;
+  getMe: Promise<void>;
 }
 
 const AutoCharge = (props: Props) => {
@@ -15,10 +16,12 @@ const AutoCharge = (props: Props) => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    if (props.user.id === -1) navigate('/');
+
     setIsEnabled(props.user.enable_auto_charge);
     setBalance(props.user.auto_charge_balance);
     setCharge(props.user.auto_charge_charge);
-  }, [props.user.auto_charge_balance, props.user.auto_charge_charge, props.user.enable_auto_charge]);
+  }, [navigate, props.user.id, props.user.enable_auto_charge, props.user.auto_charge_balance, props.user.auto_charge_charge]);
 
   const saveSettings = () => {
     if (balance < 1000 || balance > 10000) {

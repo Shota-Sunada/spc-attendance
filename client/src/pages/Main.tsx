@@ -18,6 +18,7 @@ type UserPageProps = {
   isMenuOpen: boolean;
   setIsMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
   isSmartphone: boolean;
+  getMe: Promise<void>
 };
 
 const QR_MAX_TIMEOUT_SEC = 300;
@@ -32,26 +33,6 @@ const UserPage = (props: UserPageProps) => {
     props.setIsQROpened(true);
     createTicket();
   };
-
-  async function fetchData() {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      return;
-    }
-
-    const res = await fetch(`${BACKEND_ENDPOINT}/api/me`, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    });
-
-    if (res.ok) {
-      const data = await res.json();
-      props.setUser(data);
-    } else {
-      localStorage.removeItem('token');
-    }
-  }
 
   const createTicket = useCallback(async () => {
     const payload = {
@@ -153,7 +134,7 @@ const UserPage = (props: UserPageProps) => {
         </div>
       </div>
       {/* メイン画面 */}
-      <div className={props.isQROpened ? 'blur-sm transition-[.1s]' : ''} onLoad={()=> fetchData}>
+      <div className={props.isQROpened ? 'blur-sm transition-[.1s]' : ''} onLoad={()=> props.getMe}>
         <div className="max-w-[360px] mx-auto">
           <p className="m-[10px] flex items-center justify-center font-bold">{'ホーム'}</p>
           <div className="flex flex-col items-center justify-center">

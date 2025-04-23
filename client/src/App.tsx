@@ -47,6 +47,26 @@ export default function App() {
     getAuthUser();
   }, []);
 
+  const getMe = async () => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      return;
+    }
+
+    const res = await fetch(`${BACKEND_ENDPOINT}/api/me`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+
+    if (res.ok) {
+      const data = await res.json();
+      setUser(data);
+    } else {
+      localStorage.removeItem('token');
+    }
+  };
+
   return (
     <>
       <main>
@@ -66,6 +86,7 @@ export default function App() {
                       setIsQROpened={setIsQROpened}
                       isMenuOpen={isMenuOpen}
                       setIsMenuOpen={setIsMenuOpen}
+                      getMe={getMe()}
                     />
                   ) : (
                     <LoginRegister setUser={setUser} />
@@ -75,7 +96,7 @@ export default function App() {
               <Route path="/purchases" element={<Purchases user={user} />}></Route>
               <Route path="/purchase" element={<PurchaseView user={user} />}></Route>
               <Route path="/usage-histories" element={<History user={user} />}></Route>
-              <Route path="/auto-charge" element={<AutoCharge user={user} />}></Route>
+              <Route path="/auto-charge" element={<AutoCharge user={user} getMe={getMe()} />}></Route>
               <Route path="/reader" element={<ReaderPage />}></Route>
               <Route path="/reader-admin" element={<ReaderAdmin />}></Route>
               <Route path="/user" element={<UserPage user={user} />}></Route>
