@@ -33,7 +33,7 @@ const UserPage = (props: UserPageProps) => {
     createTicket();
   };
 
-  const getAuthUser = useCallback(async () => {
+  async function fetchData() {
     const token = localStorage.getItem('token');
     if (!token) {
       return;
@@ -51,11 +51,7 @@ const UserPage = (props: UserPageProps) => {
     } else {
       localStorage.removeItem('token');
     }
-  }, [props]);
-
-  useEffect(() => {
-    getAuthUser();
-  }, [getAuthUser]);
+  }
 
   const createTicket = useCallback(async () => {
     const payload = {
@@ -157,7 +153,7 @@ const UserPage = (props: UserPageProps) => {
         </div>
       </div>
       {/* メイン画面 */}
-      <div className={props.isQROpened ? 'blur-sm transition-[.1s]' : ''}>
+      <div className={props.isQROpened ? 'blur-sm transition-[.1s]' : ''} onLoad={()=> fetchData}>
         <div className="max-w-[360px] mx-auto">
           <p className="m-[10px] flex items-center justify-center font-bold">{'ホーム'}</p>
           <div className="flex flex-col items-center justify-center">
