@@ -14,7 +14,8 @@ export const NO_USER: User = {
   created_at: '',
   enable_auto_charge: false,
   auto_charge_balance: 0,
-  auto_charge_charge: 0
+  auto_charge_charge: 0,
+  is_banned: false
 };
 
 export const FARE_ADULT = 220;
