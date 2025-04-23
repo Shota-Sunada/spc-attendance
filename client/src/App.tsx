@@ -18,6 +18,7 @@ import PurchaseView from './pages/PurchaseView';
 import ReaderAdmin from './pages/ReaderAdmin';
 import { mediaQuery } from './hooks/MediaQuery';
 import FakePass from './pages/FakePass';
+import Credits from './pages/Credits';
 
 export default function App() {
   const isSmartphone = UseMediaQuery(mediaQuery.smartphone);
@@ -55,7 +56,11 @@ export default function App() {
       <main>
         <div className="h-[100%] bg-[#f7f4e5] overflow-y-auto">
           <BrowserRouter>
-            {user.id === -1 ? <></> : <UserHeader isBanned={isBanned} setUser={setUser} isQROpened={isQROpened} isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />}
+            {user.id === -1 ? (
+              <></>
+            ) : (
+              <UserHeader isBanned={isBanned} setUser={setUser} isQROpened={isQROpened} isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
+            )}
             <Routes>
               <Route
                 path="/"
@@ -85,6 +90,7 @@ export default function App() {
               <Route path="/reader" element={<ReaderPage />}></Route>
               <Route path="/reader-admin" element={<ReaderAdmin />}></Route>
               <Route path="/user" element={<UserPage user={user} />}></Route>
+              <Route path="/credits" element={<Credits />}></Route>
               <Route path="/*" element={<Page404 />}></Route>
             </Routes>
             <Menu isOpen={isMenuOpen} setIsOpen={setIsMenuOpen} />

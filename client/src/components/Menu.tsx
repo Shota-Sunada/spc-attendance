@@ -5,6 +5,7 @@ import { FaUserAlt } from 'react-icons/fa';
 import { IoClose } from 'react-icons/io5';
 import { FaHouse } from "react-icons/fa6";
 import { IoTicketOutline } from "react-icons/io5";
+import { FaCircleInfo } from "react-icons/fa6";
 import '../styles/menu.css';
 import { useNavigate } from 'react-router-dom';
 
@@ -35,7 +36,7 @@ const Menu = (props: Props) => {
               <div className="icon">
                 <FaHouse size={'30px'} color="#fc1d25" />
               </div>
-              <a>ホーム</a>
+              <a>{"ホーム"}</a>
             </li>
             <li
               onClick={() => {
@@ -45,7 +46,7 @@ const Menu = (props: Props) => {
               <div className="icon">
                 <IoTicketOutline size={'30px'} color="#f4c541" />
               </div>
-              <a>見せかけ定期券</a>
+              <a>{"見せかけ定期券"}</a>
             </li>
             <li
               onClick={() => {
@@ -55,7 +56,7 @@ const Menu = (props: Props) => {
               <div className="icon">
                 <SiMoneygram size={'30px'} color="#219bce" />
               </div>
-              <a>オートチャージ設定</a>
+              <a>{"オートチャージ設定"}</a>
             </li>
             <li
               onClick={() => {
@@ -65,7 +66,7 @@ const Menu = (props: Props) => {
               <div className="icon">
                 <RiMoneyCnyCircleLine size={'30px'} color="#fc1d25" />
               </div>
-              <a>購入・払戻履歴</a>
+              <a>{"購入・払戻履歴"}</a>
             </li>
             <li
               onClick={() => {
@@ -75,7 +76,7 @@ const Menu = (props: Props) => {
               <div className="icon">
                 <PiTimer size={'30px'} color="#f4c541" />
               </div>
-              <a>利用履歴</a>
+              <a>{"利用履歴"}</a>
             </li>
             <li
               onClick={() => {
@@ -85,7 +86,17 @@ const Menu = (props: Props) => {
               <div className="icon">
                 <FaUserAlt size={'30px'} color="#219bce" />
               </div>
-              <a>ユーザー情報</a>
+              <a>{"ユーザー情報"}</a>
+            </li>
+            <li
+              onClick={() => {
+                navigate('/credits');
+                props.setIsOpen(false);
+              }}>
+              <div className="icon">
+                <FaCircleInfo size={'30px'} color="#219bce" />
+              </div>
+              <a>{"クレジット"}</a>
             </li>
           </ul>
         </div>
