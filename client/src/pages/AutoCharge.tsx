@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom';
 
 interface Props {
   user: User;
-  getMe: Promise<void>;
 }
 
 const AutoCharge = (props: Props) => {
