@@ -23,29 +23,38 @@ const AutoCharge = (props: Props) => {
   }, [navigate, props.user.id, props.user.enable_auto_charge, props.user.auto_charge_balance, props.user.auto_charge_charge]);
 
   const saveSettings = () => {
-    if (balance < 1000 || balance > 10000) {
-      alert('残高は、1,000円以上10,000円以下で設定してください。');
+    if (!isEnabled) {
+      if (balance > charge) {
+        apiAutoCharge(props.user, isEnabled, charge, charge, navigate);
+        return;
+      }
+      apiAutoCharge(props.user, isEnabled, balance, charge, navigate);
       return;
-    }
+    } else {
+      if (balance < 1000 || balance > 10000) {
+        alert('残高は、1,000円以上10,000円以下で設定してください。');
+        return;
+      }
 
-    if (charge < 1000 || charge > 20000) {
-      alert('チャージ額は、1,000円以上10,000円以下で設定してください。');
-      return;
-    }
+      if (charge < 1000 || charge > 20000) {
+        alert('チャージ額は、1,000円以上10,000円以下で設定してください。');
+        return;
+      }
 
-    if (balance > charge) {
-      alert('チャージ額は、残高以上の金額で設定してください。');
-      return;
-    }
+      if (balance > charge) {
+        alert('チャージ額は、残高以上の金額で設定してください。');
+        return;
+      }
 
-    if (!Number.isInteger(balance)) {
-      alert('残高は、整数値で設定してください。');
-      return;
-    }
+      if (!Number.isInteger(balance)) {
+        alert('残高は、整数値で設定してください。');
+        return;
+      }
 
-    if (!Number.isInteger(charge)) {
-      alert('残高は、整数値で設定してください。');
-      return;
+      if (!Number.isInteger(charge)) {
+        alert('残高は、整数値で設定してください。');
+        return;
+      }
     }
 
     apiAutoCharge(props.user, isEnabled, balance, charge, navigate);
