@@ -6,7 +6,7 @@ import LoginRegister from './pages/LoginRegister';
 import User from './types/User';
 import ReaderPage from './pages/Reader';
 import Page404 from './pages/404';
-import { mediaQuery, UseMediaQuery } from './hooks/UseMediaQuery';
+import { UseMediaQuery } from './hooks/UseMediaQuery';
 import UserHeader from './components/UserHeader';
 import Menu from './components/Menu';
 import Charge from './pages/Charge';
@@ -16,6 +16,7 @@ import UserPage from './pages/User';
 import Purchases from './pages/Purchases';
 import PurchaseView from './pages/PurchaseView';
 import ReaderAdmin from './pages/ReaderAdmin';
+import { mediaQuery } from './hooks/MediaQuery';
 
 export default function App() {
   const isSmartphone = UseMediaQuery(mediaQuery.smartphone);

@@ -1,11 +1,5 @@
 import { useEffect, useState } from 'react';
 
-export const mediaQuery = {
-  smartphone: 'width < 752px',
-  tablet: '752px <= width < 1122px',
-  pc: '1122px <= width'
-};
-
 export const UseMediaQuery = (query: string) => {
   const formattedQuery = `(${query})`;
   const [match, setMatch] = useState(matchMedia(formattedQuery).matches);
