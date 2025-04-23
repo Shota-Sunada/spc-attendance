@@ -25,6 +25,8 @@ const (
 	selectAdmin = "SELECT * FROM admin WHERE id6 = ?"
 
 	updateAdmin = "UPDATE admin SET adult_num = ?, children_num = ?, is_cancel = ?, start_id = ?, end_id = ?, fare_direct = ? WHERE id6 = ?"
+
+	deleteAdmin = "DELETE FROM admin WHERE id6 = ?"
 )
 
 type Admin struct {
@@ -121,6 +123,30 @@ func updateAdminF(w http.ResponseWriter, r *http.Request) {
 	logger.Info(fmt.Sprintf("StartId: %d", arg.StartId))
 	logger.Info(fmt.Sprintf("EndId: %d", arg.EndId))
 	logger.Info(fmt.Sprintf("FareDirect: %d", arg.FareDirect))
+	logger.Info("==========================================")
+
+	respondJSON(w, http.StatusOK, nil)
+}
+
+func deleteAdminF(w http.ResponseWriter, r *http.Request) {
+	var arg Admin
+	if err := decodeBody(r, &arg); err != nil {
+		logger.Error("The internal server error is occurred: deleteAdmin-decodeBody")
+		logger.ErrorE(err)
+		respondJSON(w, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	_, err := db.Exec(deleteAdmin, arg.ID6)
+	if err != nil {
+		logger.Error("The internal server error is occurred: deleteAdmin-Exec")
+		logger.ErrorE(err)
+		respondJSON(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	logger.Info("========= The admin was deleted.=========")
+	logger.Info(fmt.Sprintf("ID6: %d", arg.ID6))
 	logger.Info("==========================================")
 
 	respondJSON(w, http.StatusOK, nil)

@@ -397,7 +397,7 @@ const ReaderPage = () => {
                 return;
               }
 
-              console.log("乗車電停: ", user.last_get_on_id);
+              console.log('乗車電停: ', user.last_get_on_id);
               if (user.last_get_on_id === NOT_GET_ON_ID) {
                 console.log('乗車処理 開始');
 
@@ -551,6 +551,34 @@ const ReaderPage = () => {
       ctx.strokeRect(code.boundingBox.x, code.boundingBox.y, code.boundingBox.width, code.boundingBox.height);
     });
   };
+
+  const handleBeforeUnload = useCallback(async () => {
+    const payload = {
+      id6: id6
+    };
+
+    const res = await fetch(`${BACKEND_ENDPOINT}/deleteAdmin`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    });
+
+    if (res.ok) {
+      console.log('送信しました');
+    } else {
+      console.log('送信失敗');
+    }
+  }, [id6]);
+
+  useEffect(() => {
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [handleBeforeUnload]);
 
   return (
     <div className="bg-black flex flex-row overflow-y-hidden">
