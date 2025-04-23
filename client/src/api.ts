@@ -10,7 +10,12 @@ export async function apiCharge(user: User, charge: number, showNotify: boolean,
     enable_auto_charge: user.enable_auto_charge,
     auto_charge_balance: user.auto_charge_balance,
     auto_charge_charge: user.auto_charge_charge,
-    is_banned: user.is_banned
+    is_banned: user.is_banned,
+    pass_is_student: user.pass_is_student,
+    pass_company_name: user.pass_company_name,
+    pass_start_id: user.pass_start_id,
+    pass_end_id: user.pass_end_id,
+    is_admin: user.is_admin
   };
 
   const res = await fetch(`${BACKEND_ENDPOINT}/api/update`, {
@@ -71,7 +76,12 @@ export async function apiAutoCharge(user: User, enabled: boolean, balance: numbe
     enable_auto_charge: enabled,
     auto_charge_balance: balance,
     auto_charge_charge: charge,
-    is_banned: user.is_banned
+    is_banned: user.is_banned,
+    pass_is_student: user.pass_is_student,
+    pass_company_name: user.pass_company_name,
+    pass_start_id: user.pass_start_id,
+    pass_end_id: user.pass_end_id,
+    is_admin: user.is_admin
   };
 
   const res = await fetch(`${BACKEND_ENDPOINT}/api/update`, {
@@ -98,7 +108,12 @@ export async function apiGetOn(user: User, stop_id: number): Promise<boolean> {
     enable_auto_charge: user.enable_auto_charge,
     auto_charge_balance: user.auto_charge_balance,
     auto_charge_charge: user.auto_charge_charge,
-    is_banned: user.is_banned
+    is_banned: user.is_banned,
+    pass_is_student: user.pass_is_student,
+    pass_company_name: user.pass_company_name,
+    pass_start_id: user.pass_start_id,
+    pass_end_id: user.pass_end_id,
+    is_admin: user.is_admin
   };
 
   const res = await fetch(`${BACKEND_ENDPOINT}/api/update`, {
@@ -126,7 +141,12 @@ export async function apiCancel(user: User): Promise<boolean> {
     enable_auto_charge: user.enable_auto_charge,
     auto_charge_balance: user.auto_charge_balance,
     auto_charge_charge: user.auto_charge_charge,
-    is_banned: user.is_banned
+    is_banned: user.is_banned,
+    pass_is_student: user.pass_is_student,
+    pass_company_name: user.pass_company_name,
+    pass_start_id: user.pass_start_id,
+    pass_end_id: user.pass_end_id,
+    is_admin: user.is_admin
   };
 
   const res = await fetch(`${BACKEND_ENDPOINT}/api/update`, {
@@ -154,7 +174,12 @@ export async function apiPay(user: User, balance: number): Promise<boolean> {
     enable_auto_charge: user.enable_auto_charge,
     auto_charge_balance: user.auto_charge_balance,
     auto_charge_charge: user.auto_charge_charge,
-    is_banned: user.is_banned
+    is_banned: user.is_banned,
+    pass_is_student: user.pass_is_student,
+    pass_company_name: user.pass_company_name,
+    pass_start_id: user.pass_start_id,
+    pass_end_id: user.pass_end_id,
+    is_admin: user.is_admin
   };
 
   const res = await fetch(`${BACKEND_ENDPOINT}/api/update`, {
@@ -182,7 +207,12 @@ export async function apiBan(user: User): Promise<boolean> {
     enable_auto_charge: user.enable_auto_charge,
     auto_charge_balance: user.auto_charge_balance,
     auto_charge_charge: user.auto_charge_charge,
-    is_banned: true
+    is_banned: true,
+    pass_is_student: user.pass_is_student,
+    pass_company_name: user.pass_company_name,
+    pass_start_id: user.pass_start_id,
+    pass_end_id: user.pass_end_id,
+    is_admin: user.is_admin
   };
 
   const res = await fetch(`${BACKEND_ENDPOINT}/api/update`, {
@@ -202,10 +232,58 @@ export async function apiBan(user: User): Promise<boolean> {
   }
 }
 
-export async function apiCreateHistory(user: User, get_on_id: number | null, get_off_id: number, fare: number, balance: number, type_id: number, company_id: number) {
+export async function apiPass(
+  user: User,
+  pass_is_student: boolean,
+  pass_company_name: string,
+  pass_start_id: string,
+  pass_end_id: string,
+  is_admin: boolean
+): Promise<boolean> {
+  const payload = {
+    name: user.name,
+    balance: user.balance,
+    last_get_on_id: user.last_get_on_id,
+    enable_auto_charge: user.enable_auto_charge,
+    auto_charge_balance: user.auto_charge_balance,
+    auto_charge_charge: user.auto_charge_charge,
+    is_banned: user.is_banned,
+    pass_is_student: pass_is_student,
+    pass_company_name: pass_company_name,
+    pass_start_id: pass_start_id,
+    pass_end_id: pass_end_id,
+    is_admin: is_admin
+  };
+
+  const res = await fetch(`${BACKEND_ENDPOINT}/api/update`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(payload)
+  });
+
+  if (res.ok) {
+    console.log('更新しました。');
+    return true;
+  } else {
+    console.log('更新に失敗しました。');
+    return false;
+  }
+}
+
+export async function apiCreateHistory(
+  user: User,
+  get_on_id: number | null,
+  get_off_id: number,
+  fare: number,
+  balance: number,
+  type_id: number,
+  company_id: number
+) {
   const payload = {
     user_id: user.id,
-    get_on_id: get_on_id ? get_on_id :user.last_get_on_id,
+    get_on_id: get_on_id ? get_on_id : user.last_get_on_id,
     get_off_id: get_off_id,
     fair: fare,
     balance: balance,

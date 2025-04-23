@@ -4,6 +4,7 @@ import { PiTimer } from 'react-icons/pi';
 import { FaUserAlt } from 'react-icons/fa';
 import { IoClose } from 'react-icons/io5';
 import { FaHouse } from "react-icons/fa6";
+import { IoTicketOutline } from "react-icons/io5";
 import '../styles/menu.css';
 import { useNavigate } from 'react-router-dom';
 
@@ -35,6 +36,16 @@ const Menu = (props: Props) => {
                 <FaHouse size={'30px'} color="#fc1d25" />
               </div>
               <a>ホーム</a>
+            </li>
+            <li
+              onClick={() => {
+                navigate('/fake-pass');
+                props.setIsOpen(false);
+              }}>
+              <div className="icon">
+                <IoTicketOutline size={'30px'} color="#f4c541" />
+              </div>
+              <a>見せかけ定期券</a>
             </li>
             <li
               onClick={() => {

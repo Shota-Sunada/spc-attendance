@@ -10,4 +10,8 @@ export default interface User {
   auto_charge_balance: number;
   auto_charge_charge: number;
   is_banned: boolean;
+  pass_is_student: boolean;
+  pass_company_name: string;
+  pass_start_id: string;
+  pass_end_id: string;
 }

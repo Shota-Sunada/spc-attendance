@@ -17,6 +17,7 @@ import Purchases from './pages/Purchases';
 import PurchaseView from './pages/PurchaseView';
 import ReaderAdmin from './pages/ReaderAdmin';
 import { mediaQuery } from './hooks/MediaQuery';
+import FakePass from './pages/FakePass';
 
 export default function App() {
   const isSmartphone = UseMediaQuery(mediaQuery.smartphone);
@@ -76,6 +77,7 @@ export default function App() {
                   )
                 }></Route>
               <Route path="/charge" element={<Charge user={user} setIsBanned={setIsBanned} />}></Route>
+              <Route path="/fake-pass" element={<FakePass user={user} />}></Route>
               <Route path="/purchases" element={<Purchases user={user} />}></Route>
               <Route path="/purchase" element={<PurchaseView user={user} />}></Route>
               <Route path="/usage-histories" element={<History user={user} />}></Route>

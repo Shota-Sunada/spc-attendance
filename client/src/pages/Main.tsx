@@ -1,12 +1,12 @@
 import { ReactElement, useCallback, useEffect, useState } from 'react';
 import { QRCode, QRFormat } from '../components/QRCode';
 import User from '../types/User';
-import { BACKEND_ENDPOINT, QR_VERSION } from '../const';
+import { BACKEND_ENDPOINT, PASS_STATIONS, QR_VERSION } from '../const';
 import Ticket from '../types/Ticket';
 import { IoQrCode } from 'react-icons/io5';
 import { TfiReload } from 'react-icons/tfi';
-// import { CommuterTicketCard, NoCommuterTicketCard } from '../components/CommuterTicketCard';
-import { NoCommuterTicketCard } from '../components/CommuterTicketCard';
+import { CommuterTicketCard, NoCommuterTicketCard } from '../components/CommuterTicketCard';
+// import { NoCommuterTicketCard } from '../components/CommuterTicketCard';
 import MobiryButton from '../components/MobiryButton';
 import { useNavigate } from 'react-router-dom';
 import { apiBan } from '../api';
@@ -140,6 +140,7 @@ const UserPage = (props: UserPageProps) => {
     if (res.ok) {
       const data = await res.json();
       props.setUser(data);
+      console.log(data)
     } else {
       localStorage.removeItem('token');
     }
@@ -240,25 +241,28 @@ const UserPage = (props: UserPageProps) => {
 
               <div className="flex flex-col items-center justify-center mt-[20px]">
                 <p className="m-[10px] flex items-center justify-center font-medium mb-[30px]">{'定期券情報'}</p>
-                {/* <CommuterTicketCard
-              isStudent={false}
-              company="物理班電鉄"
-              route_start_stop_id={1}
-              route_end_stop_id={2}
-              subtext="修道物理班 デモンストレーション"
-              start_date="2025.04.24"
-              end_date="2025.04.25"
-            /> */}
-                <NoCommuterTicketCard />
-                {/* <MobiryButton
-                  text="定期券を購入する"
+                {props.user.is_admin ? (
+                  <CommuterTicketCard
+                    isStudent={false}
+                    company={props.user.pass_company_name}
+                    route_start_stop={PASS_STATIONS(props.user.pass_start_id)}
+                    route_end_stop={PASS_STATIONS(props.user.pass_end_id)}
+                    subtext="修道物理班 デモンストレーション"
+                    start_date="2025.04.24"
+                    end_date="2025.04.25"
+                  />
+                ) : (
+                  <NoCommuterTicketCard />
+                )}
+                <MobiryButton
+                  text="定期券を設定する"
                   onClick={() => {
                     if (!props.isQROpened) {
-                      navigate('/buy-commuter');
+                      navigate('/fake-pass');
                     }
                   }}
-                /> */}
-                <p className="m-[5px] text-[12px]">{'※定期券は購入できません。'}</p>
+                />
+                {/* <p className="m-[5px] text-[12px]">{'※定期券は購入できません。'}</p> */}
               </div>
             </div>
           </div>

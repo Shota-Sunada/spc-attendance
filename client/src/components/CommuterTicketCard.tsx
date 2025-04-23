@@ -4,8 +4,10 @@ import { FaArrowRight } from 'react-icons/fa';
 interface Props {
   isStudent: boolean;
   company: string;
-  route_start_stop_id: number;
-  route_end_stop_id: number;
+  // route_start_stop_id: number;
+  // route_end_stop_id: number;
+  route_start_stop: string;
+  route_end_stop: string;
   subtext: string;
   start_date: string;
   end_date: string;
@@ -28,12 +30,12 @@ export const CommuterTicketCard = (props: Props) => {
         <p className="font-medium">{props.company}</p>
       </div>
       <div className="flex flex-row m-[10px] items-center justify-center">
-        <p className="font-bold text-[24px] items-center justify-center">{'物理班'}</p>
+        <p className="font-bold text-[24px] items-center justify-center">{props.route_start_stop}</p>
         <div className="flex flex-row items-center justify-center px-[4px]">
           <FaArrowLeft className="transform-[translateX(5px)]" size={'20px'} color={'#c7d2d5'} />
           <FaArrowRight className="transform-[translateX(-5px)]" size={'20px'} color={'#c7d2d5'} />
         </div>
-        <p className="font-bold text-[24px] items-center justify-center">{'鉄道研究班'}</p>
+        <p className="font-bold text-[24px] items-center justify-center">{props.route_end_stop}</p>
       </div>
       <p className="flex items-center justify-center text-[12px] font-medium">{props.subtext}</p>
       <div className="mt-[10px] flex flex-row items-center justify-center">
