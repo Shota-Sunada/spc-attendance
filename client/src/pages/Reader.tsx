@@ -397,9 +397,9 @@ const ReaderPage = () => {
                 return;
               }
 
-              console.log(user.last_get_on_id);
+              console.log("乗車電停: ", user.last_get_on_id);
               if (user.last_get_on_id === NOT_GET_ON_ID) {
-                console.log('乗車');
+                console.log('乗車処理 開始');
 
                 const getOnResult = await apiGetOn(user, current_stop_id);
                 if (getOnResult) {
@@ -423,7 +423,7 @@ const ReaderPage = () => {
                   setCurrentStatus('error');
                 }
               } else {
-                console.log('降車');
+                console.log('降車処理 開始');
 
                 if (configData.is_cancel) {
                   apiCancel(user);
@@ -433,7 +433,6 @@ const ReaderPage = () => {
                   let children_num = 0;
                   if (configData.adult_num) {
                     adult_num = configData.adult_num;
-                    console.log(adult_num);
                   }
                   if (configData.children_num) {
                     children_num = configData.children_num;
@@ -588,23 +587,23 @@ const ReaderPage = () => {
 
                 switch (scanResult.rawValue) {
                   case lastUUID:
-                    console.log('The UUID is duplicated with the last one. Skip.');
+                    console.log('UUIDが最後に読み取ったものと同一です。処理を中断します。');
                     return;
                   case null:
-                    console.log('The UUID is null. Skip.');
+                    console.log('UUIDがnullです。処理を中断します。');
                     return;
                   case undefined:
-                    console.log('The UUID is undefined. Skip.');
+                    console.log('UUIDがundefinedです。処理を中断します。');
                     return;
                   case '':
-                    console.log('The UUID is empty. Skip.');
+                    console.log('UUIDが空です。処理を中断します。');
                     return;
                   default:
                     break;
                 }
 
                 if (readHistory.includes(scanResult.rawValue)) {
-                  console.log('The UUID was not judged for valid, but its was contained in history. Skip.');
+                  console.log('UUIDが有効と判断されましたが、履歴に含まれていました。処理を中断します。');
                   setCurrentStatus('error');
 
                   setTimeout(() => {
@@ -628,7 +627,7 @@ const ReaderPage = () => {
 
                 setLastUUID(scanResult.rawValue);
                 setTimeout(() => {
-                  console.log('reset last uuid');
+                  console.log('最終UUID履歴を削除');
                   setLastUUID(null);
                 }, 3000);
 
