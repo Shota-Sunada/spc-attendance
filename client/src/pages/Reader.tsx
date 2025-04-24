@@ -438,7 +438,7 @@ const ReaderPage = () => {
                 if (configData.is_cancel) {
                   apiCancel(user);
                   setCurrentStatus('cancel');
-                  soundError.play();
+                  soundPipi.play();
                 } else {
                   let adult_num = 1;
                   let children_num = 0;
