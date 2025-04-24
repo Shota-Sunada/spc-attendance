@@ -21,7 +21,8 @@ export async function apiCharge(user: User, charge: number, showNotify: boolean,
   const res = await fetch(`${BACKEND_ENDPOINT}/api/update`, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'User-ID': String(user.id)
     },
     body: JSON.stringify(payload)
   });
@@ -53,7 +54,8 @@ export async function apiCharge(user: User, charge: number, showNotify: boolean,
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`
+        Authorization: `Bearer ${token}`,
+        'User-ID': String(user.id)
       },
       body: JSON.stringify(payload2)
     });
@@ -94,7 +96,8 @@ export async function apiAutoCharge(user: User, enabled: boolean, balance: numbe
   const res = await fetch(`${BACKEND_ENDPOINT}/api/update`, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'User-ID': String(user.id)
     },
     body: JSON.stringify(payload)
   });
@@ -126,7 +129,8 @@ export async function apiGetOn(user: User, stop_id: number): Promise<boolean> {
   const res = await fetch(`${BACKEND_ENDPOINT}/api/update`, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'User-ID': String(user.id)
     },
     body: JSON.stringify(payload)
   });
@@ -159,7 +163,8 @@ export async function apiCancel(user: User): Promise<boolean> {
   const res = await fetch(`${BACKEND_ENDPOINT}/api/update`, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'User-ID': String(user.id)
     },
     body: JSON.stringify(payload)
   });
@@ -192,7 +197,8 @@ export async function apiPay(user: User, balance: number): Promise<boolean> {
   const res = await fetch(`${BACKEND_ENDPOINT}/api/update`, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'User-ID': String(user.id)
     },
     body: JSON.stringify(payload)
   });
@@ -225,7 +231,8 @@ export async function apiBan(user: User): Promise<boolean> {
   const res = await fetch(`${BACKEND_ENDPOINT}/api/update`, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'User-ID': String(user.id)
     },
     body: JSON.stringify(payload)
   });
@@ -265,7 +272,8 @@ export async function apiPass(
   const res = await fetch(`${BACKEND_ENDPOINT}/api/update`, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'User-ID': String(user.id)
     },
     body: JSON.stringify(payload)
   });
@@ -308,7 +316,8 @@ export async function apiCreateHistory(
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`
+      Authorization: `Bearer ${token}`,
+      'User-ID': String(user.id)
     },
     body: JSON.stringify(payload)
   });
@@ -343,7 +352,8 @@ export async function apiCreateChargeHistory(user: User, fare: number, balance: 
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`
+      Authorization: `Bearer ${token}`,
+      'User-ID': String(user.id)
     },
     body: JSON.stringify(payload)
   });

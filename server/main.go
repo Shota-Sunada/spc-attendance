@@ -10,13 +10,16 @@ import (
 
 	"github.com/dgrijalva/jwt-go"
 	_ "github.com/go-sql-driver/mysql"
+
 	"github.com/joho/godotenv"
-	// _ "github.com/mattn/go-sqlite3"
+	"golang.org/x/time/rate"
 )
 
 var secret []byte
 var db *sql.DB
 var logger Logger
+
+var userLimiters = make(map[string]*rate.Limiter)
 
 const dbDriver = "mysql"
 const dsn = "butsury_days:shota0817@(localhost:3306)/butsury_days"
@@ -94,21 +97,35 @@ func main() {
 
 	logger.Info("Handling \"/api/histories\" function")
 	http.HandleFunc("/api/histories", handleCORS(func(w http.ResponseWriter, r *http.Request) {
-		switch r.Method {
-		case http.MethodPost:
-			handleAuthRequire(createHistory)(w, r)
-		default:
-			w.WriteHeader(http.StatusMethodNotAllowed)
+		id := r.Header.Get("User-ID")
+		lim := getLimiter(id)
+
+		if lim.Allow() {
+			switch r.Method {
+			case http.MethodPost:
+				handleAuthRequire(createHistory)(w, r)
+			default:
+				w.WriteHeader(http.StatusMethodNotAllowed)
+			}
+		} else {
+			w.WriteHeader(http.StatusTooManyRequests)
 		}
 	}))
 
 	logger.Info("Handling \"/getHistories\" function")
 	http.HandleFunc("/getHistories", handleCORS(func(w http.ResponseWriter, r *http.Request) {
-		switch r.Method {
-		case http.MethodPost:
-			handleAuthRequire(getHistories)(w, r)
-		default:
-			w.WriteHeader(http.StatusMethodNotAllowed)
+		id := r.Header.Get("User-ID")
+		lim := getLimiter(id)
+
+		if lim.Allow() {
+			switch r.Method {
+			case http.MethodPost:
+				handleAuthRequire(getHistories)(w, r)
+			default:
+				w.WriteHeader(http.StatusMethodNotAllowed)
+			}
+		} else {
+			w.WriteHeader(http.StatusTooManyRequests)
 		}
 	}))
 
@@ -137,11 +154,18 @@ func main() {
 
 	logger.Info("Handling \"/api/tickets\" function")
 	http.HandleFunc("/api/tickets", handleCORS(func(w http.ResponseWriter, r *http.Request) {
-		switch r.Method {
-		case http.MethodPost:
-			handleAuthRequire(issueTicket)(w, r)
-		default:
-			w.WriteHeader(http.StatusMethodNotAllowed)
+		id := r.Header.Get("User-ID")
+		lim := getLimiter(id)
+
+		if lim.Allow() {
+			switch r.Method {
+			case http.MethodPost:
+				handleAuthRequire(issueTicket)(w, r)
+			default:
+				w.WriteHeader(http.StatusMethodNotAllowed)
+			}
+		} else {
+			w.WriteHeader(http.StatusTooManyRequests)
 		}
 	}))
 
@@ -167,31 +191,52 @@ func main() {
 
 	logger.Info("Handling \"/api/update\" function")
 	http.HandleFunc("/api/update", handleCORS(func(w http.ResponseWriter, r *http.Request) {
-		switch r.Method {
-		case http.MethodPost:
-			update(w, r)
-		default:
-			w.WriteHeader(http.StatusMethodNotAllowed)
+		id := r.Header.Get("User-ID")
+		lim := getLimiter(id)
+
+		if lim.Allow() {
+			switch r.Method {
+			case http.MethodPost:
+				update(w, r)
+			default:
+				w.WriteHeader(http.StatusMethodNotAllowed)
+			}
+		} else {
+			w.WriteHeader(http.StatusTooManyRequests)
 		}
 	}))
 
 	logger.Info("Handling \"/api/purchases\" function")
 	http.HandleFunc("/api/purchases", handleCORS(func(w http.ResponseWriter, r *http.Request) {
-		switch r.Method {
-		case http.MethodPost:
-			handleAuthRequire(createPurchaseHistory)(w, r)
-		default:
-			w.WriteHeader(http.StatusMethodNotAllowed)
+		id := r.Header.Get("User-ID")
+		lim := getLimiter(id)
+
+		if lim.Allow() {
+			switch r.Method {
+			case http.MethodPost:
+				handleAuthRequire(createPurchaseHistory)(w, r)
+			default:
+				w.WriteHeader(http.StatusMethodNotAllowed)
+			}
+		} else {
+			w.WriteHeader(http.StatusTooManyRequests)
 		}
 	}))
 
 	logger.Info("Handling \"/getPurchases\" function")
 	http.HandleFunc("/getPurchases", handleCORS(func(w http.ResponseWriter, r *http.Request) {
-		switch r.Method {
-		case http.MethodPost:
-			handleAuthRequire(getPurchaseHistories)(w, r)
-		default:
-			w.WriteHeader(http.StatusMethodNotAllowed)
+		id := r.Header.Get("User-ID")
+		lim := getLimiter(id)
+
+		if lim.Allow() {
+			switch r.Method {
+			case http.MethodPost:
+				handleAuthRequire(getPurchaseHistories)(w, r)
+			default:
+				w.WriteHeader(http.StatusMethodNotAllowed)
+			}
+		} else {
+			w.WriteHeader(http.StatusTooManyRequests)
 		}
 	}))
 
@@ -313,4 +358,15 @@ func handleAuthRequire(h http.HandlerFunc) http.HandlerFunc {
 
 		h(w, r.WithContext(ctx))
 	}
+}
+
+func getLimiter(id string) *rate.Limiter {
+	if limiter, exists := userLimiters[id]; exists {
+		return limiter
+	}
+
+	limiter := rate.NewLimiter(1, 3)
+	userLimiters[id] = limiter
+
+	return limiter
 }

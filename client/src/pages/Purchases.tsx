@@ -33,7 +33,8 @@ const Purchases = (props: Props) => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
+          'User-ID': String(props.user.id)
         },
         body: JSON.stringify(payload)
       });

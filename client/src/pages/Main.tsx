@@ -85,7 +85,8 @@ const UserPage = (props: UserPageProps) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`
+        Authorization: `Bearer ${token}`,
+        'User-ID': String(props.user.id)
       },
       body: JSON.stringify(payload)
     });
@@ -140,7 +141,7 @@ const UserPage = (props: UserPageProps) => {
     if (res.ok) {
       const data = await res.json();
       props.setUser(data);
-      console.log(data)
+      console.log(data);
     } else {
       localStorage.removeItem('token');
     }
@@ -206,13 +207,13 @@ const UserPage = (props: UserPageProps) => {
                   </>
                 ) : (
                   <p
-                      className="text-center py-[10px] px-[100px] border-[1px] rounded-2xl cursor-pointer"
-                      onClick={() => {
-                        props.setIsQROpened(false);
-                        setQR(null);
-                      }}>
-                      {'閉じる'}
-                    </p>
+                    className="text-center py-[10px] px-[100px] border-[1px] rounded-2xl cursor-pointer"
+                    onClick={() => {
+                      props.setIsQROpened(false);
+                      setQR(null);
+                    }}>
+                    {'閉じる'}
+                  </p>
                 )
               ) : (
                 <div

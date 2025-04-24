@@ -35,7 +35,8 @@ export default function App() {
 
     const res = await fetch(`${BACKEND_ENDPOINT}/api/me`, {
       headers: {
-        Authorization: `Bearer ${token}`
+        Authorization: `Bearer ${token}`,
+        'User-ID': String(user.id)
       }
     });
 
@@ -49,7 +50,7 @@ export default function App() {
 
   useEffect(() => {
     getAuthUser();
-  }, []);
+  });
 
   return (
     <>
