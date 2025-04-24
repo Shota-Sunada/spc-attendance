@@ -203,6 +203,7 @@ const UserPage = (props: UserPageProps) => {
                       onClick={() => {
                         props.setIsQROpened(false);
                         setQR(null);
+                        getMe();
                       }}>
                       {'閉じる'}
                     </p>
@@ -213,6 +214,7 @@ const UserPage = (props: UserPageProps) => {
                     onClick={() => {
                       props.setIsQROpened(false);
                       setQR(null);
+                      getMe();
                     }}>
                     {'閉じる'}
                   </p>
