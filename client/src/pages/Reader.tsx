@@ -596,119 +596,122 @@ const ReaderPage = () => {
   }, [handleBeforeUnload]);
 
   return (
-    <div className="bg-black flex flex-row overflow-y-hidden">
-      <div className="m-auto h-screen w-screen max-w-[400px] flex flex-col">
-        <p className={headerCss + ' pl-1 font-bold shrink'}>{headerText}</p>
-        <div className="bg-gray-700 grow min-h-[400px]">
-          <table className="text-white w-full h-full">
-            <tbody className="max-h-[400px]">
-              {tableTop}
-              {tableMiddle}
-              {tableBottom}
-              <tr className="h-[100px]">
-                <td className="reader-left border-r-[1px] border-gray-500">
-                  <p className="reader-text text-[5px]">{'　'}</p>
-                </td>
-                <td className="reader-right">
-                  <p className="reader-text text-[5px]">{'　'}</p>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div className="bg-white flex items-center justify-center">
-          <img src="/logo.png" alt="LOGO" className="w-[30%] m-[20px]" />
-        </div>
-        <div className="bg-gray-900">
-          <Scanner
-            onScan={(detectedCodes: IDetectedBarcode[]) => {
-              if (detectedCodes.length > 0) {
-                setScanResult({
-                  format: detectedCodes[0].format,
-                  rawValue: detectedCodes[0].rawValue
-                });
+    <>
+      <title>{'リーダー機 - BUTSURY DAYS'}</title>
+      <div className="bg-black flex flex-row overflow-y-hidden">
+        <div className="m-auto h-screen w-screen max-w-[400px] flex flex-col">
+          <p className={headerCss + ' pl-1 font-bold shrink'}>{headerText}</p>
+          <div className="bg-gray-700 grow min-h-[400px]">
+            <table className="text-white w-full h-full">
+              <tbody className="max-h-[400px]">
+                {tableTop}
+                {tableMiddle}
+                {tableBottom}
+                <tr className="h-[100px]">
+                  <td className="reader-left border-r-[1px] border-gray-500">
+                    <p className="reader-text text-[5px]">{'　'}</p>
+                  </td>
+                  <td className="reader-right">
+                    <p className="reader-text text-[5px]">{'　'}</p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div className="bg-white flex items-center justify-center">
+            <img src="/logo.png" alt="LOGO" className="w-[30%] m-[20px]" />
+          </div>
+          <div className="bg-gray-900">
+            <Scanner
+              onScan={(detectedCodes: IDetectedBarcode[]) => {
+                if (detectedCodes.length > 0) {
+                  setScanResult({
+                    format: detectedCodes[0].format,
+                    rawValue: detectedCodes[0].rawValue
+                  });
 
-                switch (scanResult.rawValue) {
-                  case lastUUID:
-                    console.log('UUIDが最後に読み取ったものと同一です。処理を中断します。');
-                    return;
-                  case null:
-                    console.log('UUIDがnullです。処理を中断します。');
-                    return;
-                  case undefined:
-                    console.log('UUIDがundefinedです。処理を中断します。');
-                    return;
-                  case '':
-                    console.log('UUIDが空です。処理を中断します。');
-                    return;
-                  default:
-                    break;
-                }
+                  switch (scanResult.rawValue) {
+                    case lastUUID:
+                      console.log('UUIDが最後に読み取ったものと同一です。処理を中断します。');
+                      return;
+                    case null:
+                      console.log('UUIDがnullです。処理を中断します。');
+                      return;
+                    case undefined:
+                      console.log('UUIDがundefinedです。処理を中断します。');
+                      return;
+                    case '':
+                      console.log('UUIDが空です。処理を中断します。');
+                      return;
+                    default:
+                      break;
+                  }
 
-                if (readHistory.includes(scanResult.rawValue)) {
-                  console.log('UUIDが有効と判断されましたが、履歴に含まれていました。処理を中断します。');
-                  setCurrentStatus('error');
-                  // if (!isPlayingError) {
-                  //   setIsPlayingError(true);
-                  //   soundError.play();
-                  // }
+                  if (readHistory.includes(scanResult.rawValue)) {
+                    console.log('UUIDが有効と判断されましたが、履歴に含まれていました。処理を中断します。');
+                    setCurrentStatus('error');
+                    // if (!isPlayingError) {
+                    //   setIsPlayingError(true);
+                    //   soundError.play();
+                    // }
 
+                    setTimeout(() => {
+                      switch (currentMode) {
+                        default:
+                        case 'get-on-off':
+                          setCurrentStatus('standby');
+                          break;
+                        case 'get-on':
+                          setCurrentStatus('standby-getOn');
+                          break;
+                        case 'get-off':
+                          setCurrentStatus('standby-getOff');
+                          break;
+                      }
+                    }, 5000);
+                    return;
+                  } else {
+                    setReadHistory([...readHistory, scanResult.rawValue]);
+                  }
+
+                  setLastUUID(scanResult.rawValue);
                   setTimeout(() => {
-                    switch (currentMode) {
-                      default:
-                      case 'get-on-off':
-                        setCurrentStatus('standby');
-                        break;
-                      case 'get-on':
-                        setCurrentStatus('standby-getOn');
-                        break;
-                      case 'get-off':
-                        setCurrentStatus('standby-getOff');
-                        break;
-                    }
-                  }, 5000);
-                  return;
-                } else {
-                setReadHistory([...readHistory, scanResult.rawValue]);
+                    console.log('最終UUID履歴を削除');
+                    setLastUUID(null);
+                  }, 3000);
+
+                  setCurrentStatus('isReading');
+                  handleScan();
                 }
-
-                setLastUUID(scanResult.rawValue);
-                setTimeout(() => {
-                  console.log('最終UUID履歴を削除');
-                  setLastUUID(null);
-                }, 3000);
-
-                setCurrentStatus('isReading');
-                handleScan();
-              }
-            }}
-            formats={['qr_code', 'micro_qr_code']}
-            allowMultiple
-            scanDelay={2000}
-            // paused={isReaderPaused}
-            components={{
-              tracker: customTracker,
-              audio: false,
-              onOff: false,
-              zoom: false,
-              finder: false,
-              torch: false
-            }}
-          />
+              }}
+              formats={['qr_code', 'micro_qr_code']}
+              allowMultiple
+              scanDelay={2000}
+              // paused={isReaderPaused}
+              components={{
+                tracker: customTracker,
+                audio: false,
+                onOff: false,
+                zoom: false,
+                finder: false,
+                torch: false
+              }}
+            />
+          </div>
         </div>
-      </div>
 
-      <div className="fixed bottom-0 right-0">
-        <p className="text-white text-right">{id6}</p>
-        {/* <p
+        <div className="fixed bottom-0 right-0">
+          <p className="text-white text-right">{id6}</p>
+          {/* <p
           className="text-black cursor-pointer bg-white text-center hover:bg-blue-300"
           onClick={() => {
             fetchAdmin();
           }}>
           {'更新'}
         </p> */}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

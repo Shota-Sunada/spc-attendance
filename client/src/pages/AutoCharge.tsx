@@ -62,6 +62,7 @@ const AutoCharge = (props: Props) => {
 
   return (
     <>
+      <title>{"オートチャージ設定 - BUTSURY DAYS"}</title>
       <div className="m-[10px] flex flex-col items-center justify-center">
         <div className="flex flex-col items-center justify-center">
           <p className="font-bold">{'オートチャージ設定'}</p>

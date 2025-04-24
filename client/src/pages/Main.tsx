@@ -164,6 +164,7 @@ const UserPage = (props: UserPageProps) => {
 
   return (
     <>
+      <title>{"ホーム - BUTSURY DAYS"}</title>
       {/* QRコード */}
       {props.isBanned ? (
         <>

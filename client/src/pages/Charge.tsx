@@ -42,6 +42,7 @@ const Charge = (props: Props) => {
 
   return (
     <>
+      <title>{"チャージ - BUTSURY DAYS"}</title>
       <div className="flex flex-col x-0">
         <p className="m-[10px] flex items-center justify-center font-bold">{'チャージ'}</p>
         <div className="flex flex-col items-center justify-center">

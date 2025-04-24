@@ -108,53 +108,56 @@ const LoginRegister = ({ setUser }: SetUserProps) => {
   }, [params]);
 
   return (
-    <div className="h-[100%] flex flex-col justify-center items-center bg-[#f7f4e5]">
-      {/* <h2 className="text-[200%] pointer-default">{'BUTSURY DAYS'}</h2> */}
-      <img className="w-[300px]" src="/logo.png" alt="LOGO" />
-      <h2 className="text-[150%] pointer-default font-bold p-[3px]">{isRegister ? '新規登録画面' : 'ログイン画面'}</h2>
-      <form className="flex flex-col justify-center items-center" onSubmit={handleSubmit}>
-        <input className={isNameInvalid ? 'bg-red-400' : 'bg-white'} name="name" type="text" placeholder="ユーザー名" required />
-        <input className={isPasswordInvalid ? 'bg-red-400' : 'bg-white'} name="password" type="password" placeholder="パスワード" required />
-        <p>{'ユーザー名およびパスワードは、'}</p>
-        <p>{'文字数が8文字以上32文字以下、'}</p>
-        <p>{'半角英数字と記号文字を組み合わせてください。'}</p>
-        <p>{'一部記号とスペースは使えません。'}</p>
-        <p>{'ひらがな、カタカナ、漢字も使えません。'}</p>
-        <button className="" type="submit">
-          <MobiryButton text={isRegister ? 'ユーザー登録' : 'ログイン'} onClick={() => {}} />
-        </button>
-        <div className="flex flex-col border-[#ebebde] rounded-[12px] max-w-[328px] w-fill bg-white p-[24px] mt-[10px]">
-          <p className="font-medium min-w-[250px] w-[100%] flex items-center justify-center">
-            {isRegister ? 'アカウントをお持ちですか？' : 'アカウントをお持ちでない方'}
-          </p>
-          <button
-            className="m-auto mt-[10px] text-[15px] w-[100%] py-[5%] rounded-[20px] text-white bg-[#462066] hover:bg-[#3e195b] cursor-pointer anim"
-            type="button"
-            onClick={() => setIsRegister(!isRegister)}>
-            {isRegister ? 'ログインの方はこちらから' : '新規登録の方はこちらから'}
+    <>
+      <title>{'BUTSURY DAYS'}</title>
+      <div className="h-[100%] flex flex-col justify-center items-center bg-[#f7f4e5]">
+        {/* <h2 className="text-[200%] pointer-default">{'BUTSURY DAYS'}</h2> */}
+        <img className="w-[300px]" src="/logo.png" alt="LOGO" />
+        <h2 className="text-[150%] pointer-default font-bold p-[3px]">{isRegister ? '新規登録画面' : 'ログイン画面'}</h2>
+        <form className="flex flex-col justify-center items-center" onSubmit={handleSubmit}>
+          <input className={isNameInvalid ? 'bg-red-400' : 'bg-white'} name="name" type="text" placeholder="ユーザー名" required />
+          <input className={isPasswordInvalid ? 'bg-red-400' : 'bg-white'} name="password" type="password" placeholder="パスワード" required />
+          <p>{'ユーザー名およびパスワードは、'}</p>
+          <p>{'文字数が8文字以上32文字以下、'}</p>
+          <p>{'半角英数字と記号文字を組み合わせてください。'}</p>
+          <p>{'一部記号とスペースは使えません。'}</p>
+          <p>{'ひらがな、カタカナ、漢字も使えません。'}</p>
+          <button className="" type="submit">
+            <MobiryButton text={isRegister ? 'ユーザー登録' : 'ログイン'} onClick={() => {}} />
           </button>
+          <div className="flex flex-col border-[#ebebde] rounded-[12px] max-w-[328px] w-fill bg-white p-[24px] mt-[10px]">
+            <p className="font-medium min-w-[250px] w-[100%] flex items-center justify-center">
+              {isRegister ? 'アカウントをお持ちですか？' : 'アカウントをお持ちでない方'}
+            </p>
+            <button
+              className="m-auto mt-[10px] text-[15px] w-[100%] py-[5%] rounded-[20px] text-white bg-[#462066] hover:bg-[#3e195b] cursor-pointer anim"
+              type="button"
+              onClick={() => setIsRegister(!isRegister)}>
+              {isRegister ? 'ログインの方はこちらから' : '新規登録の方はこちらから'}
+            </button>
+          </div>
+        </form>
+        <div className="m-[2vh] text-white">
+          {isNameInvalid ? (
+            <p className="m-[3px] p-[3px] rounded-[5px] bg-red-400">
+              {'ユーザー名に使用できない文字が含まれているか、'}
+              {'文字数が8文字以上32文字以下ではありません。'}
+            </p>
+          ) : (
+            <></>
+          )}
+          {isPasswordInvalid ? (
+            <p className="m-[3px] p-[3px] rounded-[5px] bg-red-400">
+              {'パスワードに使用できない文字が含まれているか、'}
+              {'文字数が8文字以上32文字以下ではありません。'}
+            </p>
+          ) : (
+            <></>
+          )}
+          {error && <p className="m-[3px] p-[3px] rounded-[5px] bg-red-400">{error}</p>}
         </div>
-      </form>
-      <div className="m-[2vh] text-white">
-        {isNameInvalid ? (
-          <p className="m-[3px] p-[3px] rounded-[5px] bg-red-400">
-            {'ユーザー名に使用できない文字が含まれているか、'}
-            {'文字数が8文字以上32文字以下ではありません。'}
-          </p>
-        ) : (
-          <></>
-        )}
-        {isPasswordInvalid ? (
-          <p className="m-[3px] p-[3px] rounded-[5px] bg-red-400">
-            {'パスワードに使用できない文字が含まれているか、'}
-            {'文字数が8文字以上32文字以下ではありません。'}
-          </p>
-        ) : (
-          <></>
-        )}
-        {error && <p className="m-[3px] p-[3px] rounded-[5px] bg-red-400">{error}</p>}
       </div>
-    </div>
+    </>
   );
 };
 

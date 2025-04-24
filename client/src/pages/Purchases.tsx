@@ -51,43 +51,46 @@ const Purchases = (props: Props) => {
   }, [props.user.id]);
 
   return (
-    <div className="flex flex-col x-0">
-      <p className="m-[10px] flex items-center justify-center font-bold">{'購入・払戻履歴'}</p>
-      <div className="table-root flex items-center justify-center">
-        <table className="max-w-[360px] w-[100%]">
-          <thead>
-            <tr className="min-h-[60px]">
-              <th className="text-[12px] w-[60px] border-r-white border-r-[.5px]">{'利用日'}</th>
-              <th className="text-[12px] border-r-white border-r-[.5px]">{'種別・区分'}</th>
-              <th className="text-[12px] w-[76px] border-r-white border-r-[.5px]">{'金額'}</th>
-              <th className="text-[12px] w-[58px]">{'詳細'}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {purchases.map((x, i) => (
-              <tr key={uuidv4()}>
-                <td className={(i % 2 === 0 ? 'bg-[#ffffff]' : 'bg-[#fcfbf7]') + ' text-[12px]'}>
-                  {format(parse(x.date, 'yyyy-MM-dd HH:SS:mm', new Date()), 'yyyy.MM.dd')}
-                </td>
-                <td className={(i % 2 === 0 ? 'bg-[#ffffff]' : 'bg-[#fcfbf7]') + ' text-[12px]'}>
-                  {PurchaseTypes[x.type_id]}
-                  <br />
-                  {PurchaseClasses[x.class_id]}
-                </td>
-                <td className={(i % 2 === 0 ? 'bg-[#ffffff]' : 'bg-[#fcfbf7]') + ' after:content-["\\5186"] text-[12px]'}>
-                  {x.purchase_price.toLocaleString('es-US')}
-                </td>
-                <td className={(i % 2 === 0 ? 'bg-[#ffffff]' : 'bg-[#fcfbf7]') + ' text-[12px]'}>
-                  <div className="flex items-center justify-center cursor-pointer" onClick={() => navigate(`/purchase?id=${x.id}`)}>
-                    <FaArrowAltCircleRight size={'30px'} color="#219bce" />
-                  </div>
-                </td>
+    <>
+      <title>{'購入・払戻履歴 - BUTSURY DAYS'}</title>
+      <div className="flex flex-col x-0">
+        <p className="m-[10px] flex items-center justify-center font-bold">{'購入・払戻履歴'}</p>
+        <div className="table-root flex items-center justify-center">
+          <table className="max-w-[360px] w-[100%]">
+            <thead>
+              <tr className="min-h-[60px]">
+                <th className="text-[12px] w-[60px] border-r-white border-r-[.5px]">{'利用日'}</th>
+                <th className="text-[12px] border-r-white border-r-[.5px]">{'種別・区分'}</th>
+                <th className="text-[12px] w-[76px] border-r-white border-r-[.5px]">{'金額'}</th>
+                <th className="text-[12px] w-[58px]">{'詳細'}</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {purchases.map((x, i) => (
+                <tr key={uuidv4()}>
+                  <td className={(i % 2 === 0 ? 'bg-[#ffffff]' : 'bg-[#fcfbf7]') + ' text-[12px]'}>
+                    {format(parse(x.date, 'yyyy-MM-dd HH:SS:mm', new Date()), 'yyyy.MM.dd')}
+                  </td>
+                  <td className={(i % 2 === 0 ? 'bg-[#ffffff]' : 'bg-[#fcfbf7]') + ' text-[12px]'}>
+                    {PurchaseTypes[x.type_id]}
+                    <br />
+                    {PurchaseClasses[x.class_id]}
+                  </td>
+                  <td className={(i % 2 === 0 ? 'bg-[#ffffff]' : 'bg-[#fcfbf7]') + ' after:content-["\\5186"] text-[12px]'}>
+                    {x.purchase_price.toLocaleString('es-US')}
+                  </td>
+                  <td className={(i % 2 === 0 ? 'bg-[#ffffff]' : 'bg-[#fcfbf7]') + ' text-[12px]'}>
+                    <div className="flex items-center justify-center cursor-pointer" onClick={() => navigate(`/purchase?id=${x.id}`)}>
+                      <FaArrowAltCircleRight size={'30px'} color="#219bce" />
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

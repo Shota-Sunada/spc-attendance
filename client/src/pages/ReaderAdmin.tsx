@@ -83,136 +83,139 @@ const ReaderAdmin = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center">
-      <p className="font-bold">{'リーダー機管理画面'}</p>
-      {isConnected ? (
-        <div className="flex flex-col">
-          <div className="m-[10px]">
-            <p>{'大人の人数'}</p>
-            <div>
-              <input type="checkbox" name="adult_num_null" id="adult_num_null" onChange={() => setAdultNumNull(!adultNumNull)} />
-              <label className="ml-[5px]" htmlFor="adult_num_null">
-                {'設定しない'}
+    <>
+      <title>{'リーダー機管理画面 - BUTSURY DAYS'}</title>
+      <div className="flex flex-col items-center justify-center">
+        <p className="font-bold">{'リーダー機管理画面'}</p>
+        {isConnected ? (
+          <div className="flex flex-col">
+            <div className="m-[10px]">
+              <p>{'大人の人数'}</p>
+              <div>
+                <input type="checkbox" name="adult_num_null" id="adult_num_null" onChange={() => setAdultNumNull(!adultNumNull)} />
+                <label className="ml-[5px]" htmlFor="adult_num_null">
+                  {'設定しない'}
+                </label>
+              </div>
+              <input
+                disabled={adultNumNull}
+                className="p-[10px] bg-white rounded-[6px] disabled:bg-[#c7d2d5] disabled:text-white"
+                type="number"
+                name="adult_num"
+                onChange={(e) => setAdultNum(e.target.valueAsNumber)}
+                defaultValue={adultNum}
+              />
+            </div>
+            <div className="m-[10px] flex flex-col">
+              <p>{'子供の人数'}</p>
+              <div>
+                <input type="checkbox" name="children_num_null" id="children_num_null" onChange={() => setChildrenNumNull(!childrenNumNull)} />
+                <label className="ml-[5px]" htmlFor="children_num_null">
+                  {'設定しない'}
+                </label>
+              </div>
+              <input
+                disabled={childrenNumNull}
+                className="p-[10px] bg-white rounded-[6px] disabled:bg-[#c7d2d5] disabled:text-white"
+                type="number"
+                name="children_num"
+                onChange={(e) => setChildrenNum(e.target.valueAsNumber)}
+                defaultValue={childrenNum}
+              />
+            </div>
+            <div className="m-[10px]">
+              <div>
+                <input type="checkbox" name="is_cancel_null" id="is_cancel_null" onChange={() => setIsCancelNull(!isCancelNull)} />
+                <label className="ml-[5px]" htmlFor="is_cancel_null">
+                  {'設定しない'}
+                </label>
+              </div>
+              <input
+                disabled={isCancelNull}
+                className="p-[10px] bg-white rounded-[6px] disabled:bg-[#c7d2d5] disabled:text-white"
+                type="checkbox"
+                id="is_cancel"
+                name="is_cancel"
+                onChange={() => setIsCancel(!isCancel)}
+                defaultChecked={isCancel}
+              />
+              <label className="ml-[5px]" htmlFor="is_cancel">
+                {'乗車情報取り消し'}
               </label>
             </div>
-            <input
-              disabled={adultNumNull}
-              className="p-[10px] bg-white rounded-[6px] disabled:bg-[#c7d2d5] disabled:text-white"
-              type="number"
-              name="adult_num"
-              onChange={(e) => setAdultNum(e.target.valueAsNumber)}
-              defaultValue={adultNum}
-            />
-          </div>
-          <div className="m-[10px] flex flex-col">
-            <p>{'子供の人数'}</p>
-            <div>
-              <input type="checkbox" name="children_num_null" id="children_num_null" onChange={() => setChildrenNumNull(!childrenNumNull)} />
-              <label className="ml-[5px]" htmlFor="children_num_null">
-                {'設定しない'}
-              </label>
+            <div className="m-[10px]">
+              <p>{'乗車駅'}</p>
+              <div>
+                <input type="checkbox" name="start_id_null" id="start_id_null" onChange={() => setStartIdNull(!startIdNull)} />
+                <label className="ml-[5px]" htmlFor="start_id_null">
+                  {'設定しない'}
+                </label>
+              </div>
+              <input
+                disabled={startIdNull}
+                className="p-[10px] bg-white rounded-[6px] disabled:bg-[#c7d2d5] disabled:text-white"
+                type="number"
+                name="start_id"
+                onChange={(e) => setStartId(e.target.valueAsNumber)}
+                defaultValue={startId}
+              />
             </div>
-            <input
-              disabled={childrenNumNull}
-              className="p-[10px] bg-white rounded-[6px] disabled:bg-[#c7d2d5] disabled:text-white"
-              type="number"
-              name="children_num"
-              onChange={(e) => setChildrenNum(e.target.valueAsNumber)}
-              defaultValue={childrenNum}
-            />
-          </div>
-          <div className="m-[10px]">
-            <div>
-              <input type="checkbox" name="is_cancel_null" id="is_cancel_null" onChange={() => setIsCancelNull(!isCancelNull)} />
-              <label className="ml-[5px]" htmlFor="is_cancel_null">
-                {'設定しない'}
-              </label>
+            <div className="m-[10px]">
+              <p>{'降車駅'}</p>
+              <div>
+                <input type="checkbox" name="end_id_null" id="end_id_null" onChange={() => setEndIdNull(!endIdNull)} />
+                <label className="ml-[5px]" htmlFor="end_id_null">
+                  {'設定しない'}
+                </label>
+              </div>
+              <input
+                disabled={endIdNull}
+                className="p-[10px] bg-white rounded-[6px] disabled:bg-[#c7d2d5] disabled:text-white"
+                type="number"
+                name="end_id"
+                onChange={(e) => setEndId(e.target.valueAsNumber)}
+                defaultValue={endId}
+              />
             </div>
-            <input
-              disabled={isCancelNull}
-              className="p-[10px] bg-white rounded-[6px] disabled:bg-[#c7d2d5] disabled:text-white"
-              type="checkbox"
-              id="is_cancel"
-              name="is_cancel"
-              onChange={() => setIsCancel(!isCancel)}
-              defaultChecked={isCancel}
-            />
-            <label className="ml-[5px]" htmlFor="is_cancel">
-              {'乗車情報取り消し'}
-            </label>
-          </div>
-          <div className="m-[10px]">
-            <p>{'乗車駅'}</p>
-            <div>
-              <input type="checkbox" name="start_id_null" id="start_id_null" onChange={() => setStartIdNull(!startIdNull)} />
-              <label className="ml-[5px]" htmlFor="start_id_null">
-                {'設定しない'}
-              </label>
+            <div className="m-[10px]">
+              <p>{'運賃直接入力'}</p>
+              <div>
+                <input type="checkbox" name="fare_direct_null" id="fare_direct_null" onChange={() => setFareDirectNull(!fareDirectNull)} />
+                <label className="ml-[5px]" htmlFor="fare_direct_null">
+                  {'設定しない'}
+                </label>
+              </div>
+              <input
+                disabled={fareDirectNull}
+                className="p-[10px] bg-white rounded-[6px] disabled:bg-[#c7d2d5] disabled:text-white"
+                type="number"
+                name="fare_direct"
+                onChange={(e) => setFareDirect(e.target.valueAsNumber)}
+                defaultValue={Number(fareDirect)}
+              />
             </div>
-            <input
-              disabled={startIdNull}
-              className="p-[10px] bg-white rounded-[6px] disabled:bg-[#c7d2d5] disabled:text-white"
-              type="number"
-              name="start_id"
-              onChange={(e) => setStartId(e.target.valueAsNumber)}
-              defaultValue={startId}
-            />
-          </div>
-          <div className="m-[10px]">
-            <p>{'降車駅'}</p>
-            <div>
-              <input type="checkbox" name="end_id_null" id="end_id_null" onChange={() => setEndIdNull(!endIdNull)} />
-              <label className="ml-[5px]" htmlFor="end_id_null">
-                {'設定しない'}
-              </label>
-            </div>
-            <input
-              disabled={endIdNull}
-              className="p-[10px] bg-white rounded-[6px] disabled:bg-[#c7d2d5] disabled:text-white"
-              type="number"
-              name="end_id"
-              onChange={(e) => setEndId(e.target.valueAsNumber)}
-              defaultValue={endId}
-            />
-          </div>
-          <div className="m-[10px]">
-            <p>{'運賃直接入力'}</p>
-            <div>
-              <input type="checkbox" name="fare_direct_null" id="fare_direct_null" onChange={() => setFareDirectNull(!fareDirectNull)} />
-              <label className="ml-[5px]" htmlFor="fare_direct_null">
-                {'設定しない'}
-              </label>
-            </div>
-            <input
-              disabled={fareDirectNull}
-              className="p-[10px] bg-white rounded-[6px] disabled:bg-[#c7d2d5] disabled:text-white"
-              type="number"
-              name="fare_direct"
-              onChange={(e) => setFareDirect(e.target.valueAsNumber)}
-              defaultValue={Number(fareDirect)}
-            />
-          </div>
 
-          <div className="flex items-center justify-center m-[15px]">
-            <MobiryButton text={'送信'} onClick={send} />
+            <div className="flex items-center justify-center m-[15px]">
+              <MobiryButton text={'送信'} onClick={send} />
+            </div>
           </div>
-        </div>
-      ) : (
-        <>
-          <p>{'管理するリーダー機のIDを入力してください。'}</p>
-          <input
-            className="p-[10px] bg-white rounded-[6px] disabled:bg-[#c7d2d5] disabled:text-white"
-            type="number"
-            name="id6"
-            onChange={(e) => {
-              setId(e.target.valueAsNumber);
-            }}
-          />
-          {isInvalid ? <p className="m-[3px] p-[3px] rounded-[5px] bg-red-400">{'IDが不正です。'}</p> : <></>}
-          <MobiryButton text={'接続'} onClick={onClick} />
-        </>
-      )}
-    </div>
+        ) : (
+          <>
+            <p>{'管理するリーダー機のIDを入力してください。'}</p>
+            <input
+              className="p-[10px] bg-white rounded-[6px] disabled:bg-[#c7d2d5] disabled:text-white"
+              type="number"
+              name="id6"
+              onChange={(e) => {
+                setId(e.target.valueAsNumber);
+              }}
+            />
+            {isInvalid ? <p className="m-[3px] p-[3px] rounded-[5px] bg-red-400">{'IDが不正です。'}</p> : <></>}
+            <MobiryButton text={'接続'} onClick={onClick} />
+          </>
+        )}
+      </div>
+    </>
   );
 };
 
