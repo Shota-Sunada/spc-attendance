@@ -42,13 +42,14 @@ const FakePass = (props: Props) => {
   return (
     <>
       <title>{'見せかけ定期券 - BUTSURY DAYS'}</title>
-      <div className="flex flex-col x-0">
+      <div className="flex flex-col x-0 p-[10px]">
         <p className="m-[10px] flex items-center justify-center font-bold">{'見せかけ定期券設定'}</p>
         <div className="flex flex-col items-center justify-center">
-          <p>{'時間がなくて定期券のシステムが用意できなかったので、'}</p>
-          <p>{'見た目だけでもお楽しみください。'}</p>
-          <br />
-          <p>{'※見た目だけなので、実際には使用できません。'}</p>
+          <div className='flex flex-col items-center justify-center text-center'>
+            <p>{'時間がなくて定期券のシステムが用意できなかったので、見た目だけでもお楽しみください。'}</p>
+            <br />
+            <p>{'※見た目だけなので、実際には使用できません。'}</p>
+          </div>
           <br />
 
           <div>

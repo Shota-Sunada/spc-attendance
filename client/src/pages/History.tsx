@@ -51,7 +51,7 @@ const History = (props: Props) => {
       <div className="flex flex-col x-0">
         <p className="m-[10px] flex items-center justify-center font-bold">{'利用履歴'}</p>
         <div className="table-root flex items-center justify-center">
-          <table className="max-w-[360px] w-[100%]">
+          <table className="max-w-[360px] w-[100%] pb-[20px]">
             <thead>
               <tr className="min-h-[60px]">
                 <th className="text-[12px] w-[60px] border-r-white border-r-[.5px]">{'利用日'}</th>

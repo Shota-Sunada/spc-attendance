@@ -27,7 +27,7 @@ const UserPage = (props: Props) => {
         </div>
 
         <div className="mt-[20px]">
-          <p className="text-[13px] font-normal">{'情報の編集はできません。詳しくは管理担当者にお問い合わせください。'}</p>
+          <p className="text-[13px] font-normal text-center">{'情報の編集はできません。詳しくは管理担当者にお問い合わせください。'}</p>
         </div>
       </div>
     </>
