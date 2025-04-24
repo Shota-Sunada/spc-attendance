@@ -8,6 +8,7 @@ import { useSearchParams } from 'react-router-dom';
 import { QRFormat } from '../components/QRCode';
 import { apiCancel, apiCharge, apiCreateChargeHistory, apiCreateHistory, apiGetOn, apiPay } from '../api';
 import { Admin } from '../types/Admin';
+import { UsePlaySound } from '../hooks/UsePlaySound';
 
 type ReaderStatus =
   | 'getOn'
@@ -37,6 +38,10 @@ const ReaderPage = () => {
   const [id6, setId6] = useState<number>(10000);
 
   const [params] = useSearchParams();
+
+  const soundPi = UsePlaySound('/sounds/pi.wav');
+  const soundPipi = UsePlaySound('/sounds/pipi.wav');
+  const soundError = UsePlaySound('/sounds/error.wav');
 
   useEffect(() => {
     async function fetchAdmin() {
@@ -378,6 +383,7 @@ const ReaderPage = () => {
         if (res.ok) {
           if (data == null) {
             setCurrentStatus('error');
+            soundError.play();
           } else {
             const payload2 = {
               id: data.user_id
@@ -394,6 +400,7 @@ const ReaderPage = () => {
             if (res2.ok) {
               if (user.last_get_on_id === current_stop_id) {
                 setCurrentStatus('already_on');
+                soundError.play();
                 return;
               }
 
@@ -419,8 +426,11 @@ const ReaderPage = () => {
                   } else {
                     setTableBottom(tableNullRow);
                   }
+
+                  soundPi.play();
                 } else {
                   setCurrentStatus('error');
+                  soundError.play();
                 }
               } else {
                 console.log('降車処理 開始');
@@ -428,6 +438,7 @@ const ReaderPage = () => {
                 if (configData.is_cancel) {
                   apiCancel(user);
                   setCurrentStatus('cancel');
+                  soundError.play();
                 } else {
                   let adult_num = 1;
                   let children_num = 0;
@@ -464,8 +475,11 @@ const ReaderPage = () => {
                       }
 
                       apiCreateHistory(user, start, end, fare, zan, type_id, company_id);
+
+                      soundPipi.play();
                     } else {
                       setCurrentStatus('error');
+                      soundError.play();
                     }
                   }
                 }
@@ -475,6 +489,7 @@ const ReaderPage = () => {
         }
       } catch {
         setCurrentStatus('error');
+        soundError.play();
       }
     } else {
       console.log('管理システム接続失敗');
@@ -633,6 +648,10 @@ const ReaderPage = () => {
                 if (readHistory.includes(scanResult.rawValue)) {
                   console.log('UUIDが有効と判断されましたが、履歴に含まれていました。処理を中断します。');
                   setCurrentStatus('error');
+                  // if (!isPlayingError) {
+                  //   setIsPlayingError(true);
+                  //   soundError.play();
+                  // }
 
                   setTimeout(() => {
                     switch (currentMode) {
@@ -650,7 +669,7 @@ const ReaderPage = () => {
                   }, 5000);
                   return;
                 } else {
-                  setReadHistory([...readHistory, scanResult.rawValue]);
+                setReadHistory([...readHistory, scanResult.rawValue]);
                 }
 
                 setLastUUID(scanResult.rawValue);
