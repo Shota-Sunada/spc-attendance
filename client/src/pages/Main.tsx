@@ -134,7 +134,8 @@ const UserPage = (props: UserPageProps) => {
 
     const res = await fetch(`${BACKEND_ENDPOINT}/api/me`, {
       headers: {
-        Authorization: `Bearer ${token}`
+        Authorization: `Bearer ${token}`,
+        'User-ID': String(props.user.id)
       }
     });
 
@@ -147,12 +148,13 @@ const UserPage = (props: UserPageProps) => {
     }
   }, [props]);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (!initialized) {
       getMe();
       setInitialized(true);
     }
-  }, [getMe, initialized]);
+  });
 
   useEffect(() => {
     if (props.user.is_banned) {

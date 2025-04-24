@@ -27,6 +27,8 @@ export default function App() {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const [isBanned, setIsBanned] = useState<boolean>(false);
 
+  const [initialized, setInitialized] = useState<boolean>(false);
+
   const getAuthUser = async () => {
     const token = localStorage.getItem('token');
     if (!token) {
@@ -48,8 +50,12 @@ export default function App() {
     }
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
-    getAuthUser();
+    if (!initialized) {
+      getAuthUser();
+      setInitialized(true);
+    }
   });
 
   return (
