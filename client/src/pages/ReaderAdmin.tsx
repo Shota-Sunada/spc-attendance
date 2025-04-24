@@ -85,7 +85,7 @@ const ReaderAdmin = () => {
   return (
     <>
       <title>{'リーダー機管理画面 - BUTSURY DAYS'}</title>
-      <div className="flex flex-col items-center justify-center">
+      <div className="flex flex-col items-center justify-center p-[10px]">
         <p className="font-bold">{'リーダー機管理画面'}</p>
         {isConnected ? (
           <div className="flex flex-col">
