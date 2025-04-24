@@ -9,7 +9,7 @@ import { CommuterTicketCard, NoCommuterTicketCard } from '../components/Commuter
 // import { NoCommuterTicketCard } from '../components/CommuterTicketCard';
 import MobiryButton from '../components/MobiryButton';
 import { useNavigate } from 'react-router-dom';
-import { apiBan } from '../api';
+// import { apiBan } from '../api';
 
 type UserPageProps = {
   user: User;
@@ -60,19 +60,6 @@ const UserPage = (props: UserPageProps) => {
           <QRCode data={data} />
         </>
       );
-
-      setGenCount(genCount + 1);
-      console.log('QRコード生成数: ', genCount + 1);
-
-      if (genCount === 1) {
-        setGenResetCount(GEN_RESET_TIMEOUT_SEC);
-      }
-
-      if (genCount > GEN_LIMIT_PER_SECONDS) {
-        props.setIsBanned(true);
-        props.setIsQROpened(false);
-        apiBan(props.user);
-      }
     }
 
     const payload = {
@@ -81,19 +68,36 @@ const UserPage = (props: UserPageProps) => {
 
     const token = localStorage.getItem('token');
 
-    const res = await fetch(`${BACKEND_ENDPOINT}/api/tickets`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-        'User-ID': String(props.user.id)
-      },
-      body: JSON.stringify(payload)
-    });
+    try {
+      const res = await fetch(`${BACKEND_ENDPOINT}/api/tickets`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+          'User-ID': String(props.user.id)
+        },
+        body: JSON.stringify(payload)
+      });
 
-    const data = (await res.json()) as Ticket;
-    if (res.ok) {
-      GenerateQRCode(data.uuid);
+      const data = (await res.json()) as Ticket;
+      if (res.ok) {
+        GenerateQRCode(data.uuid);
+        console.log("QRコード生成")
+      }
+    } catch {
+      //
+    }
+
+    setGenCount(genCount + 1);
+
+    if (genCount === 1) {
+      setGenResetCount(GEN_RESET_TIMEOUT_SEC);
+    }
+
+    if (genCount > GEN_LIMIT_PER_SECONDS) {
+      props.setIsBanned(true);
+      props.setIsQROpened(false);
+      // apiBan(props.user);
     }
   }, [genCount, props]);
 
@@ -164,15 +168,15 @@ const UserPage = (props: UserPageProps) => {
 
   return (
     <>
-      <title>{"ホーム - BUTSURY DAYS"}</title>
+      <title>{'ホーム - BUTSURY DAYS'}</title>
       {/* QRコード */}
       {props.isBanned ? (
         <>
           <div className="content items-center justify-center m-[10px]">
             <p className="text-center">{'【お知らせ】'}</p>
-            <p className="text-center">{'現在、このアカウントへのサービスの提供を停止させていただいております。'}</p>
+            <p className="text-center">{'過剰なQRコードの生成を検知したため、一時的にサービスを停止しました。'}</p>
             <br />
-            <p className="text-center">{'詳しくは、管理担当者までお問い合わせください。'}</p>
+            <p className="text-center">{'ページをリロードしてください。'}</p>
             <br />
             <br />
             <p className="text-center">{'開発・管理担当: 修道物理班'}</p>
