@@ -205,7 +205,14 @@ const UserPage = (props: UserPageProps) => {
                     </p>
                   </>
                 ) : (
-                  <></>
+                  <p
+                      className="text-center py-[10px] px-[100px] border-[1px] rounded-2xl cursor-pointer"
+                      onClick={() => {
+                        props.setIsQROpened(false);
+                        setQR(null);
+                      }}>
+                      {'閉じる'}
+                    </p>
                 )
               ) : (
                 <div
