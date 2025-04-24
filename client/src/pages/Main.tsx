@@ -243,7 +243,7 @@ const UserPage = (props: UserPageProps) => {
                 <p className="m-[10px] flex items-center justify-center font-medium mb-[30px]">{'定期券情報'}</p>
                 {props.user.is_admin ? (
                   <CommuterTicketCard
-                    isStudent={false}
+                    isStudent={props.user.is_student}
                     company={props.user.pass_company_name}
                     route_start_stop={PASS_STATIONS(props.user.pass_start_id)}
                     route_end_stop={PASS_STATIONS(props.user.pass_end_id)}
