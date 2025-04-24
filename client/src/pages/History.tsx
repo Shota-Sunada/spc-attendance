@@ -19,10 +19,16 @@ const History = (props: Props) => {
         user_id: props.user.id
       };
 
+      const token = localStorage.getItem('token');
+      if (!token) {
+        return;
+      }
+
       const res = await fetch(`${BACKEND_ENDPOINT}/getHistories`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
         },
         body: JSON.stringify(payload)
       });

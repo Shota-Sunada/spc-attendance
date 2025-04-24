@@ -96,7 +96,7 @@ func main() {
 	http.HandleFunc("/api/histories", handleCORS(func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case http.MethodPost:
-			createHistory(w, r)
+			handleAuthRequire(createHistory)(w, r)
 		default:
 			w.WriteHeader(http.StatusMethodNotAllowed)
 		}
@@ -106,7 +106,7 @@ func main() {
 	http.HandleFunc("/getHistories", handleCORS(func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case http.MethodPost:
-			getHistories(w, r)
+			handleAuthRequire(getHistories)(w, r)
 		default:
 			w.WriteHeader(http.StatusMethodNotAllowed)
 		}
@@ -179,7 +179,7 @@ func main() {
 	http.HandleFunc("/api/purchases", handleCORS(func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case http.MethodPost:
-			createPurchaseHistory(w, r)
+			handleAuthRequire(createPurchaseHistory)(w, r)
 		default:
 			w.WriteHeader(http.StatusMethodNotAllowed)
 		}
@@ -189,7 +189,7 @@ func main() {
 	http.HandleFunc("/getPurchases", handleCORS(func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case http.MethodPost:
-			getPurchaseHistories(w, r)
+			handleAuthRequire(getPurchaseHistories)(w, r)
 		default:
 			w.WriteHeader(http.StatusMethodNotAllowed)
 		}

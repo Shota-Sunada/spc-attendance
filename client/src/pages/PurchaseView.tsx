@@ -25,10 +25,17 @@ const PurchaseView = (props: Props) => {
         user_id: props.user.id
       };
 
+      const token = localStorage.getItem('token');
+      if (!token) {
+        console.log('購入・払戻履歴の作成に失敗しました。管理担当者にお問い合わせください。');
+        return;
+      }
+
       const res = await fetch(`${BACKEND_ENDPOINT}/getPurchases`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
         },
         body: JSON.stringify(payload)
       });
@@ -97,11 +104,11 @@ const PurchaseView = (props: Props) => {
         )}
         <div className="flex flex-row items-center justify-between">
           <p className="">{'販売額:'}</p>
-          <p className='font-medium after:content-["\5186"]'>{purchase.price.toLocaleString("en-US")}</p>
+          <p className='font-medium after:content-["\5186"]'>{purchase.price.toLocaleString('en-US')}</p>
         </div>
         <div className="flex flex-row items-center justify-between">
           <p className="">{'購入額:'}</p>
-          <p className='font-medium after:content-["\5186"]'>{purchase.purchase_price.toLocaleString("en-US")}</p>
+          <p className='font-medium after:content-["\5186"]'>{purchase.purchase_price.toLocaleString('en-US')}</p>
         </div>
       </div>
 

@@ -23,10 +23,17 @@ const Purchases = (props: Props) => {
         user_id: props.user.id
       };
 
+      const token = localStorage.getItem('token');
+      if (!token) {
+        console.log('購入・払戻履歴の取得に失敗しました。管理担当者にお問い合わせください。');
+        return;
+      }
+
       const res = await fetch(`${BACKEND_ENDPOINT}/getPurchases`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
         },
         body: JSON.stringify(payload)
       });
@@ -48,7 +55,7 @@ const Purchases = (props: Props) => {
       <div className="table-root flex items-center justify-center">
         <table className="max-w-[360px] w-[100%]">
           <thead>
-            <tr className='min-h-[60px]'>
+            <tr className="min-h-[60px]">
               <th className="text-[12px] w-[60px] border-r-white border-r-[.5px]">{'利用日'}</th>
               <th className="text-[12px] border-r-white border-r-[.5px]">{'種別・区分'}</th>
               <th className="text-[12px] w-[76px] border-r-white border-r-[.5px]">{'金額'}</th>

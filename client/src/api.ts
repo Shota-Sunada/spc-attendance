@@ -43,10 +43,17 @@ export async function apiCharge(user: User, charge: number, showNotify: boolean,
       purchase_price: charge
     };
 
+    const token = localStorage.getItem('token');
+    if (!token) {
+      console.log('履歴の作成に失敗しました。');
+      return;
+    }
+
     const res2 = await fetch(`${BACKEND_ENDPOINT}/api/purchases`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
       },
       body: JSON.stringify(payload2)
     });
@@ -291,10 +298,17 @@ export async function apiCreateHistory(
     company_id: company_id
   };
 
+  const token = localStorage.getItem('token');
+  if (!token) {
+    console.log('履歴の作成に失敗しました。');
+    return;
+  }
+
   const res = await fetch(`${BACKEND_ENDPOINT}/api/histories`, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`
     },
     body: JSON.stringify(payload)
   });
@@ -319,10 +333,17 @@ export async function apiCreateChargeHistory(user: User, fare: number, balance: 
     company_id: 0
   };
 
+  const token = localStorage.getItem('token');
+  if (!token) {
+    console.log('履歴の作成に失敗しました。');
+    return;
+  }
+
   const res = await fetch(`${BACKEND_ENDPOINT}/api/histories`, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`
     },
     body: JSON.stringify(payload)
   });
