@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"os"
 	"strings"
@@ -22,7 +23,9 @@ var logger Logger
 var userLimiters = make(map[string]*rate.Limiter)
 
 const dbDriver = "mysql"
-const dsn = "butsury_days:shota0817@(localhost:3306)/butsury_days"
+
+var dsn string = ""
+var port string = ""
 
 func init() {
 	logger.Init()
@@ -47,6 +50,10 @@ func init() {
 	}
 	secret = []byte(secretRaw)
 
+	dsn = os.Getenv("DSN")
+	if dsn == "" {
+		logger.Error("DSN is not set")
+	}
 	logger.Info("Initializing database...")
 	db, err = sql.Open(dbDriver, dsn)
 	if err != nil {
@@ -280,8 +287,13 @@ func main() {
 		}
 	}))
 
-	logger.Info("Server is booted. Endpoint: http://localhost:8080")
-	http.ListenAndServe(":8080", nil)
+	port = os.Getenv("PORT")
+	if port == "" {
+		logger.Error("PORT is not set")
+	}
+
+	logger.Info(fmt.Sprintf("Server is booted. Endpoint: http://localhost:%s", port))
+	http.ListenAndServe(fmt.Sprintf(":%s", port), nil)
 }
 
 /* 処理系 */
