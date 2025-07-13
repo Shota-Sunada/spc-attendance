@@ -82,7 +82,7 @@ const UserPage = (props: UserPageProps) => {
       const data = (await res.json()) as Ticket;
       if (res.ok) {
         GenerateQRCode(data.uuid);
-        console.log("QRコード生成")
+        console.log('QRコード生成');
       }
     } catch {
       //
@@ -280,6 +280,9 @@ const UserPage = (props: UserPageProps) => {
                   }}
                 />
                 {/* <p className="m-[5px] text-[12px]">{'※定期券は購入できません。'}</p> */}
+              </div>
+              <div className="flex flex-col items-center justify-center mt-[20px]">
+                <p className='text-3xl'>{props.user.is_admin ? '現在活動中 👍' : '現在休暇中 💤'}</p>
               </div>
             </div>
           </div>
