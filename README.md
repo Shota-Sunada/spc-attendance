@@ -62,3 +62,6 @@ PORT=8080
 
 DSNはデータベース接続のおまじない
 例: `USERNAME:PASSWORD@(localhost:3306)/butsury_days`
+
+## BUTSURY-DAYSと分岐したときの最終コミット↓
+https://github.com/ShudoPhysicsClub/BUTSURY-DAYS/commit/47fcfc32419f5a5edf15ad1777eeda498c81ff18
