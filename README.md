@@ -46,3 +46,19 @@ company_id: 会社ID<br/>
 
 > 整理券番号4 ジャグリング同好会<br/>
 > https://butsury-days.shudo-physics.com/reader?stop_id=4&type_id=1&company_id=1
+
+## .env 説明
+```
+SECRET=
+
+DATABASE_NAME=
+DATABASE_USER=
+DATABASE_PASSWORD=
+DATABASE_ADDRESS=
+DATABASE_PROTOCOL=
+
+PORT=8080
+```
+
+DSNはデータベース接続のおまじない
+例: `USERNAME:PASSWORD@(localhost:3306)/butsury_days`

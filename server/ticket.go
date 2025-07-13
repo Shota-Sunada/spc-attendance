@@ -45,9 +45,9 @@ func issueTicket(w http.ResponseWriter, r *http.Request) {
 	}
 
 	limit := time.Now().Add(5 * time.Minute)
-	uuid, err := uuid.NewRandom()
+	random, _ := uuid.NewRandom()
 
-	result, err := db.Exec(insertTicket, ticket.UserId, uuid.String(), false, limit)
+	result, err := db.Exec(insertTicket, ticket.UserId, random.String(), false, limit)
 	if err != nil {
 		logger.Error("The internal server error is occurred: issueTicket-Exec")
 		logger.ErrorE(err)
@@ -63,7 +63,7 @@ func issueTicket(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	ticket.ID = int(id)
-	ticket.Uuid = uuid.String()
+	ticket.Uuid = random.String()
 	ticket.DateLimit = limit.Format("2006-01-02 15:04:05")
 
 	logger.Info("========= The new ticket was issued.=========")

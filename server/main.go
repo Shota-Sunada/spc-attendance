@@ -10,7 +10,7 @@ import (
 	"strings"
 
 	"github.com/dgrijalva/jwt-go"
-	_ "github.com/go-sql-driver/mysql"
+	"github.com/go-sql-driver/mysql"
 
 	"github.com/joho/godotenv"
 	"golang.org/x/time/rate"
@@ -24,7 +24,14 @@ var userLimiters = make(map[string]*rate.Limiter)
 
 const dbDriver = "mysql"
 
+var databaseName string = ""
+var databaseUser string = ""
+var databasePassword string = ""
+var databaseAddress string = ""
+var databaseProtocol string = ""
+
 var dsn string = ""
+
 var port string = ""
 
 func init() {
@@ -50,11 +57,41 @@ func init() {
 	}
 	secret = []byte(secretRaw)
 
-	dsn = os.Getenv("DSN")
+	databaseName = os.Getenv("DATABASE_NAME")
+	if databaseName == "" {
+		logger.Error("DATABASE_NAME is not set")
+	}
+	databaseUser = os.Getenv("DATABASE_USER")
+	if databaseUser == "" {
+		logger.Error("DATABASE_USER is not set")
+	}
+	databasePassword = os.Getenv("DATABASE_PASSWORD")
+	if databasePassword == "" {
+		logger.Error("DATABASE_PASSWORD is not set")
+	}
+	databaseAddress = os.Getenv("DATABASE_ADDRESS")
+	if databaseAddress == "" {
+		logger.Error("DATABASE_ADDRESS is not set")
+	}
+	databaseProtocol = os.Getenv("DATABASE_PROTOCOL")
+	if databaseProtocol == "" {
+		logger.Error("DATABASE_PROTOCOL is not set")
+	}
+
+	logger.Info("Initializing database...")
+	c := mysql.Config{
+		DBName: 			databaseName,
+		User:                 databaseUser,
+		Passwd:               databasePassword,
+		Net:                  databaseProtocol,
+		Addr:                 databaseAddress,
+	}
+
+	dsn = c.FormatDSN()
 	if dsn == "" {
 		logger.Error("DSN is not set")
 	}
-	logger.Info("Initializing database...")
+
 	db, err = sql.Open(dbDriver, dsn)
 	if err != nil {
 		logger.ErrorE(err)
