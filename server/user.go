@@ -24,9 +24,9 @@ const (
 			auto_charge_charge  INT NOT NULL DEFAULT 1000,
 			is_banned			BOOLEAN NOT NULL DEFAULT FALSE,
 			pass_is_student		BOOLEAN NOT NULL DEFAULT FALSE,
-			pass_company_name	TEXT NOT NULL DEFAULT "物理班電鉄",
-			pass_start_id		TEXT NOT NULL DEFAULT "bk2",
-			pass_end_id			TEXT NOT NULL DEFAULT "physics"
+			pass_company_name	TEXT NOT NULL,
+			pass_start_id		TEXT NOT NULL,
+			pass_end_id			TEXT NOT NULL
 		)
 	`
 

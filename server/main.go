@@ -10,7 +10,7 @@ import (
 	"strings"
 
 	"github.com/dgrijalva/jwt-go"
-	"github.com/go-sql-driver/mysql"
+	_ "github.com/go-sql-driver/mysql"
 
 	"github.com/joho/godotenv"
 	"golang.org/x/time/rate"
@@ -79,15 +79,8 @@ func init() {
 	}
 
 	logger.Info("Initializing database...")
-	c := mysql.Config{
-		DBName: 			databaseName,
-		User:                 databaseUser,
-		Passwd:               databasePassword,
-		Net:                  databaseProtocol,
-		Addr:                 databaseAddress,
-	}
-
-	dsn = c.FormatDSN()
+	dsn = fmt.Sprintf("%s:%s@%s(%s)/%s",databaseUser,databasePassword,databaseProtocol,databaseAddress,databaseName)
+	logger.Info(fmt.Sprintf("DSN: %s", dsn))
 	if dsn == "" {
 		logger.Error("DSN is not set")
 	}
