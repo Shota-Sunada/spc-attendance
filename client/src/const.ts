@@ -1,6 +1,6 @@
 import User from './types/User';
 
-export const BACKEND_ENDPOINT = 'https://api.butsury-days.shudo-physics.com';
+export const BACKEND_ENDPOINT = 'http://localhost:8080';
 
 export const QR_VERSION = 1;
 
