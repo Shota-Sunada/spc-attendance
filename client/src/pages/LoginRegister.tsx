@@ -109,7 +109,7 @@ const LoginRegister = ({ setUser }: SetUserProps) => {
 
   return (
     <>
-      <title>{'BUTSURY DAYS'}</title>
+      <title>{'物理班出席システム'}</title>
       <div className="h-[100%] flex flex-col justify-center items-center bg-[#f7f4e5]">
         {/* <h2 className="text-[200%] pointer-default">{'BUTSURY DAYS'}</h2> */}
         <img className="w-[300px]" src="/logo.png" alt="LOGO" />

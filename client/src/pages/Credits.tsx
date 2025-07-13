@@ -5,6 +5,12 @@ const Credits = () => {
       <div className="flex flex-col x-0 items-center justify-center mx-[20px]">
         <p className="m-[10px] flex items-center justify-center font-bold">{'クレジット'}</p>
         <div className="mt-[20px] flex flex-col items-center justify-center text-center">
+          <p className="font-normal">{'このアプリケーションは BUTSURY DAYS をベースに作成されました。'}</p>
+          <br />
+          <p className="font-normal">{'Copyright 2025 Shudo Physics Club'}</p>
+        </div>
+        <p className="mt-[20px] font-normal">{"MOBIRY DAYS クレジット"}</p>
+        <div className="flex flex-col items-center justify-center text-center border p-[10px] rounded-2xl">
           <p className="font-normal">{'原案'}</p>
           <p className="font-normal">{'MOBIRY DAYS - 広島電鉄株式会社'}</p>
           <br />
